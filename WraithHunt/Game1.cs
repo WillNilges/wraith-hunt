@@ -1,4 +1,6 @@
-﻿using Microsoft.Xna.Framework;
+﻿using System.Collections.Generic;
+
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Devcade;
@@ -9,6 +11,8 @@ namespace WraithHunt
 	{
 		private GraphicsDeviceManager _graphics;
 		private SpriteBatch _spriteBatch;
+
+        private List<WorldObject> platforms;
 
 		/// <summary>
 		/// Game constructor
@@ -55,6 +59,10 @@ namespace WraithHunt
 			// TODO: use this.Content to load your game content here
 			// ex.
 			// texture = Content.Load<Texture2D>("fileNameWithoutExtention");
+
+            platforms = new List<WorldObject>();
+            WorldObject chom = new WorldObject(100,400,100,10,Color.Brown);
+            platforms.Add(chom);
 		}
 
 		/// <summary>
@@ -90,6 +98,10 @@ namespace WraithHunt
 
 			_spriteBatch.Begin();
 			// TODO: Add your drawing code here
+            foreach(WorldObject obj in platforms)
+            {
+                obj.DrawBox(_spriteBatch);
+            }
 			_spriteBatch.End();
 
 			base.Draw(gameTime);
