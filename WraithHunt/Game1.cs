@@ -12,7 +12,12 @@ namespace WraithHunt
 		private GraphicsDeviceManager _graphics;
 		private SpriteBatch _spriteBatch;
 
-        private List<WorldObject> platforms;
+        private List<WorldObject> _platforms;
+
+        private Player medium;
+        private Player demon;
+
+        private KeyboardState _lastState;
 
 		/// <summary>
 		/// Game constructor
@@ -60,9 +65,12 @@ namespace WraithHunt
 			// ex.
 			// texture = Content.Load<Texture2D>("fileNameWithoutExtention");
 
-            platforms = new List<WorldObject>();
+            _platforms = new List<WorldObject>();
             WorldObject chom = new WorldObject(100,400,100,10,Color.Brown);
-            platforms.Add(chom);
+            _platforms.Add(chom);
+            
+            medium = new Player(120, 350, 10, 10, Color.White);
+
 		}
 
 		/// <summary>
@@ -84,7 +92,23 @@ namespace WraithHunt
 			}
 
 			// TODO: Add your update logic here
+            KeyboardState myState = Keyboard.GetState();
+            if (_lastState == null)
+                _lastState = Keyboard.GetState();
 
+            if (myState.IsKeyDown(Keys.A))
+            {
+                medium.space.X--;
+            }
+
+            if (myState.IsKeyDown(Keys.D))
+            {
+                medium.space.X++;
+            }
+
+            medium.UpdatePhysics(_platforms);
+
+            _lastState = Keyboard.GetState();
 			base.Update(gameTime);
 		}
 
@@ -94,14 +118,15 @@ namespace WraithHunt
 		/// <param name="gameTime">This is the gameTime object you can use to get the time since last frame.</param>
 		protected override void Draw(GameTime gameTime)
 		{
-			GraphicsDevice.Clear(Color.CornflowerBlue);
+			GraphicsDevice.Clear(Color.Navy);
 
 			_spriteBatch.Begin();
 			// TODO: Add your drawing code here
-            foreach(WorldObject obj in platforms)
+            foreach(WorldObject obj in _platforms)
             {
                 obj.DrawBox(_spriteBatch);
             }
+            medium.DrawBox(_spriteBatch);
 			_spriteBatch.End();
 
 			base.Draw(gameTime);
