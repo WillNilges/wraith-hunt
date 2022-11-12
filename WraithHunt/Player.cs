@@ -10,11 +10,16 @@ namespace WraithHunt
 {
     public class Player : WorldObject 
     {
-        private int _gravityMax = -3; // The maximum speed you can fall
-        private int _gravityAccel = -1; // Acceleration
-
+        private int _gravityMax = 3; // The maximum speed you can fall
+        private int _gravityAccel = 1; // Acceleration
 
         private int _currentGravity = 0;
+
+        private int _jumpPower = 10;
+
+        private bool _hasJumped = false;
+
+        private bool _collide = false;
 
         public Player(int xPos, int yPos, int dimWidth, int dimHeight, Color objColor) : base(xPos, yPos, dimWidth,  dimHeight, objColor)
         {
@@ -22,7 +27,7 @@ namespace WraithHunt
 
         public void UpdatePhysics(List<WorldObject> platforms)
         {
-            _currentGravity = -1;
+            _collide = false;
             // Check if we're colliding with a world object.
             foreach(WorldObject platform in platforms)
             {
@@ -36,11 +41,29 @@ namespace WraithHunt
                     space.Y < platform.space.Y + platform.space.height
                 )
                 {
-                    _currentGravity = 0;
+                    _collide = true;
+                    _hasJumped = false;
+                    space.Y = platform.space.Y - space.height;
                 }
             }
 
-            space.Y -= _currentGravity;
+            if (_collide) 
+                _currentGravity = 0;
+            else if (_currentGravity < _gravityMax)
+                _currentGravity += _gravityAccel;
+
+            space.Y += _currentGravity;
+        }
+
+        public void Jump()
+        {
+            if (!_hasJumped && _collide)
+            {
+                _hasJumped = true;
+                _collide = false;
+                _currentGravity -= _jumpPower;
+                space.Y -= 5;
+            }
         }
     }
 }

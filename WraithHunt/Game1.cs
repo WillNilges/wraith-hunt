@@ -96,6 +96,11 @@ namespace WraithHunt
             if (_lastState == null)
                 _lastState = Keyboard.GetState();
 
+            if (myState.IsKeyDown(Keys.W))
+            {
+                medium.Jump();
+            }
+
             if (myState.IsKeyDown(Keys.A))
             {
                 medium.space.X--;
