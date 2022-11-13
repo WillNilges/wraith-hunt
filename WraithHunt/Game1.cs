@@ -235,7 +235,9 @@ namespace WraithHunt
             }
 
             medium.UpdatePhysics(_platforms);
+            medium.abilitiesTick();
             demon.UpdatePhysics(_platforms);
+            demon.abilitiesTick();
 
             _lastState = Keyboard.GetState();
 			base.Update(gameTime);
