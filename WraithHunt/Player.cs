@@ -32,7 +32,9 @@ namespace WraithHunt
 
         private bool _collide = false;
         public Direction facing;
-        public Texture2D sprite {get; set;}
+        public Texture2D sprite;
+        public int spriteSize;
+        public Rectangle spriteParams;
 
         private WorldObject _collidingWith = null;
 
@@ -45,16 +47,27 @@ namespace WraithHunt
 
         public void Draw(SpriteBatch batch)
         {
-            int spriteSize = 30;
             SpriteEffects effects = SpriteEffects.None;
-            int xOffset = 0;
+//            int xOffset = 0;
             if (facing == Direction.LEFT)
             {
                 effects = SpriteEffects.FlipHorizontally;
-                xOffset = spriteSize/2;
+//                xOffset = spriteSize/2;
             }
 
-            batch.Draw(sprite, new Rectangle(space.X-xOffset, space.Y-(spriteSize/2), spriteSize, spriteSize), null, Color.White, 0, new Vector2(0,0), effects, 0);
+            spriteParams.X = space.X;
+            spriteParams.Y = space.Y-(15);
+
+            batch.Draw(
+                sprite, 
+                spriteParams,
+                null,
+                Color.White,
+                0,
+                new Vector2(0,0),
+                effects,
+                0
+            );
         }
 
         public void UpdatePhysics(List<WorldObject> platforms)
