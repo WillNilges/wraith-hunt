@@ -8,18 +8,26 @@ using Devcade;
 
 namespace WraithHunt
 {
+
+    public enum Direction
+    {
+        LEFT,
+        RIGHT
+    }
+
     public class Player : WorldObject 
     {
-        private int _gravityMax = 3; // The maximum speed you can fall
+        private int _gravityMax = 4; // The maximum speed you can fall
         private int _gravityAccel = 1; // Acceleration
-
         private int _currentGravity = 0;
-
-        private int _jumpPower = 10;
-
+        private int _jumpPower = 15;
         private bool _hasJumped = false;
 
+        private int _speed = 4;
+
         private bool _collide = false;
+
+        private WorldObject _collidingWith = null;
 
         public Player(int xPos, int yPos, int dimWidth, int dimHeight, Color objColor) : base(xPos, yPos, dimWidth,  dimHeight, objColor)
         {
@@ -28,12 +36,20 @@ namespace WraithHunt
         public void UpdatePhysics(List<WorldObject> platforms)
         {
             _collide = false;
+
             // Check if we're colliding with a world object.
             foreach(WorldObject platform in platforms)
             {
-                /*
-                Console.WriteLine($"Our Space:{space.Y}, Their Space: {platform.space.Y}");
-                if (platform.space.Y < space.Y)*/
+                if (_hasJumped && _currentGravity < 0 &&
+                    space.Y > platform.space.Y + platform.space.height &&
+                    space.Y - Math.Abs(_currentGravity) < platform.space.Y + platform.space.height
+                )
+                {
+                    _collide = true;
+                    _collidingWith = platform;
+                    space.Y = platform.space.Y + platform.space.height + 1;
+                    break;
+                }
                 if (
                     platform.space.X < space.X + space.width &&
                     space.X < platform.space.X + platform.space.width &&
@@ -43,7 +59,9 @@ namespace WraithHunt
                 {
                     _collide = true;
                     _hasJumped = false;
+                    _collidingWith = platform;
                     space.Y = platform.space.Y - space.height;
+                    break;
                 }
             }
 
@@ -53,6 +71,19 @@ namespace WraithHunt
                 _currentGravity += _gravityAccel;
 
             space.Y += _currentGravity;
+        }
+
+        public void Walk(Direction dir)
+        {
+            switch (dir)
+            {
+                case Direction.LEFT:
+                    space.X -= _speed;
+                    break;
+                case Direction.RIGHT:
+                    space.X += _speed;
+                    break;
+            }
         }
 
         public void Jump()

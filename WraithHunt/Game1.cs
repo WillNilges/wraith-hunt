@@ -66,8 +66,13 @@ namespace WraithHunt
 			// texture = Content.Load<Texture2D>("fileNameWithoutExtention");
 
             _platforms = new List<WorldObject>();
-            WorldObject chom = new WorldObject(100,400,100,10,Color.Brown);
-            _platforms.Add(chom);
+            for (int i = 0; i < 10; i++)
+            {
+                WorldObject chom = new WorldObject(100,200 + i*100,100,10,Color.Brown);
+                WorldObject skz = new WorldObject(300,100 + i*100,100,10,Color.Brown);
+                _platforms.Add(chom);
+                _platforms.Add(skz);
+            }
             
             medium = new Player(120, 350, 10, 10, Color.White);
 
@@ -103,12 +108,12 @@ namespace WraithHunt
 
             if (myState.IsKeyDown(Keys.A))
             {
-                medium.space.X--;
+                medium.Walk(Direction.LEFT);
             }
 
             if (myState.IsKeyDown(Keys.D))
             {
-                medium.space.X++;
+                medium.Walk(Direction.RIGHT);
             }
 
             medium.UpdatePhysics(_platforms);
