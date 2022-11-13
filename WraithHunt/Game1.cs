@@ -182,6 +182,20 @@ namespace WraithHunt
 			base.Update(gameTime);
 		}
 
+        private void viewportSprites(Viewport port, Camera cam)
+        {
+            GraphicsDevice.Viewport = port;
+            _spriteBatch.Begin(cam);
+            // TODO: Add your drawing code here
+            foreach(WorldObject obj in _platforms)
+            {
+                obj.DrawBox(_spriteBatch);
+            }
+            medium.DrawBox(_spriteBatch);
+            demon.DrawBox(_spriteBatch);
+            _spriteBatch.End();
+        }
+
 		/// <summary>
 		/// Your main draw loop. This runs once every frame, over and over.
 		/// </summary>
@@ -204,27 +218,8 @@ namespace WraithHunt
             );
 			_spriteBatch.End();
 
-            GraphicsDevice.Viewport = leftViewport;
-			_spriteBatch.Begin(this.camera);
-			// TODO: Add your drawing code here
-            foreach(WorldObject obj in _platforms)
-            {
-                obj.DrawBox(_spriteBatch);
-            }
-            medium.DrawBox(_spriteBatch);
-            demon.DrawBox(_spriteBatch);
-			_spriteBatch.End();
-
-            GraphicsDevice.Viewport = rightViewport;
-			_spriteBatch.Begin(this.demonCamera);
-			// TODO: Add your drawing code here
-            foreach(WorldObject obj in _platforms)
-            {
-                obj.DrawBox(_spriteBatch);
-            }
-            medium.DrawBox(_spriteBatch);
-            demon.DrawBox(_spriteBatch);
-			_spriteBatch.End();
+            viewportSprites(leftViewport, camera);
+            viewportSprites(rightViewport, demonCamera);
 
 			base.Draw(gameTime);
 		}
