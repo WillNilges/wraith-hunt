@@ -271,8 +271,13 @@ namespace WraithHunt
             _spriteBatch.End();
         }
 
-        private void drawHUD(Player player)
+        private void drawHUD(Player player, bool drawOnBottom)
         {
+            int HUDHeight = 50;
+            if (drawOnBottom)
+            {
+                HUDHeight = defaultViewport.Height/2 - 50;
+            }
             _spriteBatch.Begin();
             string textHP = $"LIFE: {player.health}";
             Vector2 HUDSize = _HUDFont.MeasureString(textHP);
@@ -281,7 +286,7 @@ namespace WraithHunt
                 textHP, 
                 new Vector2(
                     defaultViewport.Width / 2 - HUDSize.X / 2,
-                    defaultViewport.Height/2 - 50
+                    HUDHeight
                     ), 
                 Color.White
             );
@@ -312,9 +317,9 @@ namespace WraithHunt
 			_spriteBatch.End();
 
             viewportSprites(leftViewport, camera);
-            drawHUD(medium);
+            drawHUD(medium, true);
             viewportSprites(rightViewport, demonCamera);
-            drawHUD(demon);
+            drawHUD(demon, false);
 
 			base.Draw(gameTime);
 		}
