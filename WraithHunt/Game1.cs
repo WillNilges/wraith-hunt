@@ -106,7 +106,7 @@ namespace WraithHunt
             
             // Players
             medium = new Player(120, 350, 10, 10, Color.White);
-            demon = new Player(220, 350, 10, 10, Color.Red);
+            demon = new Player(130, 350, 10, 10, Color.Red);
 		}
 
 		/// <summary>
@@ -143,6 +143,7 @@ namespace WraithHunt
             if (_lastState == null)
                 _lastState = Keyboard.GetState();
 
+            // Medium Keys
             if (myState.IsKeyDown(Keys.W))
             {
                 medium.Jump();
@@ -158,7 +159,24 @@ namespace WraithHunt
                 medium.Walk(Direction.RIGHT);
             }
 
+            // Demon Keys
+            if (myState.IsKeyDown(Keys.I))
+            {
+                demon.Jump();
+            }
+
+            if (myState.IsKeyDown(Keys.J))
+            {
+                demon.Walk(Direction.LEFT);
+            }
+
+            if (myState.IsKeyDown(Keys.L))
+            {
+                demon.Walk(Direction.RIGHT);
+            }
+
             medium.UpdatePhysics(_platforms);
+            demon.UpdatePhysics(_platforms);
 
             _lastState = Keyboard.GetState();
 			base.Update(gameTime);
@@ -170,6 +188,7 @@ namespace WraithHunt
 		/// <param name="gameTime">This is the gameTime object you can use to get the time since last frame.</param>
 		protected override void Draw(GameTime gameTime)
 		{
+            // Draw the background and the separation bar.
             GraphicsDevice.Viewport = defaultViewport;
 			GraphicsDevice.Clear(Color.Navy);
 			_spriteBatch.Begin();
@@ -193,6 +212,7 @@ namespace WraithHunt
                 obj.DrawBox(_spriteBatch);
             }
             medium.DrawBox(_spriteBatch);
+            demon.DrawBox(_spriteBatch);
 			_spriteBatch.End();
 
             GraphicsDevice.Viewport = rightViewport;
@@ -203,6 +223,7 @@ namespace WraithHunt
                 obj.DrawBox(_spriteBatch);
             }
             medium.DrawBox(_spriteBatch);
+            demon.DrawBox(_spriteBatch);
 			_spriteBatch.End();
 
 			base.Draw(gameTime);
