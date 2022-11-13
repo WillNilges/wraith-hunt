@@ -9,6 +9,7 @@ namespace WraithHunt
     {
         public int duration {get;}
         public int damage {get;}
+        private Direction _direction;
         private bool _decay;
         public int timer {get; set;}
 
@@ -18,6 +19,7 @@ namespace WraithHunt
         public DamageBox(
             int xPos,
             int yPos, 
+            Direction dir,
             int dimWidth,
             int dimHeight,
             Color objColor,
@@ -33,9 +35,25 @@ namespace WraithHunt
             objColor
         )
         {
+            // TODO: Find a way to center the beam effect in the middle of the player sprite
+            // (something something space.Y)
+            
+            // Direction ENUM to control which direction the beam gets cast in
+            // Magic number: 10. The player's width
+            switch (dir)
+            {
+                case Direction.LEFT:
+                    space.X -= space.width + 10; // Make it spawn a distance away from the player
+                    break;
+                case Direction.RIGHT:
+                    space.X += 10 * 2; // Make it spawn a distance away from the player
+                    break;
+            }
+
             duration = dur;
             timer = dur;
             damage = dmg;
+            _direction = dir;
             _decay = damageDecay;
             _caster = castBy;
         }
@@ -64,7 +82,10 @@ namespace WraithHunt
                         // that much. This ought to be handled by the collision
                         // system.
                         player.space.Y -= (int) ((float) space.height/2.0f * ((float) timer/ (float) duration));
-                        player.space.X -= (int) ((float) space.width/2.0f * ((float) timer/ (float) duration)); // TODO: Add horizontal velocity to player
+                        int dirMultiplier = 1;
+                        if (_direction == Direction.LEFT)
+                            dirMultiplier = -1;
+                        player.space.X += (int) ((float) 10.0f * ((float) timer/ (float) duration)) * dirMultiplier; // TODO: Add horizontal velocity to player
                     }
 
                     // Make player invulnerable to this hitbox, since they've been hit by it once.
