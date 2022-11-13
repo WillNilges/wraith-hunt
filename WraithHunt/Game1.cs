@@ -24,6 +24,13 @@ namespace WraithHunt
 
         private Camera camera;
 
+        // Here be dragons
+        Viewport defaultViewport;
+        Viewport leftViewport;
+        Viewport rightViewport;
+        Matrix projectionMatrix;
+        Matrix halfprojectionMatrix;
+
 		/// <summary>
 		/// Game constructor
 		/// </summary>
@@ -71,6 +78,21 @@ namespace WraithHunt
 			// ex.
 			// texture = Content.Load<Texture2D>("fileNameWithoutExtention");
 
+            // Split Screen
+            defaultViewport = GraphicsDevice.Viewport;
+            leftViewport = defaultViewport;
+            rightViewport = defaultViewport;
+            leftViewport.Width = leftViewport.Width / 2;
+            rightViewport.Width = rightViewport.Width / 2;
+            rightViewport.X = leftViewport.Width;
+
+            // Projection Matrix
+            projectionMatrix = Matrix.CreatePerspectiveFieldOfView(
+                MathHelper.PiOver4, 4.0f / 3.0f, 1.0f, 10000f);
+            halfprojectionMatrix = Matrix.CreatePerspectiveFieldOfView(
+                MathHelper.PiOver4, 2.0f / 3.0f, 1.0f, 10000f);
+
+            // Platforms
             _platforms = new List<WorldObject>();
             for (int i = 0; i < 10; i++)
             {
@@ -80,6 +102,7 @@ namespace WraithHunt
                 _platforms.Add(skz);
             }
             
+            // Players
             medium = new Player(120, 350, 10, 10, Color.White);
 
 		}
@@ -138,8 +161,21 @@ namespace WraithHunt
 		/// <param name="gameTime">This is the gameTime object you can use to get the time since last frame.</param>
 		protected override void Draw(GameTime gameTime)
 		{
+            GraphicsDevice.Viewport = defaultViewport;
 			GraphicsDevice.Clear(Color.Navy);
 
+
+            GraphicsDevice.Viewport = leftViewport;
+			_spriteBatch.Begin(this.camera);
+			// TODO: Add your drawing code here
+            foreach(WorldObject obj in _platforms)
+            {
+                obj.DrawBox(_spriteBatch);
+            }
+            medium.DrawBox(_spriteBatch);
+			_spriteBatch.End();
+
+            GraphicsDevice.Viewport = rightViewport;
 			_spriteBatch.Begin(this.camera);
 			// TODO: Add your drawing code here
             foreach(WorldObject obj in _platforms)
