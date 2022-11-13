@@ -82,15 +82,15 @@ namespace WraithHunt
             defaultViewport = GraphicsDevice.Viewport;
             leftViewport = defaultViewport;
             rightViewport = defaultViewport;
-            leftViewport.Width = leftViewport.Width / 2;
-            rightViewport.Width = rightViewport.Width / 2;
-            rightViewport.X = leftViewport.Width;
+            leftViewport.Height = leftViewport.Height / 2;
+            rightViewport.Height = rightViewport.Height / 2;
+            rightViewport.Y = leftViewport.Height;
 
             // Projection Matrix
             projectionMatrix = Matrix.CreatePerspectiveFieldOfView(
-                MathHelper.PiOver4, 4.0f / 3.0f, 1.0f, 10000f);
+                MathHelper.PiOver4,1.0f, 4.0f / 3.0f, 10000f);
             halfprojectionMatrix = Matrix.CreatePerspectiveFieldOfView(
-                MathHelper.PiOver4, 2.0f / 3.0f, 1.0f, 10000f);
+                MathHelper.PiOver4, 1.0f, 2.0f / 3.0f, 10000f);
 
             // Platforms
             _platforms = new List<WorldObject>();
@@ -164,7 +164,6 @@ namespace WraithHunt
             GraphicsDevice.Viewport = defaultViewport;
 			GraphicsDevice.Clear(Color.Navy);
 
-
             GraphicsDevice.Viewport = leftViewport;
 			_spriteBatch.Begin(this.camera);
 			// TODO: Add your drawing code here
@@ -184,6 +183,21 @@ namespace WraithHunt
             }
             medium.DrawBox(_spriteBatch);
 			_spriteBatch.End();
+
+            /*
+            GraphicsDevice.Viewport = defaultViewport;
+			_spriteBatch.Begin();
+            RectangleSprite.FillRectangle(
+                _spriteBatch,
+                new Rectangle(
+                    0,
+                    defaultViewport.Height/2,
+                    defaultViewport.Width,
+                    5
+                ),
+                Color.Black 
+            );
+			_spriteBatch.End();*/
 
 			base.Draw(gameTime);
 		}
