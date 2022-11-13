@@ -23,6 +23,7 @@ namespace WraithHunt
         private KeyboardState _lastState;
 
         private Camera camera;
+        private Camera demonCamera;
 
         // Here be dragons
         Viewport defaultViewport;
@@ -63,6 +64,7 @@ namespace WraithHunt
 			
 			// TODO: Add your initialization logic here
             this.camera = new Camera(this._graphics.GraphicsDevice);
+            this.demonCamera = new Camera(this._graphics.GraphicsDevice);
 
 			base.Initialize();
 		}
@@ -104,7 +106,7 @@ namespace WraithHunt
             
             // Players
             medium = new Player(120, 350, 10, 10, Color.White);
-
+            demon = new Player(220, 350, 10, 10, Color.Red);
 		}
 
 		/// <summary>
@@ -126,9 +128,16 @@ namespace WraithHunt
 			}
 
 			// TODO: Add your update logic here
+
+            // Medium's Camera
             this.camera.Update(gameTime);
             Vector2 mediumPos = new Vector2(medium.space.X, medium.space.Y);
             this.camera.Position = mediumPos;
+
+            // Demon's Camera
+            this.demonCamera.Update(gameTime);
+            Vector2 demonPos = new Vector2(demon.space.X, demon.space.Y);
+            this.demonCamera.Position = demonPos;
             
             KeyboardState myState = Keyboard.GetState();
             if (_lastState == null)
@@ -187,7 +196,7 @@ namespace WraithHunt
 			_spriteBatch.End();
 
             GraphicsDevice.Viewport = rightViewport;
-			_spriteBatch.Begin(this.camera);
+			_spriteBatch.Begin(this.demonCamera);
 			// TODO: Add your drawing code here
             foreach(WorldObject obj in _platforms)
             {
