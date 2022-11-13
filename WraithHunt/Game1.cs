@@ -15,9 +15,10 @@ namespace WraithHunt
 		private GraphicsDeviceManager _graphics;
 		private SpriteBatch _spriteBatch;
 
-        private List<WorldObject> _platforms;
+        private List<WorldObject> _platforms; // For stuff you can stand on
+        private List<DamageBox> _dmgBoxes; // For stuff that hurts
 
-        private Player medium;
+        private Medium medium;
         private Player demon;
 
         private KeyboardState _lastState;
@@ -103,9 +104,12 @@ namespace WraithHunt
                 _platforms.Add(chom);
                 _platforms.Add(skz);
             }
+
+            // Attack System
+            _dmgBoxes = new List<DamageBox>(); 
             
             // Players
-            medium = new Player(120, 350, 10, 10, Color.White);
+            medium = new Medium(120, 350, 10, 10, Color.White);
             demon = new Player(130, 350, 10, 10, Color.Red);
 		}
 
@@ -138,7 +142,32 @@ namespace WraithHunt
             this.demonCamera.Update(gameTime);
             Vector2 demonPos = new Vector2(demon.space.X, demon.space.Y);
             this.demonCamera.Position = demonPos;
+
+            // DamageBoxes
             
+            // This is a felony
+            int boxes = _dmgBoxes.Count;
+            int i = 0;
+            while (i < boxes)
+            {
+                // Decay timer
+                _dmgBoxes[i].update();
+
+                if (_dmgBoxes[i].timer == 0)
+                {
+                    _dmgBoxes.RemoveAt(i);
+                    boxes = _dmgBoxes.Count;
+                    continue;
+                }
+                // TODO: Do the rest of the collision logic for damage boxes.
+                // if a character is inside of one, they die, or whatever.
+                // Also you need to draw damage boxes.
+                _dmgBoxes[i].checkCollision(medium);
+                _dmgBoxes[i].checkCollision(demon);
+                i++;
+            }
+
+            // Controls
             KeyboardState myState = Keyboard.GetState();
             if (_lastState == null)
                 _lastState = Keyboard.GetState();
@@ -157,6 +186,16 @@ namespace WraithHunt
             if (myState.IsKeyDown(Keys.D))
             {
                 medium.Walk(Direction.RIGHT);
+            }
+
+            if (myState.IsKeyDown(Keys.Q))
+            {
+                _dmgBoxes.Add(medium.BeamAttack(Direction.LEFT));
+            }
+
+            if (myState.IsKeyDown(Keys.E))
+            {
+                _dmgBoxes.Add(medium.BeamAttack(Direction.RIGHT));
             }
 
             // Demon Keys
@@ -188,6 +227,10 @@ namespace WraithHunt
             _spriteBatch.Begin(cam);
             // TODO: Add your drawing code here
             foreach(WorldObject obj in _platforms)
+            {
+                obj.DrawBox(_spriteBatch);
+            }
+            foreach(DamageBox obj in _dmgBoxes)
             {
                 obj.DrawBox(_spriteBatch);
             }

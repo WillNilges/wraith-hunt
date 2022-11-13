@@ -3,7 +3,6 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Devcade;
 
-
 namespace WraithHunt
 {
     public class SpaceProperties
@@ -13,7 +12,6 @@ namespace WraithHunt
         public int width {get; set;}
         public int height {get; set;}
     }
-
 
     public class WorldObject 
     {

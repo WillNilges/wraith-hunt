@@ -34,12 +34,24 @@ namespace WraithHunt
 
         private WorldObject _collidingWith = null;
 
+        public int healthMax = 10;
+        public int health = 10;
+
         public Player(int xPos, int yPos, int dimWidth, int dimHeight, Color objColor) : base(xPos, yPos, dimWidth,  dimHeight, objColor)
         {
         }
 
         public void UpdatePhysics(List<WorldObject> platforms)
         {
+
+            // If you die, reset position to the top of screen and fall back into the world (for now)
+            if (health <= 0)
+            {
+                space.X = 150;
+                space.Y = 0;
+                health = healthMax;
+            }
+
             _collide = false;
             _jumpGrace--;
 
