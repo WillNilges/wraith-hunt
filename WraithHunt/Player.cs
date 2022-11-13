@@ -20,7 +20,8 @@ namespace WraithHunt
         private int _gravityMax = 4; // The maximum speed you can fall
         private int _gravityAccel = 1; // Acceleration
         private int _currentGravity = 0;
-        private int _jumpPower = 15;
+        private int _jumpPower = 30;
+        private int _jumpTick;
         private bool _hasJumped = false; // Checks if the player has jumped
         private int _jumpGraceMax = 10; // Allow player to jump N frames after they've stopped colliding
         private int _jumpGrace;
@@ -78,7 +79,15 @@ namespace WraithHunt
                 _currentGravity += _gravityAccel;
             }
 
-            space.Y += _currentGravity;
+            if (_jumpTick > 0)
+            {
+                space.Y -= (int)((double) 5 * ((double) _jumpTick / (double) _jumpPower));
+                _jumpTick--;
+            }
+            else
+            {
+                space.Y += _currentGravity;
+            }
         }
 
         public void Walk(Direction dir)
@@ -100,7 +109,7 @@ namespace WraithHunt
             {
                 _hasJumped = true;
                 _collide = false;
-                _currentGravity = -1 * _jumpPower;
+                _jumpTick = _jumpPower;
                 space.Y -= 5;
             }
         }
