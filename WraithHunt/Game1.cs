@@ -268,15 +268,24 @@ namespace WraithHunt
             demon.DrawBox(_spriteBatch);
             demon.Draw(_spriteBatch);
             // Draw the hud of a given player
-            drawHUD();
             _spriteBatch.End();
         }
 
-        private void drawHUD()
+        private void drawHUD(Player player)
         {
-            string welcome = "Welcome to Devcade";
-            Vector2 welcomeSize = _HUDFont.MeasureString(welcome);
-            _spriteBatch.DrawString(_HUDFont, welcome, new Vector2(100, 100), Color.White);
+            _spriteBatch.Begin();
+            string textHP = $"LIFE: {player.health}";
+            Vector2 HUDSize = _HUDFont.MeasureString(textHP);
+            _spriteBatch.DrawString(
+                _HUDFont, 
+                textHP, 
+                new Vector2(
+                    defaultViewport.Width / 2 - HUDSize.X / 2,
+                    defaultViewport.Height/2 - 50
+                    ), 
+                Color.White
+            );
+            _spriteBatch.End();
         }
 
 		/// <summary>
@@ -289,6 +298,7 @@ namespace WraithHunt
             GraphicsDevice.Viewport = defaultViewport;
 			GraphicsDevice.Clear(Color.Navy);
 			_spriteBatch.Begin();
+            // Draw black dividing bar
             RectangleSprite.FillRectangle(
                 _spriteBatch,
                 new Rectangle(
@@ -302,7 +312,9 @@ namespace WraithHunt
 			_spriteBatch.End();
 
             viewportSprites(leftViewport, camera);
+            drawHUD(medium);
             viewportSprites(rightViewport, demonCamera);
+            drawHUD(demon);
 
 			base.Draw(gameTime);
 		}
