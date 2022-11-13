@@ -1,8 +1,5 @@
-# Devcade-game-template
-A template repository for creating games for the Devcade arcade system.
+# Wraith Hunt 
 
-## Whats included
+A Demon haunts an apartment complex. He feeds on the innocent. You must stop him.
 
-- An initiallized monogame project
-- The Devcade library intalled
-- Resolution setting and basic controls updating
+An asymmetrical split-screen competitve arcade platformer that requires locating and eliminating your opponent.
