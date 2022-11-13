@@ -112,20 +112,25 @@ namespace WraithHunt
             medium = new Medium(120, 350, 10, 10, Color.White);
             medium.sprite = Content.Load<Texture2D>("medium_placeholder_01");
             medium.spriteParams = new Rectangle(
-                medium.space.X,
-                medium.space.Y-(15),
+                medium.space.X-15,
+                medium.space.Y-15,
                 30,
                 30
             );
+            medium.spriteOffsetLeft = 15;
+            medium.spriteOffsetRight = 0;
 
             demon = new Player(130, 350, 10, 10, Color.Red);
             demon.sprite = Content.Load<Texture2D>("demon_placeholder_01");
             demon.spriteParams = new Rectangle(
                 demon.space.X-15,
-                demon.space.Y-(15),
+                demon.space.Y-15,
                 30,
                 30
             );
+            demon.spriteOffsetLeft = 10;
+            demon.spriteOffsetRight = 10;
+
 		}
 
 		/// <summary>

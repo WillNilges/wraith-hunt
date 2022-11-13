@@ -35,6 +35,8 @@ namespace WraithHunt
         public Texture2D sprite;
         public int spriteSize;
         public Rectangle spriteParams;
+        public int spriteOffsetLeft {set; get;}
+        public int spriteOffsetRight {set; get;}
 
         private WorldObject _collidingWith = null;
 
@@ -53,9 +55,13 @@ namespace WraithHunt
             {
                 effects = SpriteEffects.FlipHorizontally;
 //                xOffset = spriteSize/2;
+                spriteParams.X = space.X-spriteOffsetLeft;
+            }
+            else
+            {
+                spriteParams.X = space.X-spriteOffsetRight;
             }
 
-            spriteParams.X = space.X;
             spriteParams.Y = space.Y-(15);
 
             batch.Draw(
