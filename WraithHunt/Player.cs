@@ -19,9 +19,11 @@ namespace WraithHunt
     {
         private int _gravityMax = 30; // The maximum speed you can fall
         private int _gravityAccel = 1; // Acceleration
+        private int _gravityInc = 8;
         private int _currentGravity = 0;
         private int _jumpPower = 30;
         private int _jumpTick;
+        private int _jumpInc = 8;
         private bool _hasJumped = false; // Checks if the player has jumped
         private int _jumpGraceMax = 10; // Allow player to jump N frames after they've stopped colliding
         private int _jumpGrace;
@@ -44,9 +46,12 @@ namespace WraithHunt
             // Check if we're colliding with a world object.
             foreach(WorldObject platform in platforms)
             {
-                if (_hasJumped && _currentGravity < 0 &&
+                if (
+                    _hasJumped && _jumpTick > 0 &&
+                    platform.space.X < space.X + space.width &&
+                    space.X < platform.space.X + platform.space.width &&
                     space.Y > platform.space.Y + platform.space.height &&
-                    space.Y - Math.Abs(_currentGravity) < platform.space.Y + platform.space.height
+                    space.Y - _jumpInc < platform.space.Y + platform.space.height
                 )
                 {
                     _collide = true;
@@ -73,6 +78,7 @@ namespace WraithHunt
             {
                 _currentGravity = 0;
                 _jumpGrace = _jumpGraceMax;
+                _jumpTick = 0;
             }
             else if (_currentGravity < _gravityMax && _jumpTick == 0)
             {
@@ -81,12 +87,12 @@ namespace WraithHunt
 
             if (_jumpTick > 0)
             {
-                space.Y -= (int)((double) 8 * ((double) _jumpTick / (double) _jumpPower));
+                space.Y -= (int)((double) _jumpInc * ((double) _jumpTick / (double) _jumpPower));
                 _jumpTick--;
             }
             else
             {
-                space.Y += (int)((double) 8 * ((double) _currentGravity / (double) _gravityMax));
+                space.Y += (int)((double) _gravityInc * ((double) _currentGravity / (double) _gravityMax));
             }
         }
 
