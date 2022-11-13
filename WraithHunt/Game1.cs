@@ -68,8 +68,8 @@ namespace WraithHunt
             _platforms = new List<WorldObject>();
             for (int i = 0; i < 10; i++)
             {
-                WorldObject chom = new WorldObject(100,200 + i*100,100,10,Color.Brown);
-                WorldObject skz = new WorldObject(300,100 + i*100,100,10,Color.Brown);
+                WorldObject chom = new WorldObject(100,200 + i*150,100,10,Color.Brown);
+                WorldObject skz = new WorldObject(300,100 + i*150,100,10,Color.Brown);
                 _platforms.Add(chom);
                 _platforms.Add(skz);
             }

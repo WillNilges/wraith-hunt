@@ -21,7 +21,9 @@ namespace WraithHunt
         private int _gravityAccel = 1; // Acceleration
         private int _currentGravity = 0;
         private int _jumpPower = 15;
-        private bool _hasJumped = false;
+        private bool _hasJumped = false; // Checks if the player has jumped
+        private int _jumpGraceMax = 10; // Allow player to jump N frames after they've stopped colliding
+        private int _jumpGrace;
 
         private int _speed = 4;
 
@@ -36,6 +38,7 @@ namespace WraithHunt
         public void UpdatePhysics(List<WorldObject> platforms)
         {
             _collide = false;
+            _jumpGrace--;
 
             // Check if we're colliding with a world object.
             foreach(WorldObject platform in platforms)
@@ -66,9 +69,14 @@ namespace WraithHunt
             }
 
             if (_collide) 
+            {
                 _currentGravity = 0;
+                _jumpGrace = _jumpGraceMax;
+            }
             else if (_currentGravity < _gravityMax)
+            {
                 _currentGravity += _gravityAccel;
+            }
 
             space.Y += _currentGravity;
         }
@@ -88,11 +96,11 @@ namespace WraithHunt
 
         public void Jump()
         {
-            if (!_hasJumped && _collide)
+            if (!_hasJumped && (_collide || _jumpGrace >= 0))
             {
                 _hasJumped = true;
                 _collide = false;
-                _currentGravity -= _jumpPower;
+                _currentGravity = -1 * _jumpPower;
                 space.Y -= 5;
             }
         }
