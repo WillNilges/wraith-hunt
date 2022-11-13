@@ -5,6 +5,9 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Devcade;
 
+// For camera functionality
+using Comora;
+
 namespace WraithHunt
 {
 	public class Game1 : Game
@@ -18,6 +21,8 @@ namespace WraithHunt
         private Player demon;
 
         private KeyboardState _lastState;
+
+        private Camera camera;
 
 		/// <summary>
 		/// Game constructor
@@ -50,6 +55,7 @@ namespace WraithHunt
 			#endregion
 			
 			// TODO: Add your initialization logic here
+            this.camera = new Camera(this._graphics.GraphicsDevice);
 
 			base.Initialize();
 		}
@@ -97,6 +103,10 @@ namespace WraithHunt
 			}
 
 			// TODO: Add your update logic here
+            this.camera.Update(gameTime);
+            Vector2 mediumPos = new Vector2(medium.space.X, medium.space.Y);
+            this.camera.Position = mediumPos;
+            
             KeyboardState myState = Keyboard.GetState();
             if (_lastState == null)
                 _lastState = Keyboard.GetState();
@@ -130,7 +140,7 @@ namespace WraithHunt
 		{
 			GraphicsDevice.Clear(Color.Navy);
 
-			_spriteBatch.Begin();
+			_spriteBatch.Begin(this.camera);
 			// TODO: Add your drawing code here
             foreach(WorldObject obj in _platforms)
             {
