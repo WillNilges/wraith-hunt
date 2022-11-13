@@ -17,7 +17,7 @@ namespace WraithHunt
 
     public class Player : WorldObject 
     {
-        private int _gravityMax = 4; // The maximum speed you can fall
+        private int _gravityMax = 30; // The maximum speed you can fall
         private int _gravityAccel = 1; // Acceleration
         private int _currentGravity = 0;
         private int _jumpPower = 30;
@@ -74,19 +74,19 @@ namespace WraithHunt
                 _currentGravity = 0;
                 _jumpGrace = _jumpGraceMax;
             }
-            else if (_currentGravity < _gravityMax)
+            else if (_currentGravity < _gravityMax && _jumpTick == 0)
             {
                 _currentGravity += _gravityAccel;
             }
 
             if (_jumpTick > 0)
             {
-                space.Y -= (int)((double) 5 * ((double) _jumpTick / (double) _jumpPower));
+                space.Y -= (int)((double) 8 * ((double) _jumpTick / (double) _jumpPower));
                 _jumpTick--;
             }
             else
             {
-                space.Y += _currentGravity;
+                space.Y += (int)((double) 8 * ((double) _currentGravity / (double) _gravityMax));
             }
         }
 
