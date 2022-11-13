@@ -20,9 +20,9 @@ namespace WraithHunt
 
         // Creates a DamageBox for the Demon with a specified duration
         // and damage value.
-        public DamageBox BeamAttack(Direction dir)
+        public DamageBox BeamAttack()
         {
-            return new DamageBox(space.X, space.Y, dir, _beamRange, _beamHeight, Color.BlueViolet, _beamDuration, _beamDamage, _beamDecays, this);
+            return new DamageBox(space.X, space.Y, facing, _beamRange, _beamHeight, Color.BlueViolet, _beamDuration, _beamDamage, _beamDecays, this);
         }
     }
 }

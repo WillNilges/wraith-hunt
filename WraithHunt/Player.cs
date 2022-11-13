@@ -31,6 +31,7 @@ namespace WraithHunt
         private int _speed = 4;
 
         private bool _collide = false;
+        public Direction facing;
 
         private WorldObject _collidingWith = null;
 
@@ -39,6 +40,11 @@ namespace WraithHunt
 
         public Player(int xPos, int yPos, int dimWidth, int dimHeight, Color objColor) : base(xPos, yPos, dimWidth,  dimHeight, objColor)
         {
+        }
+
+        public void Draw()
+        {
+            Rectangle sourceRectangle = new Rectangle(0, 0, 48, 64);
         }
 
         public void UpdatePhysics(List<WorldObject> platforms)
@@ -110,6 +116,7 @@ namespace WraithHunt
 
         public void Walk(Direction dir)
         {
+            facing = dir;
             switch (dir)
             {
                 case Direction.LEFT:

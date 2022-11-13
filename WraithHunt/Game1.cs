@@ -19,6 +19,7 @@ namespace WraithHunt
         private List<DamageBox> _dmgBoxes; // For stuff that hurts
 
         private Medium medium;
+        private Texture2D mediumSprite;
         private Player demon;
 
         private KeyboardState _lastState;
@@ -110,6 +111,7 @@ namespace WraithHunt
             
             // Players
             medium = new Medium(120, 350, 10, 10, Color.White);
+            mediumSprite = Content.Load<Texture2D>("medium_placeholder_01");
             demon = new Player(130, 350, 10, 10, Color.Red);
 		}
 
@@ -190,12 +192,7 @@ namespace WraithHunt
 
             if (myState.IsKeyDown(Keys.Q))
             {
-                _dmgBoxes.Add(medium.BeamAttack(Direction.LEFT));
-            }
-
-            if (myState.IsKeyDown(Keys.E))
-            {
-                _dmgBoxes.Add(medium.BeamAttack(Direction.RIGHT));
+                _dmgBoxes.Add(medium.BeamAttack());
             }
 
             // Demon Keys
@@ -236,6 +233,7 @@ namespace WraithHunt
             }
             medium.DrawBox(_spriteBatch);
             demon.DrawBox(_spriteBatch);
+            _spriteBatch.Draw(mediumSprite, new Rectangle(100, 100, 100, 100), Color.White);
             _spriteBatch.End();
         }
 
