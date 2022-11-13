@@ -69,7 +69,7 @@ namespace WraithHunt
                     _collide = true;
                     _hasJumped = false;
                     _collidingWith = platform;
-                    space.Y = platform.space.Y - space.height;
+                    space.Y = platform.space.Y - space.height + 1;
                     break;
                 }
             }
