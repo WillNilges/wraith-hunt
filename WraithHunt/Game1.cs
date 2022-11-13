@@ -163,6 +163,18 @@ namespace WraithHunt
 		{
             GraphicsDevice.Viewport = defaultViewport;
 			GraphicsDevice.Clear(Color.Navy);
+			_spriteBatch.Begin();
+            RectangleSprite.FillRectangle(
+                _spriteBatch,
+                new Rectangle(
+                    0,
+                    defaultViewport.Height/2,
+                    defaultViewport.Width,
+                    5
+                ),
+                Color.Black 
+            );
+			_spriteBatch.End();
 
             GraphicsDevice.Viewport = leftViewport;
 			_spriteBatch.Begin(this.camera);
@@ -183,21 +195,6 @@ namespace WraithHunt
             }
             medium.DrawBox(_spriteBatch);
 			_spriteBatch.End();
-
-            /*
-            GraphicsDevice.Viewport = defaultViewport;
-			_spriteBatch.Begin();
-            RectangleSprite.FillRectangle(
-                _spriteBatch,
-                new Rectangle(
-                    0,
-                    defaultViewport.Height/2,
-                    defaultViewport.Width,
-                    5
-                ),
-                Color.Black 
-            );
-			_spriteBatch.End();*/
 
 			base.Draw(gameTime);
 		}
