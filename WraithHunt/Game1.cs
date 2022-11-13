@@ -290,6 +290,29 @@ namespace WraithHunt
                     ), 
                 Color.White
             );
+
+            RectangleSprite.FillRectangle(
+                _spriteBatch,
+                new Rectangle(
+                    0,
+                    HUDHeight + 20,
+                    defaultViewport.Width,
+                    5
+                ),
+                Color.Red
+            );
+
+            RectangleSprite.FillRectangle(
+                _spriteBatch,
+                new Rectangle(
+                    0,
+                    HUDHeight + 20,
+                    (int)((float)defaultViewport.Width * ((float)player.health/(float)player.healthMax)),
+                    5
+                ),
+                Color.Green
+            );
+
             _spriteBatch.End();
         }
 
