@@ -103,17 +103,18 @@ namespace WraithHunt
             _platforms = new List<WorldObject>();
             for (int i = 0; i < 10; i++)
             {
-                WorldObject chom = new WorldObject(100,200 + i*100,100,10,Color.Brown);
-                WorldObject skz = new WorldObject(300,100 + i*100,100,10,Color.Brown);
-                _platforms.Add(chom);
-                _platforms.Add(skz);
+                for (int j = 0; j < 10; j ++)
+                {
+                    WorldObject skz = new WorldObject(200 * j,100 + i*100,100,10,Color.DarkGray);
+                    _platforms.Add(skz);
+                }
             }
 
             // Attack System
             _dmgBoxes = new List<DamageBox>(); 
             
             // Players
-            medium = new Medium(120, 350, 10, 10, Color.White);
+            medium = new Medium(70, 350, 10, 10, Color.White);
             medium.sprite = Content.Load<Texture2D>("medium_placeholder_01");
             medium.spriteParams = new Rectangle(
                 medium.space.X-15,
@@ -124,7 +125,7 @@ namespace WraithHunt
             medium.spriteOffsetLeft = 15;
             medium.spriteOffsetRight = 0;
 
-            demon = new Demon(130, 350, 10, 10, Color.Red);
+            demon = new Demon(600, 350, 10, 10, Color.Red);
             demon.sprite = Content.Load<Texture2D>("demon_placeholder_01");
             demon.spriteParams = new Rectangle(
                 demon.space.X-15,
