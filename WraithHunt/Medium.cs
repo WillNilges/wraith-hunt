@@ -10,10 +10,10 @@ namespace WraithHunt
     {
         private int _beamDuration = 50;
         private int _beamDamage = 3;
-        private int _beamRange = 150;
+        private int _beamRange = 300;
         private int _beamHeight = 10;
         private bool _beamDecays = true;
-        private int _beamCooldown = 20;
+        private int _beamCooldown = 40;
         private int _beamTick = 0;
 
         public Medium(int xPos, int yPos, int dimWidth, int dimHeight, Color objColor) : base(xPos, yPos, dimWidth,  dimHeight, objColor)

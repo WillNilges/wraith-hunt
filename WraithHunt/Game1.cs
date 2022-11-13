@@ -33,6 +33,10 @@ namespace WraithHunt
         Matrix projectionMatrix;
         Matrix halfprojectionMatrix;
 
+
+        // Fonts
+        private SpriteFont _HUDFont;
+
 		/// <summary>
 		/// Game constructor
 		/// </summary>
@@ -130,6 +134,9 @@ namespace WraithHunt
             );
             demon.spriteOffsetLeft = 10;
             demon.spriteOffsetRight = 10;
+
+            // Font for HUD
+            _HUDFont = Content.Load<SpriteFont>("hudfont"); 
 
 		}
 
@@ -260,7 +267,16 @@ namespace WraithHunt
             medium.Draw(_spriteBatch);
             demon.DrawBox(_spriteBatch);
             demon.Draw(_spriteBatch);
+            // Draw the hud of a given player
+            drawHUD();
             _spriteBatch.End();
+        }
+
+        private void drawHUD()
+        {
+            string welcome = "Welcome to Devcade";
+            Vector2 welcomeSize = _HUDFont.MeasureString(welcome);
+            _spriteBatch.DrawString(_HUDFont, welcome, new Vector2(100, 100), Color.White);
         }
 
 		/// <summary>
