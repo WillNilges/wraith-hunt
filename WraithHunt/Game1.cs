@@ -33,7 +33,6 @@ namespace WraithHunt
         Matrix projectionMatrix;
         Matrix halfprojectionMatrix;
 
-
         // Fonts
         private SpriteFont _HUDFont;
 
@@ -115,7 +114,7 @@ namespace WraithHunt
             
             // Players
             medium = new Medium(70, 350, 10, 10, Color.White);
-            medium.sprite = Content.Load<Texture2D>("medium_placeholder_01");
+            medium.sprite = Content.Load<Texture2D>("medium_placeholder_01_white");
             medium.spriteParams = new Rectangle(
                 medium.space.X-15,
                 medium.space.Y-15,
@@ -242,6 +241,11 @@ namespace WraithHunt
                 _dmgBoxes.Add(demon.BlastAttack());
             }
 
+            if (myState.IsKeyDown(Keys.K))
+            {
+                demon.SwitchPlanes();
+            }
+
             medium.UpdatePhysics(_platforms);
             medium.abilitiesTick();
             demon.UpdatePhysics(_platforms);
@@ -251,7 +255,7 @@ namespace WraithHunt
 			base.Update(gameTime);
 		}
 
-        private void viewportSprites(Viewport port, Camera cam)
+        private void viewportSprites(Viewport port, Camera cam, Player player)
         {
             GraphicsDevice.Viewport = port;
             _spriteBatch.Begin(cam);
@@ -264,10 +268,16 @@ namespace WraithHunt
             {
                 obj.DrawBox(_spriteBatch);
             }
-            medium.DrawBox(_spriteBatch);
-            medium.Draw(_spriteBatch);
-            demon.DrawBox(_spriteBatch);
-            demon.Draw(_spriteBatch);
+            if (player.currentPlane == medium.currentPlane)
+            {
+                medium.DrawBox(_spriteBatch);
+                medium.Draw(_spriteBatch);
+            }
+            if (player.currentPlane == demon.currentPlane)
+            {
+                demon.DrawBox(_spriteBatch);
+                demon.Draw(_spriteBatch);
+            }
             // Draw the hud of a given player
             _spriteBatch.End();
         }
@@ -340,9 +350,9 @@ namespace WraithHunt
             );
 			_spriteBatch.End();
 
-            viewportSprites(leftViewport, camera);
+            viewportSprites(leftViewport, camera, medium);
             drawHUD(medium, true);
-            viewportSprites(rightViewport, demonCamera);
+            viewportSprites(rightViewport, demonCamera, demon);
             drawHUD(demon, false);
 
 			base.Draw(gameTime);

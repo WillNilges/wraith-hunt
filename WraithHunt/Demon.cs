@@ -16,13 +16,36 @@ namespace WraithHunt
         private int _blastCooldown = 20;
         private int _blastTick = 0;
 
+        private int _planeSwitchCooldown = 200;
+        private int _planeSwitchTick = 0;
+
         public Demon(int xPos, int yPos, int dimWidth, int dimHeight, Color objColor) : base(xPos, yPos, dimWidth,  dimHeight, objColor)
         {
+            currentPlane = Plane.ETHEREAL;
         }
 
         public void abilitiesTick()
         {
-            _blastTick--;
+            if (_blastTick > 0)
+                _blastTick--;
+            if (_planeSwitchTick > 0)
+                _planeSwitchTick--;
+        }
+
+        public void SwitchPlanes()
+        {
+            if (_planeSwitchTick <= 0)
+            {
+                if (currentPlane == Plane.MATERIAL)
+                {
+                    currentPlane = Plane.ETHEREAL;
+                }
+                else if (currentPlane == Plane.ETHEREAL)
+                {
+                    currentPlane = Plane.MATERIAL;
+                }
+                _planeSwitchTick = _planeSwitchCooldown;
+            }
         }
 
         // Creates a DamageBox for the Demon with a specified duration

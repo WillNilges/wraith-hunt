@@ -32,6 +32,18 @@
 /processorParam:TextureFormat=Compressed
 /build:hudfont.spritefont
 
+#begin medium_placeholder_01_white.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:medium_placeholder_01_white.png
+
 #begin medium_placeholder_01.png
 /importer:TextureImporter
 /processor:TextureProcessor

@@ -8,11 +8,17 @@ using Devcade;
 
 namespace WraithHunt
 {
-
     public enum Direction
     {
         LEFT,
         RIGHT
+    }
+
+    public enum Plane
+    {
+        MATERIAL,
+        ETHEREAL
+        
     }
 
     public class Player : WorldObject 
@@ -43,18 +49,19 @@ namespace WraithHunt
         public int healthMax = 10;
         public int health = 10;
 
+        public Plane currentPlane {set; get;}
+
         public Player(int xPos, int yPos, int dimWidth, int dimHeight, Color objColor) : base(xPos, yPos, dimWidth,  dimHeight, objColor)
         {
+            currentPlane = Plane.MATERIAL;
         }
 
         public void Draw(SpriteBatch batch)
         {
             SpriteEffects effects = SpriteEffects.None;
-//            int xOffset = 0;
             if (facing == Direction.LEFT)
             {
                 effects = SpriteEffects.FlipHorizontally;
-//                xOffset = spriteSize/2;
                 spriteParams.X = space.X-spriteOffsetLeft;
             }
             else
@@ -64,11 +71,23 @@ namespace WraithHunt
 
             spriteParams.Y = space.Y-(15);
 
+            Color planeColor = Color.White;
+            
+            switch (currentPlane)
+            {
+                case (Plane.MATERIAL):
+                    planeColor = Color.White;
+                    break;
+                case (Plane.ETHEREAL):
+                    planeColor = Color.DarkSlateBlue;
+                    break;
+            }
+
             batch.Draw(
                 sprite, 
                 spriteParams,
                 null,
-                Color.White,
+                planeColor,
                 0,
                 new Vector2(0,0),
                 effects,
