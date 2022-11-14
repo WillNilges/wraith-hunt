@@ -16,8 +16,8 @@ namespace WraithHunt
         private int _blastCooldown = 20;
         private int _blastTick = 0;
 
-        private int _planeSwitchCooldown = 200;
-        private int _planeSwitchTick = 0;
+        public int planeSwitchCooldown = 200;
+        public int planeSwitchTick = 0;
 
         public Demon(int xPos, int yPos, int dimWidth, int dimHeight, Color objColor) : base(xPos, yPos, dimWidth,  dimHeight, objColor)
         {
@@ -28,13 +28,13 @@ namespace WraithHunt
         {
             if (_blastTick > 0)
                 _blastTick--;
-            if (_planeSwitchTick > 0)
-                _planeSwitchTick--;
+            if (planeSwitchTick > 0)
+                planeSwitchTick--;
         }
 
         public void SwitchPlanes()
         {
-            if (_planeSwitchTick <= 0)
+            if (planeSwitchTick <= 0)
             {
                 if (currentPlane == Plane.MATERIAL)
                 {
@@ -44,7 +44,7 @@ namespace WraithHunt
                 {
                     currentPlane = Plane.MATERIAL;
                 }
-                _planeSwitchTick = _planeSwitchCooldown;
+                planeSwitchTick = planeSwitchCooldown;
             }
         }
 

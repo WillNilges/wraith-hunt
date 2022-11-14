@@ -259,6 +259,20 @@ namespace WraithHunt
         {
             GraphicsDevice.Viewport = port;
             _spriteBatch.Begin(cam);
+            if (player.currentPlane == Plane.ETHEREAL)
+            {
+                RectangleSprite.FillRectangle(
+                    _spriteBatch,
+                    new Rectangle(
+                        (int)cam.Position.X-port.Width/2,
+                        (int)cam.Position.Y-port.Height/2,
+                        port.Width,
+                        port.Height
+                    ),
+                    new Color(0, 20, 50)
+                );
+                //GraphicsDevice.Clear(new Color(0, 20, 50));
+            }
             // TODO: Add your drawing code here
             foreach(WorldObject obj in _platforms)
             {
@@ -290,6 +304,8 @@ namespace WraithHunt
                 HUDHeight = defaultViewport.Height/2 - 50;
             }
             _spriteBatch.Begin();
+
+            // Life Bar
             string textHP = $"LIFE: {player.health}";
             Vector2 HUDSize = _HUDFont.MeasureString(textHP);
             _spriteBatch.DrawString(
@@ -324,6 +340,50 @@ namespace WraithHunt
                 Color.Green
             );
 
+            // Demon HUD
+            if (player == demon)
+            {
+                // PlaneShift Cooldown
+                Color planeshiftTextColor = Color.White;
+                if (demon.planeSwitchTick > 0)
+                    planeshiftTextColor = Color.Gray;
+
+                string textPlaneshift = "PLANESHIFT";
+                Vector2 textPlaneshiftSize = _HUDFont.MeasureString(textPlaneshift);
+                _spriteBatch.DrawString(
+                    _HUDFont, 
+                    textPlaneshift, 
+                    new Vector2(
+                        20,
+                        HUDHeight + 30
+                    ), 
+                    planeshiftTextColor
+                );
+
+                RectangleSprite.FillRectangle(
+                    _spriteBatch,
+                    new Rectangle(
+                        20,
+                        HUDHeight + 50,
+                        defaultViewport.Width/5,
+                        5
+                    ),
+                    Color.Black
+                );
+
+                RectangleSprite.FillRectangle(
+                    _spriteBatch,
+                    new Rectangle(
+                        20,
+                        HUDHeight + 50,
+                        (int)(((float)defaultViewport.Width/5.0f) * 
+                            ((float) demon.planeSwitchTick / (float) demon.planeSwitchCooldown)),
+                        5
+                    ),
+                    Color.Orange
+                );
+
+            }
             _spriteBatch.End();
         }
 
@@ -335,7 +395,14 @@ namespace WraithHunt
 		{
             // Draw the background and the separation bar.
             GraphicsDevice.Viewport = defaultViewport;
-			GraphicsDevice.Clear(Color.Navy);
+			GraphicsDevice.Clear(Color.DarkSlateGray);
+
+            viewportSprites(leftViewport, camera, medium);
+            drawHUD(medium, true);
+            viewportSprites(rightViewport, demonCamera, demon);
+            drawHUD(demon, false);
+
+            GraphicsDevice.Viewport = defaultViewport;
 			_spriteBatch.Begin();
             // Draw black dividing bar
             RectangleSprite.FillRectangle(
@@ -350,11 +417,7 @@ namespace WraithHunt
             );
 			_spriteBatch.End();
 
-            viewportSprites(leftViewport, camera, medium);
-            drawHUD(medium, true);
-            viewportSprites(rightViewport, demonCamera, demon);
-            drawHUD(demon, false);
-
+            GraphicsDevice.Viewport = rightViewport;
 			base.Draw(gameTime);
 		}
 	}
