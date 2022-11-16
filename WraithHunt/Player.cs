@@ -21,30 +21,16 @@ namespace WraithHunt
         
     }
 
-    public class Player : WorldObject 
+    public class Player : Furniture 
     {
-        private int _gravityMax = 30; // The maximum speed you can fall
-        private int _gravityAccel = 1; // Acceleration
-        private int _gravityInc = 8;
-        private int _currentGravity = 0;
         private int _jumpPower = 30;
-        private int _jumpTick;
+        private int _jumpTick; // The amt of time left until the object starts falling
         private int _jumpInc = 8;
         private bool _hasJumped = false; // Checks if the player has jumped
         private int _jumpGraceMax = 10; // Allow player to jump N frames after they've stopped colliding
         private int _jumpGrace;
 
         private int _speed = 4;
-
-        private bool _collide = false;
-        public Direction facing;
-        public Texture2D sprite;
-        public int spriteSize;
-        public Rectangle spriteParams;
-        public int spriteOffsetLeft {set; get;}
-        public int spriteOffsetRight {set; get;}
-
-        private WorldObject _collidingWith = null;
 
         public int healthMax = 10;
         public int health = 10;
