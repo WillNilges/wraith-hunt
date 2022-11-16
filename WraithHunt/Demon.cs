@@ -24,6 +24,14 @@ namespace WraithHunt
             currentPlane = Plane.ETHEREAL;
         }
 
+        public void demonReset(Vector2 pos)
+        {
+            this.reset(pos);
+            _blastTick = 0;
+            planeSwitchTick = 0;
+            currentPlane = Plane.ETHEREAL;
+        }
+
         public void abilitiesTick()
         {
             if (_blastTick > 0)

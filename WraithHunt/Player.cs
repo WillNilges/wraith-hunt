@@ -56,6 +56,13 @@ namespace WraithHunt
             currentPlane = Plane.MATERIAL;
         }
 
+        public void reset(Vector2 pos)
+        {
+            health = healthMax;
+            space.X = (int) pos.X;
+            space.Y = (int) pos.Y;
+        }
+
         public void Draw(SpriteBatch batch)
         {
             SpriteEffects effects = SpriteEffects.None;
@@ -99,12 +106,12 @@ namespace WraithHunt
         {
 
             // If you die, reset position to the top of screen and fall back into the world (for now)
-            if (health <= 0)
+            /*if (health <= 0)
             {
                 space.X = 150;
                 space.Y = 0;
                 health = healthMax;
-            }
+            }*/
 
             _collide = false;
             _jumpGrace--;

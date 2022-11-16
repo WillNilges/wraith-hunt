@@ -72,21 +72,22 @@ namespace WraithHunt
                 {
                     // Do damage to the other player
                     // Optionally, decay the damage as the effect wears off
+                    float decayed = 1.0f;
                     if (_decay)
-                    {
-                        player.health -= (int) ((float) damage * ((float) timer/(float) duration));
+                        decayed = ((float) timer/(float) duration);
 
-                        // Knockback
-                        // 2.0f is a magic number. It just halves the distances
-                        // because I think it's unreasonable to be thrown back
-                        // that much. This ought to be handled by the collision
-                        // system.
-                        player.space.Y -= (int) ((float) space.height/2.0f * ((float) timer/ (float) duration));
-                        int dirMultiplier = 1;
-                        if (_direction == Direction.LEFT)
-                            dirMultiplier = -1;
-                        player.space.X += (int) ((float) 10.0f * ((float) timer/ (float) duration)) * dirMultiplier; // TODO: Add horizontal velocity to player
-                    }
+                    player.health -= (int) ((float) damage * decayed);
+
+                    // Knockback
+                    // 2.0f is a magic number. It just halves the distances
+                    // because I think it's unreasonable to be thrown back
+                    // that much. This ought to be handled by the collision
+                    // system.
+                    player.space.Y -= (int) ((float) space.height/2.0f * decayed);
+                    int dirMultiplier = 1;
+                    if (_direction == Direction.LEFT)
+                        dirMultiplier = -1;
+                    player.space.X += (int) ((float) 10.0f * decayed) * dirMultiplier; // TODO: Add horizontal velocity to player
 
                     // Make player invulnerable to this hitbox, since they've been hit by it once.
                     _hasHit = player;
@@ -96,9 +97,17 @@ namespace WraithHunt
 
         public void update()
         {
-            // Make the attack fade out
-            color = color * ((float) timer/(float) duration);
-            timer--;
+            // Only tick if the duration is positive
+            if (timer > 0) {
+                // Make the attack fade out
+                color = color * ((float) timer/(float) duration);
+                timer--;
+            }
+        }
+
+        public void ClearHit()
+        {
+            _hasHit = null;
         }
     }
 }

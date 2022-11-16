@@ -20,6 +20,12 @@ namespace WraithHunt
         {
         }
 
+        public void mediumReset(Vector2 pos)
+        {
+            this.reset(pos);
+            _beamTick = 0;
+        }
+
         public void abilitiesTick()
         {
             if (_beamTick > 0)
