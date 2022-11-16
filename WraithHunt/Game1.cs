@@ -455,10 +455,12 @@ namespace WraithHunt
             switch (state)
             {
                 case GameState.MEDIUM_WON:
+                    GraphicsDevice.Clear(Color.DarkBlue);
                     textWinner = "Medium\n  Wins!";
                     textSubtitle = "The forces of good have prevailed!\n      When are we getting paid?";
                     break;
                 case GameState.DEMON_WON:
+                    GraphicsDevice.Clear(Color.DarkRed);
                     textWinner = "Demon\n Wins!";
                     textSubtitle = "The evil that haunts this building\n   has claimed another victim.\nWill another hero rise to defeat it?";
                     break;
