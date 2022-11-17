@@ -245,48 +245,48 @@ namespace WraithHunt
                         _lastState = Keyboard.GetState();
 
                     // Medium Keys
-                    if (myState.IsKeyDown(Keys.W))
+                    if (myState.IsKeyDown(Keys.W) || Input.GetButtonDown(1, Input.ArcadeButtons.A1))
                     {
                         medium.Jump();
                     }
 
-                    if (myState.IsKeyDown(Keys.A))
+                    if (myState.IsKeyDown(Keys.A) || Input.GetButtonDown(1, Input.ArcadeButtons.StickLeft))
                     {
                         medium.Walk(Direction.LEFT);
                     }
 
-                    if (myState.IsKeyDown(Keys.D))
+                    if (myState.IsKeyDown(Keys.D) || Input.GetButtonDown(1, Input.ArcadeButtons.StickRight))
                     {
                         medium.Walk(Direction.RIGHT);
                     }
 
-                    if (myState.IsKeyDown(Keys.Q))
+                    if (myState.IsKeyDown(Keys.Q) || Input.GetButtonDown(1, Input.ArcadeButtons.A2))
                     {
                         _dmgBoxes.Add(medium.BeamAttack());
                     }
 
                     // Demon Keys
-                    if (myState.IsKeyDown(Keys.I))
+                    if (myState.IsKeyDown(Keys.I) || Input.GetButtonDown(2, Input.ArcadeButtons.A1))
                     {
                         demon.Jump();
                     }
 
-                    if (myState.IsKeyDown(Keys.J))
+                    if (myState.IsKeyDown(Keys.J) || Input.GetButtonDown(2, Input.ArcadeButtons.StickLeft))
                     {
                         demon.Walk(Direction.LEFT);
                     }
 
-                    if (myState.IsKeyDown(Keys.L))
+                    if (myState.IsKeyDown(Keys.L) || Input.GetButtonDown(2, Input.ArcadeButtons.StickRight))
                     {
                         demon.Walk(Direction.RIGHT);
                     }
 
-                    if (myState.IsKeyDown(Keys.U))
+                    if (myState.IsKeyDown(Keys.U) || Input.GetButtonDown(2, Input.ArcadeButtons.A2))
                     {
                         _dmgBoxes.Add(demon.BlastAttack());
                     }
 
-                    if (myState.IsKeyDown(Keys.K))
+                    if (myState.IsKeyDown(Keys.K) || Input.GetButtonDown(2, Input.ArcadeButtons.A3))
                     {
                         demon.SwitchPlanes();
                     }
