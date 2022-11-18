@@ -186,7 +186,7 @@ namespace WraithHunt
             medium.spriteOffsetLeft = 15;
             medium.spriteOffsetRight = 0;
 
-            demon = new Demon(600, 350, 10, 10, Color.Red);
+            demon = new Demon(600, 350, 15, 15, Color.Red);
             demon.sprite = Content.Load<Texture2D>("demon_placeholder_01");
             demon.spriteParams = new Rectangle(
                 demon.space.X-15,
