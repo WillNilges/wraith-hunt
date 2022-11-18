@@ -102,25 +102,6 @@ namespace WraithHunt
                             tileHeight 
                         );
 
-                        // Check X Collisions
-                        //if (
-                        //    layer != 2 &&
-                        //    /*Check and make sure we're correct in one dimension*/
-                        //    space.Y + space.height > (int) y + 1 &&
-                        //    space.Y < (int) y + tileHeight - 1 &&
-                        //    /*Now check directional collision*/
-                        //    space.X + space.width > (int) x - tileWidth &&
-                        //    space.X + space.width - _velocityX < (int) x - tileWidth
-                        //)
-                        //{
-                        //    _collide = true;
-                        //    _wallDirection = Direction.RIGHT;
-                        //    _velocityX = 0;
-                        //    space.X = (int) x - tileWidth;
-                        //    Console.WriteLine("Colliding!");
-                        //    continue;
-                        //}
-
                         Rectangle futureMove = getHitbox();
                         if (_velocityX < 0)
                         {
@@ -148,7 +129,6 @@ namespace WraithHunt
                             _wallDirection = Direction.LEFT;
                             _velocityX = 0;
                             space.X = (int) x + tileWidth + 1;
-                            Console.WriteLine("Colliding!");
                             continue;
                         }
 
@@ -168,7 +148,6 @@ namespace WraithHunt
                             _wallDirection = Direction.RIGHT;
                             _velocityX = 0;
                             space.X = (int) x - space.width - 1;
-                            Console.WriteLine("Colliding Right!");
                             continue;
                         }
 
