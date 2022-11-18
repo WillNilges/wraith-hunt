@@ -1,9 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Devcade;
+
+using TiledSharp;
 
 // For camera functionality
 using Comora;
@@ -58,6 +61,15 @@ namespace WraithHunt
 
         // Game State
         public GameState state = GameState.START;
+
+        // New Map Stuff
+        TmxMap map;
+        Texture2D tileset;
+
+        int tileWidth;
+        int tileHeight;
+        int tilesetTilesWide;
+        int tilesetTilesHigh;
 
 		/// <summary>
 		/// Game constructor
@@ -144,13 +156,23 @@ namespace WraithHunt
                 }
             }
 
+            // New Map Stuff
+            map = new TmxMap("Content/apartment_block.tmx");
+            tileset = Content.Load<Texture2D>("chom_map_2");//map.Tilesets[0].Name.ToString());
+
+            tileWidth = map.Tilesets[0].TileWidth;
+            tileHeight = map.Tilesets[0].TileHeight;
+
+            tilesetTilesWide = tileset.Width / tileWidth;
+            tilesetTilesHigh = tileset.Height / tileHeight;
+
             // Attack System
             _dmgBoxes = new List<DamageBox>(); 
 
             // Kill Plane
 //            willard = new Player(-10000, -10000, 1, 1, Color.Green); // I'm in your walls
             killPlane = new DamageBox(-1000, 1000, Direction.RIGHT, 10000, 10000, Color.Red, -1, 1000000, false, null);
-            _dmgBoxes.Add(killPlane);
+            //_dmgBoxes.Add(killPlane);
 
             // Players
             medium = new Medium(70, 350, 10, 10, Color.White);
@@ -303,9 +325,9 @@ namespace WraithHunt
                         demon.SwitchPlanes();
                     }
 
-                    medium.UpdatePhysics(_platforms);
+                    medium.UpdatePhysics(_platforms, map, tileset);
                     medium.abilitiesTick();
-                    demon.UpdatePhysics(_platforms);
+                    demon.UpdatePhysics(_platforms, map, tileset);
                     demon.abilitiesTick();
                     break;
                 case GameState.MEDIUM_WON:
@@ -316,8 +338,8 @@ namespace WraithHunt
                     }
                     break;
                 case GameState.START:
-                    demon.demonReset(new Vector2(80,100));
-                    medium.mediumReset(new Vector2(680,500));
+                    demon.demonReset(new Vector2(1600,1500));
+                    medium.mediumReset(new Vector2(20,20));
                     state = GameState.PLAYING;
                     killPlane.ClearHit(); 
                     break;
@@ -327,6 +349,35 @@ namespace WraithHunt
             _lastState = Keyboard.GetState();
 			base.Update(gameTime);
 		}
+
+        private void drawNewMap()
+        {
+            for (var layer = 0; layer < map.Layers.Count; layer++)
+            {
+                for (var i = 0; i < map.Layers[layer].Tiles.Count; i++)
+                {
+                    int gid = map.Layers[layer].Tiles[i].Gid;
+
+                    // Empty tile, do nothing
+                    if (gid == 0)
+                    {
+
+                    }
+                    else
+                    {
+                        int tileFrame = gid - 1;
+                        int column = tileFrame % tilesetTilesWide;
+                        int row = (int)Math.Floor((double)tileFrame / (double)tilesetTilesWide);
+
+                        float x = (i % map.Width) * map.TileWidth;
+                        float y = (float)Math.Floor(i / (double)map.Width) * map.TileHeight;
+
+                        Rectangle tilesetRec = new Rectangle(tileWidth * column, tileHeight * row, tileWidth, tileHeight);
+                        _spriteBatch.Draw(tileset, new Rectangle((int)x, (int)y, tileWidth, tileHeight), tilesetRec, Color.White);
+                    }
+                }
+            }
+        }
 
         private void viewportSprites(Viewport port, Camera cam, Player player)
         {
@@ -348,6 +399,7 @@ namespace WraithHunt
             }
             // TODO: Add your drawing code here
             // Draw the world map background
+            drawNewMap();
             foreach(WorldObject obj in _platforms)
             {
                 // Now draw some backgrounds. Give a little texture.
@@ -393,7 +445,6 @@ namespace WraithHunt
                 demon.DrawBox(_spriteBatch);
                 demon.Draw(_spriteBatch);
             }
-            // Draw the hud of a given player
             _spriteBatch.End();
         }
 
