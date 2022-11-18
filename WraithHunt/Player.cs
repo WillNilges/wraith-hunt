@@ -13,7 +13,8 @@ namespace WraithHunt
     public enum Direction
     {
         LEFT,
-        RIGHT
+        RIGHT,
+        NONE
     }
 
     public enum Plane
@@ -32,7 +33,10 @@ namespace WraithHunt
         private int _jumpGraceMax = 10; // Allow player to jump N frames after they've stopped colliding
         private int _jumpGrace;
 
-        private int _speed = 4;
+        private int _topSpeed = 4;
+        protected Direction _wallDirection = Direction.NONE;
+
+        private int _speed = 2;
 
         public int healthMax = 10;
         public int health = 10;
@@ -61,6 +65,7 @@ namespace WraithHunt
             }*/
 
             _collide = false;
+            _wallDirection = Direction.NONE;
             _jumpGrace--;
 
             int tileWidth;
@@ -76,45 +81,90 @@ namespace WraithHunt
             tilesetTilesHigh = tileset.Height / tileHeight;
 
             // Check if we're colliding with the foreground
-            for (var i = 0; i < map.Layers[1].Tiles.Count; i++)
+            for (var layer = 1; layer < 3; layer++)
             {
-                int gid = map.Layers[1].Tiles[i].Gid;
-                if (gid != 0)
+                for (var i = 0; i < map.Layers[layer].Tiles.Count; i++)
                 {
-                    int tileFrame = gid - 1;
-                    int column = tileFrame % tilesetTilesWide;
-                    int row = (int)Math.Floor((double)tileFrame / (double)tilesetTilesWide);
+                    int gid = map.Layers[layer].Tiles[i].Gid;
+                    if (gid != 0)
+                    {
+                        int tileFrame = gid - 1;
+                        int column = tileFrame % tilesetTilesWide;
+                        int row = (int)Math.Floor((double)tileFrame / (double)tilesetTilesWide);
 
-                    float x = (i % map.Width) * map.TileWidth;
-                    float y = (float)Math.Floor(i / (double)map.Width) * map.TileHeight;
-                    if (
-                        _hasJumped && _jumpTick > 0 &&
-                        x < space.X + space.width &&
-                        space.X < x + tileWidth &&
-                        space.Y > y + tileHeight &&
-                        space.Y - _jumpInc < y + tileHeight
-                    )
-                    {
-                        _collide = true;
-                        //_collidingWith = platform; // FIXME? 
-                        space.Y = (int)y + tileHeight + 1;
-                        break;
+                        float x = (i % map.Width) * map.TileWidth;
+                        float y = (float)Math.Floor(i / (double)map.Width) * map.TileHeight;
+                        // Check X Collisions
+                        //if (
+                        //    layer != 2 &&
+                        //    /*Check and make sure we're correct in one dimension*/
+                        //    space.Y + space.height > (int) y + 1 &&
+                        //    space.Y < (int) y + tileHeight - 1 &&
+                        //    /*Now check directional collision*/
+                        //    space.X + space.width > (int) x - tileWidth &&
+                        //    space.X + space.width - _velocityX < (int) x - tileWidth
+                        //)
+                        //{
+                        //    _collide = true;
+                        //    _wallDirection = Direction.RIGHT;
+                        //    _velocityX = 0;
+                        //    space.X = (int) x - tileWidth;
+                        //    Console.WriteLine("Colliding!");
+                        //    continue;
+                        //}
+
+                        //if (
+                        //    layer != 2 &&
+                        //    _velocityX < 0 &&
+                        //    /*Check if the player is on the same horizontal plane as the tile*/
+                        //    space.Y > (int) y &&
+                        //    space.Y < (int) y + tileHeight &&
+                        //    /*Check if going further left will intersect the tile with the player*/
+                        //    space.X < (int) x + tileWidth &&
+                        //    space.X - _velocityX < (int) x + tileWidth
+                        //)
+                        //{
+                        //    _wallDirection = Direction.LEFT;
+                        //    _velocityX = 0;
+                        //    space.X = (int) x + tileWidth + 1;
+                        //    Console.WriteLine("Colliding!");
+                        //    continue;
+                        //}
+
+                        // Check Y Collisions
+                        if (
+                            layer != 2 &&
+                            _hasJumped && _jumpTick > 0 &&
+                            x < space.X + space.width &&
+                            space.X < x + tileWidth &&
+                            space.Y > y + tileHeight &&
+                            space.Y - _jumpInc < y + tileHeight
+                        )
+                        {
+                            _collide = true;
+                            //_collidingWith = platform; // FIXME? 
+                            space.Y = (int)y + tileHeight + 1;
+                        } else if (
+                            (int) x < space.X + space.width &&
+                            space.X < (int) x + tileWidth &&
+                            (int)y < space.Y + space.height &&
+                            space.Y < (int) y + tileHeight
+                        )
+                        {
+                            _collide = true;
+                            _hasJumped = false;
+                            //_collidingWith = platform;
+
+                            // Without this, you can climb anything
+                            // With this, you can go through walls....
+                            //if (space.Y-space.height >= (int) y)
+                            if (_wallDirection == Direction.NONE)
+                                space.Y = (int) y - space.height + 1;
+                        }
                     }
-                    if (
-                        (int) x < space.X + space.width &&
-                        space.X < (int) x + tileWidth &&
-                        (int)y < space.Y + space.height &&
-                        space.Y < (int) y + tileHeight
-                    )
-                    {
-                        _collide = true;
-                        _hasJumped = false;
-                        //_collidingWith = platform;
-                        space.Y = (int) y - space.height + 1;
+                    if (_collide)
                         break;
-                    }
                 }
-
             }
 
             // Check if we're colliding with a world object.
@@ -148,6 +198,7 @@ namespace WraithHunt
                 }
             }
 
+            // Do stuff if we're colliding.
             if (_collide) 
             {
                 _currentGravity = 0;
@@ -159,6 +210,20 @@ namespace WraithHunt
                 _currentGravity += _gravityAccel;
             }
 
+            // X velocity collision stuff
+            if (_velocityX < 0 && _wallDirection != Direction.LEFT)
+                space.X += _velocityX;
+
+            if (_velocityX > 0 && _wallDirection != Direction.RIGHT)
+                space.X += _velocityX;
+
+            // Decay X Velocity
+            if (_velocityX < 0)
+                _velocityX++;
+            else if (_velocityX > 0)
+                _velocityX--;
+
+            // Do vertical physics differently if we're jumping
             if (_jumpTick > 0)
             {
                 space.Y -= (int)((double) _jumpInc * ((double) _jumpTick / (double) _jumpPower));
@@ -176,10 +241,12 @@ namespace WraithHunt
             switch (dir)
             {
                 case Direction.LEFT:
-                    space.X -= _speed;
+                    if (Math.Abs(_velocityX) < _topSpeed)
+                        _velocityX -= _speed;
                     break;
                 case Direction.RIGHT:
-                    space.X += _speed;
+                    if (Math.Abs(_velocityX) < _topSpeed)
+                        _velocityX += _speed;
                     break;
             }
         }

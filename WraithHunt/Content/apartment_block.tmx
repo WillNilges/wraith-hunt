@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.2" tiledversion="1.2.1" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="3" nextobjectid="1">
+<map version="1.2" tiledversion="1.2.1" orientation="orthogonal" renderorder="right-down" width="100" height="100" tilewidth="32" tileheight="32" infinite="0" nextlayerid="4" nextobjectid="1">
  <tileset firstgid="1" name="chom" tilewidth="32" tileheight="32" tilecount="81" columns="0">
   <grid orientation="orthogonal" width="1" height="1"/>
   <tile id="0">
@@ -248,12 +248,17 @@
  </tileset>
  <layer id="2" name="Building Background" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt18EJwCAQBEDBLizG/svKx0ByqD9RcAYkCfpb9iQpAQAAAAAAAAAAAAAAAAAAAAAAAAAA7FU6i33kAWPl89SP/cwrGOv1I7e9HN5Zb5RHzEQe3GjWj7hYTx4w1utHTf9evN+sN5tXtZ2RB7dyn59l9n8e7xG4jXl1FnkAAAAAAAAAAAAA9D2TMAjP
+   eJztms1uwjAQBiO498QJqTeu5dhb6fu/VRWpqwZ37dib9U/CjDQSiGib+MNeJ2WaIMZX7xOAJ8ijPqeNgi+3yZ7FrcP5Hh3yGAvyGAvy2A/07PacE95/TR0DvlwSSh6pY8AX5sdYkMc4zL06NdanjGPCeiflNeSxNtYl8yMcf/IoZx4v6ctn5fWyn2ufXxZ1wrEnj3I85kds3MmjHK88YrXJQyf1zGNrP+d5vI3YGs9+tx/aHog8+hLeI4yQx6v/Hzi3f5BHO7z6uQeSx4dTvT0z0vz4dKq3Z0bK49up3p4hj7E4Wh5ee4Nee4xe/fyRcAtHzqPm/CAPnaPmsXU8veqUQh5165QyQj+HPGo+M79Oer7XDfVCNdaux6uOlbeEMj9Sx1iRayWPZ0rykPPzyGOa/q51mYs1j1y8xnGEPCQTrzwEjzyW2W6dHx51rPRar5Z45XH09Ur6uSWPkr1Ay/VqdGrNj9w8wr7uOT9kP34OXreoYyXVGyQPrY/L+xhreYTXWyuPcCyteZTWsaL9fW1+hJ+l1taZ3Dy89rtHodd6FbvfrzE/Sp4peNWx0qufez+DeYU8WswP7XpfmXB8Y/2jxfxY60kptO/1I6gv71vU0X4zm/M7Wm2M5Ty0fp57f57Tz7UsavQPeYZvzcNSx/q7/9L1ai0P7XpieuYxGqkxt97bW563p/p0jkfZX1nz8O7no+UxE67/LepsyeM9ouQR+/xdqdcrj9HIzUPWoJzv/hHmx+jr1TKL2nmk5lVozf0VefzfM5X4iiwzWTuuJ3dERERERERERERERERERERERERERERERERERERERERERERERHT3B2qki00=
   </data>
  </layer>
  <layer id="1" name="Building Foreground" width="100" height="100">
   <data encoding="base64" compression="zlib">
-   eJzt1rkNgDAQRUEnNEAz4ArovyMIHJDY0iY+5Bnp5Rt9bUoAAAAAAAAAAAAAAAAAAAAAAAAAALCPp3R93b/yyKMAGuwVMLvaf1XLjgGjRfbqLAH05L8CVuO/AmbnvwJWE9mrIxAAAAAAAAAAAAAQ9wKRDRNY
+   eJzt2kGKwjAUBuAuxgu4c5876JxAvP+FxmFcONpiU9PmJX4fPFDREPhNXgIdBoA/x2udRuo78zsAQD36OQC0Tz8HyJNqT4AnMonVz+URhyzikEVdaeI19aRBFmMi9XMAYBn9HICWpOH/Hf3x/VznWz32uKnedr6rUuOUrFr9/JL5OeuSRxuW5jF3n9lqnF5YH7F8eh7R7ue5ebw6l8ydc6lxWqWfxyKPWErnkbPP7G+15jitsT7GuZ/zq1Qezldl9L4+9i8qmt7ziOKSUVO/X6KX81Xpfv7u//vT18ex8HjyyPN1rd1dHQqPv3Uezlfr6nF9eG48jtxnAtKbtbbdxpWzX209twgFAAAAAAAAAAAAAAAAAAAAAACU9wOpD10j
+  </data>
+ </layer>
+ <layer id="3" name="Building Climbable" width="100" height="100">
+  <data encoding="base64" compression="zlib">
+   eJzt2UEKgCAUBUDP0LZtdwmq+5+ntlERgaU/Z+BtXIgg+BRTAgAAAKjPUHoB7NiPmPqbQCRdxnlyzQX8x3CTM191bIt9Pm2ZL7IUXBe0oEvH+9LZGABQL30O+YwPA5CLPgeA+PQ5vKelv3OgrK/73F2Bmrzds/o8NucVkXift81eA/yDPgcAAAAAAAAAAAAAAAAAAAAAAABqsQLUKw7+
   </data>
  </layer>
 </map>
