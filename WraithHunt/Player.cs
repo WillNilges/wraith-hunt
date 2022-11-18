@@ -6,6 +6,8 @@ using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Devcade;
 
+using TiledSharp;
+
 namespace WraithHunt
 {
     public enum Direction
@@ -47,7 +49,7 @@ namespace WraithHunt
             space.Y = (int) pos.Y;
         }
 
-        public void UpdatePhysics(List<WorldObject> platforms)
+        public void UpdatePhysics(List<WorldObject> platforms, TmxMap map, Texture2D tileset)
         {
 
             // If you die, reset position to the top of screen and fall back into the world (for now)
@@ -60,6 +62,60 @@ namespace WraithHunt
 
             _collide = false;
             _jumpGrace--;
+
+            int tileWidth;
+            int tileHeight;
+            int tilesetTilesWide;
+            int tilesetTilesHigh;
+
+
+            tileWidth = map.Tilesets[0].TileWidth;
+            tileHeight = map.Tilesets[0].TileHeight;
+
+            tilesetTilesWide = tileset.Width / tileWidth;
+            tilesetTilesHigh = tileset.Height / tileHeight;
+
+            // Check if we're colliding with the foreground
+            for (var i = 0; i < map.Layers[1].Tiles.Count; i++)
+            {
+                int gid = map.Layers[1].Tiles[i].Gid;
+                if (gid != 0)
+                {
+                    int tileFrame = gid - 1;
+                    int column = tileFrame % tilesetTilesWide;
+                    int row = (int)Math.Floor((double)tileFrame / (double)tilesetTilesWide);
+
+                    float x = (i % map.Width) * map.TileWidth;
+                    float y = (float)Math.Floor(i / (double)map.Width) * map.TileHeight;
+                    if (
+                        _hasJumped && _jumpTick > 0 &&
+                        x < space.X + space.width &&
+                        space.X < x + tileWidth &&
+                        space.Y > y + tileHeight &&
+                        space.Y - _jumpInc < y + tileHeight
+                    )
+                    {
+                        _collide = true;
+                        //_collidingWith = platform; // FIXME? 
+                        space.Y = (int)y + tileHeight + 1;
+                        break;
+                    }
+                    if (
+                        (int) x < space.X + space.width &&
+                        space.X < (int) x + tileWidth &&
+                        (int)y < space.Y + space.height &&
+                        space.Y < (int) y + tileHeight
+                    )
+                    {
+                        _collide = true;
+                        _hasJumped = false;
+                        //_collidingWith = platform;
+                        space.Y = (int) y - space.height + 1;
+                        break;
+                    }
+                }
+
+            }
 
             // Check if we're colliding with a world object.
             foreach(WorldObject platform in platforms)
