@@ -30,7 +30,10 @@ namespace WraithHunt
         private List<DamageBox> _dmgBoxes; // For stuff that hurts
         private DamageBox killPlane;
 
+        // Sprites n Textures
         private Texture2D _redButton;
+        private Texture2D platformSprite;
+        private Texture2D platformBackground;
 
         private Medium medium;
         private Demon demon;
@@ -123,11 +126,20 @@ namespace WraithHunt
 
             // Platforms
             _platforms = new List<WorldObject>();
+            platformSprite = Content.Load<Texture2D>("IndustrialTile_79");
+            platformBackground = Content.Load<Texture2D>("IndustrialTile_26");
             for (int i = 0; i < 10; i++)
             {
-                for (int j = 0; j < 10; j ++)
+                for (int j = 0; j < 5; j ++)
                 {
-                    WorldObject skz = new WorldObject(200 * j,100 + i*100,100,10,Color.DarkGray);
+                    WorldObject skz = new WorldObject(400 * j,100 + i*100,100,10,Color.DarkGray);
+                    skz.sprite = platformSprite;
+                    skz.spriteParams = new Rectangle(
+                        200 * j,
+                        600000 + i*100,
+                        100,
+                        10
+                    );
                     _platforms.Add(skz);
                 }
             }
@@ -250,12 +262,12 @@ namespace WraithHunt
                         medium.Jump();
                     }
 
-                    if (myState.IsKeyDown(Keys.A) || Input.GetButtonDown(1, Input.ArcadeButtons.StickLeft))
+                    if (myState.IsKeyDown(Keys.A) || Input.GetButtonHeld(1, Input.ArcadeButtons.StickLeft))
                     {
                         medium.Walk(Direction.LEFT);
                     }
 
-                    if (myState.IsKeyDown(Keys.D) || Input.GetButtonDown(1, Input.ArcadeButtons.StickRight))
+                    if (myState.IsKeyDown(Keys.D) || Input.GetButtonHeld(1, Input.ArcadeButtons.StickRight))
                     {
                         medium.Walk(Direction.RIGHT);
                     }
@@ -271,12 +283,12 @@ namespace WraithHunt
                         demon.Jump();
                     }
 
-                    if (myState.IsKeyDown(Keys.J) || Input.GetButtonDown(2, Input.ArcadeButtons.StickLeft))
+                    if (myState.IsKeyDown(Keys.J) || Input.GetButtonHeld(2, Input.ArcadeButtons.StickLeft))
                     {
                         demon.Walk(Direction.LEFT);
                     }
 
-                    if (myState.IsKeyDown(Keys.L) || Input.GetButtonDown(2, Input.ArcadeButtons.StickRight))
+                    if (myState.IsKeyDown(Keys.L) || Input.GetButtonHeld(2, Input.ArcadeButtons.StickRight))
                     {
                         demon.Walk(Direction.RIGHT);
                     }
@@ -298,7 +310,7 @@ namespace WraithHunt
                     break;
                 case GameState.MEDIUM_WON:
                 case GameState.DEMON_WON:
-                    if (myState.IsKeyDown(Keys.Enter))
+                    if (myState.IsKeyDown(Keys.Enter) || Input.GetButtonDown(1, Input.ArcadeButtons.A1))
                     {
                         state = GameState.START; 
                     }
@@ -335,9 +347,37 @@ namespace WraithHunt
                 //GraphicsDevice.Clear(new Color(0, 20, 50));
             }
             // TODO: Add your drawing code here
+            // Draw the world map background
             foreach(WorldObject obj in _platforms)
             {
-                obj.DrawBox(_spriteBatch);
+                // Now draw some backgrounds. Give a little texture.
+                for (int i = 0; i < 2; i++)
+                {
+                    for (int j = 0; j < 2; j++)
+                    {
+                        _spriteBatch.Draw(
+                            platformBackground,
+                            new Rectangle(
+                                obj.space.X+(50*i),
+                                obj.space.Y-50-(50*j),
+                                50,
+                                50 
+                            ),
+                            null,
+                            Color.White,
+                            0,
+                            new Vector2(0,0),
+                            SpriteEffects.None,
+                            0
+                        );
+                    }
+                }
+            }
+            // Draw the platforms
+            foreach(WorldObject obj in _platforms)
+            {
+                obj.DirectDraw(_spriteBatch);
+                //obj.DrawBox(_spriteBatch);
             }
             foreach(DamageBox obj in _dmgBoxes)
             {

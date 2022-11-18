@@ -19,13 +19,6 @@ namespace WraithHunt
         protected int _velocityY = 0;
         protected int _velocityX = 0;
 
-        public Direction facing;
-        public Texture2D sprite;
-        public int spriteSize;
-        public Rectangle spriteParams;
-        public int spriteOffsetLeft {set; get;}
-        public int spriteOffsetRight {set; get;}
-
         protected WorldObject _collidingWith = null;
 
         public Furniture(int xPos, int yPos, int dimWidth, int dimHeight, Color objColor) : base(xPos, yPos, dimWidth,  dimHeight, objColor)

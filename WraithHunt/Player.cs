@@ -35,8 +35,6 @@ namespace WraithHunt
         public int healthMax = 10;
         public int health = 10;
 
-        public Plane currentPlane {set; get;}
-
         public Player(int xPos, int yPos, int dimWidth, int dimHeight, Color objColor) : base(xPos, yPos, dimWidth,  dimHeight, objColor)
         {
             currentPlane = Plane.MATERIAL;
@@ -47,45 +45,6 @@ namespace WraithHunt
             health = healthMax;
             space.X = (int) pos.X;
             space.Y = (int) pos.Y;
-        }
-
-        public void Draw(SpriteBatch batch)
-        {
-            SpriteEffects effects = SpriteEffects.None;
-            if (facing == Direction.LEFT)
-            {
-                effects = SpriteEffects.FlipHorizontally;
-                spriteParams.X = space.X-spriteOffsetLeft;
-            }
-            else
-            {
-                spriteParams.X = space.X-spriteOffsetRight;
-            }
-
-            spriteParams.Y = space.Y-(15);
-
-            Color planeColor = Color.White;
-            
-            switch (currentPlane)
-            {
-                case (Plane.MATERIAL):
-                    planeColor = Color.White;
-                    break;
-                case (Plane.ETHEREAL):
-                    planeColor = Color.DarkSlateBlue;
-                    break;
-            }
-
-            batch.Draw(
-                sprite, 
-                spriteParams,
-                null,
-                planeColor,
-                0,
-                new Vector2(0,0),
-                effects,
-                0
-            );
         }
 
         public void UpdatePhysics(List<WorldObject> platforms)
