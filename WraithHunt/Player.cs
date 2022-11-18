@@ -14,6 +14,8 @@ namespace WraithHunt
     {
         LEFT,
         RIGHT,
+        UP,
+        DOWN,
         NONE
     }
 

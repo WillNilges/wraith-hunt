@@ -16,6 +16,10 @@ namespace WraithHunt
         private int _beamCooldown = 40;
         private int _beamTick = 0;
 
+        public int blinkCooldown = 300;
+        public int blinkTick = 0;
+        private int _blinkRange = 192;
+
         public Medium(int xPos, int yPos, int dimWidth, int dimHeight, Color objColor) : base(xPos, yPos, dimWidth,  dimHeight, objColor)
         {
         }
@@ -30,6 +34,8 @@ namespace WraithHunt
         {
             if (_beamTick > 0)
                 _beamTick--;
+            if (blinkTick > 0)
+                blinkTick--;
         }
 
         // Creates a DamageBox for the Demon with a specified duration
@@ -40,6 +46,35 @@ namespace WraithHunt
             {
                 _beamTick = _beamCooldown;
                 return new DamageBox(space.X, space.Y, facing, _beamRange, _beamHeight, Color.BlueViolet, _beamDuration, _beamDamage, _beamDecays, this);
+            }
+            return new DamageBox(0, 0, facing, 0, 0, Color.Orange, 0, 0, true, this);
+        }
+
+        // Dash abilitiy, enter the ethereal plane, pop out like 4 tiles in a direction
+        public DamageBox blink(Direction dir)
+        {
+            if (currentPlane == Plane.MATERIAL && blinkTick <= 0)
+            {
+                currentPlane = Plane.ETHEREAL;
+                _collide = false;
+                switch (dir)
+                {
+                    case Direction.UP:
+                        space.Y -= _blinkRange;
+                        break;
+                    case Direction.DOWN:
+                        space.Y += _blinkRange;
+                        break;
+                    case Direction.LEFT:
+                        space.X -= _blinkRange;
+                        break;
+                    case Direction.RIGHT:
+                        space.X += _blinkRange;
+                        break;
+                }
+                currentPlane = Plane.MATERIAL;
+                blinkTick = blinkCooldown;
+                return new DamageBox(space.X+30, space.Y, facing, 30, _blinkRange, Color.BlueViolet, _beamDuration, 0, _beamDecays, this);
             }
             return new DamageBox(0, 0, facing, 0, 0, Color.Orange, 0, 0, true, this);
         }

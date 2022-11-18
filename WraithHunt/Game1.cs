@@ -299,6 +299,11 @@ namespace WraithHunt
                         _dmgBoxes.Add(medium.BeamAttack());
                     }
 
+                    if (myState.IsKeyDown(Keys.S) || Input.GetButtonDown(1, Input.ArcadeButtons.A3))
+                    {
+                        _dmgBoxes.Add(medium.blink(Direction.UP));
+                    }
+
                     // Demon Keys
                     if (myState.IsKeyDown(Keys.I) || Input.GetButtonDown(2, Input.ArcadeButtons.A1))
                     {
@@ -533,6 +538,50 @@ namespace WraithHunt
                         5
                     ),
                     Color.Orange
+                );
+
+            }
+
+            if (player == medium)
+            {
+                // Blink Cooldown
+                Color blinkTextColor = Color.White;
+                if (medium.blinkTick > 0)
+                    blinkTextColor = Color.Gray;
+
+                string textPlaneshift = "BLINK";
+                Vector2 textPlaneshiftSize = _HUDFont.MeasureString(textPlaneshift);
+                _spriteBatch.DrawString(
+                    _HUDFont, 
+                    textPlaneshift, 
+                    new Vector2(
+                        20,
+                        HUDHeight - 20
+                    ), 
+                    blinkTextColor
+                );
+
+                RectangleSprite.FillRectangle(
+                    _spriteBatch,
+                    new Rectangle(
+                        20,
+                        HUDHeight - 25,
+                        defaultViewport.Width/5,
+                        5
+                    ),
+                    Color.Black
+                );
+
+                RectangleSprite.FillRectangle(
+                    _spriteBatch,
+                    new Rectangle(
+                        20,
+                        HUDHeight - 25,
+                        (int)(((float)defaultViewport.Width/5.0f) * 
+                            ((float) medium.blinkTick / (float) medium.blinkCooldown)),
+                        5
+                    ),
+                    Color.BlueViolet
                 );
 
             }
