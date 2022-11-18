@@ -94,6 +94,14 @@ namespace WraithHunt
 
                         float x = (i % map.Width) * map.TileWidth;
                         float y = (float)Math.Floor(i / (double)map.Width) * map.TileHeight;
+
+                        Rectangle collisionRect = new Rectangle(
+                            (int)x,
+                            (int)y,
+                            tileWidth,
+                            tileHeight 
+                        );
+
                         // Check X Collisions
                         //if (
                         //    layer != 2 &&
@@ -113,23 +121,56 @@ namespace WraithHunt
                         //    continue;
                         //}
 
-                        //if (
-                        //    layer != 2 &&
-                        //    _velocityX < 0 &&
-                        //    /*Check if the player is on the same horizontal plane as the tile*/
-                        //    space.Y > (int) y &&
-                        //    space.Y < (int) y + tileHeight &&
-                        //    /*Check if going further left will intersect the tile with the player*/
-                        //    space.X < (int) x + tileWidth &&
-                        //    space.X - _velocityX < (int) x + tileWidth
-                        //)
-                        //{
-                        //    _wallDirection = Direction.LEFT;
-                        //    _velocityX = 0;
-                        //    space.X = (int) x + tileWidth + 1;
-                        //    Console.WriteLine("Colliding!");
-                        //    continue;
-                        //}
+                        Rectangle futureMove = getHitbox();
+                        if (_velocityX < 0)
+                        {
+                            futureMove.X -= _speed;
+                            futureMove.Width += _speed;
+                        } else if (_velocityX > 0)
+                        {
+                            futureMove.X += _speed;
+                            //futureMove.Width += _speed;
+                        }
+
+                        // Left X collision
+                        if (
+                            layer != 2 &&
+                            _velocityX < 0 &&
+                            collisionRect.Intersects(futureMove) &&
+                            /*Check if the player is on the same horizontal plane as the tile*/
+                            space.Y > (int) y &&
+                            space.Y < (int) y + tileHeight &&
+                            /*Check if going further left will intersect the tile with the player*/
+                            futureMove.X - _speed < (int) x + tileWidth &&
+                            futureMove.X - _speed - _velocityX - 1 < (int) x + tileWidth
+                        )
+                        {
+                            _wallDirection = Direction.LEFT;
+                            _velocityX = 0;
+                            space.X = (int) x + tileWidth + 1;
+                            Console.WriteLine("Colliding!");
+                            continue;
+                        }
+
+                        // Right X collision
+                        if (
+                            layer != 2 &&
+                            _velocityX > 0 &&
+                            collisionRect.Intersects(futureMove) &&
+                            /*Check if the player is on the same horizontal plane as the tile*/
+                            space.Y > (int) y &&
+                            space.Y < (int) y + tileHeight &&
+                            /*Check if going further left will intersect the tile with the player*/
+                            futureMove.X + futureMove.Width + _speed > (int) x &&
+                            futureMove.X + futureMove.Width + _speed + _velocityX > (int) x 
+                        )
+                        {
+                            _wallDirection = Direction.RIGHT;
+                            _velocityX = 0;
+                            space.X = (int) x - space.width - 1;
+                            Console.WriteLine("Colliding Right!");
+                            continue;
+                        }
 
                         // Check Y Collisions
                         if (
@@ -241,11 +282,11 @@ namespace WraithHunt
             switch (dir)
             {
                 case Direction.LEFT:
-                    if (Math.Abs(_velocityX) < _topSpeed)
+                    if (Math.Abs(_velocityX) < _topSpeed && _wallDirection != Direction.LEFT)
                         _velocityX -= _speed;
                     break;
                 case Direction.RIGHT:
-                    if (Math.Abs(_velocityX) < _topSpeed)
+                    if (Math.Abs(_velocityX) < _topSpeed && _wallDirection != Direction.RIGHT)
                         _velocityX += _speed;
                     break;
             }

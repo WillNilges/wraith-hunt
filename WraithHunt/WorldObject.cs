@@ -113,5 +113,15 @@ namespace WraithHunt
                 color
             );
         }
+
+        public Rectangle getHitbox()
+        {
+            return new Rectangle(
+                space.X,
+                space.Y,
+                space.width,
+                space.height 
+            );
+        }
     }
 }
