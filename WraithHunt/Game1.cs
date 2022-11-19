@@ -138,23 +138,23 @@ namespace WraithHunt
 
             // Platforms
             _platforms = new List<WorldObject>();
-            platformSprite = Content.Load<Texture2D>("IndustrialTile_79");
-            platformBackground = Content.Load<Texture2D>("IndustrialTile_26");
-            for (int i = 0; i < 10; i++)
-            {
-                for (int j = 0; j < 5; j ++)
-                {
-                    WorldObject skz = new WorldObject(400 * j,100 + i*100,100,10,Color.DarkGray);
-                    skz.sprite = platformSprite;
-                    skz.spriteParams = new Rectangle(
-                        200 * j,
-                        600000 + i*100,
-                        100,
-                        10
-                    );
-                    _platforms.Add(skz);
-                }
-            }
+            //platformSprite = Content.Load<Texture2D>("IndustrialTile_79");
+            //platformBackground = Content.Load<Texture2D>("IndustrialTile_26");
+            //for (int i = 0; i < 10; i++)
+            //{
+            //    for (int j = 0; j < 5; j ++)
+            //    {
+            //        WorldObject skz = new WorldObject(400 * j,100 + i*100,100,10,Color.DarkGray);
+            //        skz.sprite = platformSprite;
+            //        skz.spriteParams = new Rectangle(
+            //            200 * j,
+            //            600000 + i*100,
+            //            100,
+            //            10
+            //        );
+            //        _platforms.Add(skz);
+            //    }
+            //}
 
             // New Map Stuff
             map = new TmxMap("Content/apartment_block.tmx");
