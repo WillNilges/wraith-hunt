@@ -16,8 +16,8 @@ namespace WraithHunt
         protected bool _collide = false;
         protected bool _airborne = false;
 
-        protected int _velocityY = 0;
-        protected int _velocityX = 0;
+        public int _velocityY = 0;
+        public int _velocityX = 0;
 
         protected WorldObject _collidingWith = null;
 

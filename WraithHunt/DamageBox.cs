@@ -87,7 +87,7 @@ namespace WraithHunt
                     int dirMultiplier = 1;
                     if (_direction == Direction.LEFT)
                         dirMultiplier = -1;
-                    player.space.X += (int) ((float) 10.0f * decayed) * dirMultiplier; // TODO: Add horizontal velocity to player
+                    player._velocityX += (int) ((float) 10.0f * decayed) * dirMultiplier; // TODO: Add horizontal velocity to player
 
                     // Make player invulnerable to this hitbox, since they've been hit by it once.
                     _hasHit = player;
