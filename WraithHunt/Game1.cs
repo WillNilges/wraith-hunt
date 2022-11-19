@@ -442,12 +442,12 @@ namespace WraithHunt
             }
             if (player.currentPlane == medium.currentPlane)
             {
-                medium.DrawBox(_spriteBatch);
+                //medium.DrawBox(_spriteBatch);
                 medium.Draw(_spriteBatch);
             }
             if (player.currentPlane == demon.currentPlane)
             {
-                demon.DrawBox(_spriteBatch);
+                //demon.DrawBox(_spriteBatch);
                 demon.Draw(_spriteBatch);
             }
             _spriteBatch.End();

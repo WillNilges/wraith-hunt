@@ -13,6 +13,9 @@
 
 #---------------------------------- Content ---------------------------------#
 
+#begin apartment_block.tmx
+/copy:apartment_block.tmx
+
 #begin chom_map_2.png
 /importer:TextureImporter
 /processor:TextureProcessor
