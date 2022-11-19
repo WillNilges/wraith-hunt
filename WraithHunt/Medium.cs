@@ -74,7 +74,7 @@ namespace WraithHunt
                 }
                 currentPlane = Plane.MATERIAL;
                 blinkTick = blinkCooldown;
-                return new DamageBox(space.X+30, space.Y, facing, 30, _blinkRange, Color.BlueViolet, _beamDuration, 0, _beamDecays, this);
+                return new DamageBox(space.X+30, space.Y, Direction.LEFT, 30, _blinkRange, Color.BlueViolet, _beamDuration, 0, _beamDecays, this);
             }
             return new DamageBox(0, 0, facing, 0, 0, Color.Orange, 0, 0, true, this);
         }
