@@ -171,8 +171,8 @@ namespace WraithHunt
 
             // Kill Plane
 //            willard = new Player(-10000, -10000, 1, 1, Color.Green); // I'm in your walls
-            killPlane = new DamageBox(-1000, 1000, Direction.RIGHT, 10000, 10000, Color.Red, -1, 1000000, false, null);
-            //_dmgBoxes.Add(killPlane);
+            killPlane = new DamageBox(-1000, 3000, Direction.RIGHT, 10000, 10000, Color.Red, -1, 1000000, false, null);
+            _dmgBoxes.Add(killPlane);
 
             // Players
             medium = new Medium(70, 350, 10, 10, Color.White);
