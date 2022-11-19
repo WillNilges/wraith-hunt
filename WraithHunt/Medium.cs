@@ -16,7 +16,7 @@ namespace WraithHunt
         private int _beamCooldown = 40;
         private int _beamTick = 0;
 
-        public int blinkCooldown = 300;
+        public int blinkCooldown = 600;
         public int blinkTick = 0;
         private int _blinkRange = 192;
 
