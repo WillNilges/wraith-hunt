@@ -15,7 +15,7 @@ namespace WraithHunt
         protected int _gravityMax = 30; // The maximum speed you can fall
         protected int _gravityAccel = 1; // Acceleration
         protected int _gravityInc = 8;
-        protected int _currentGravity = 0;
+        public int _currentGravity = 0;
 
         protected bool _collide = false;
         protected Direction _wallDirection = Direction.NONE;

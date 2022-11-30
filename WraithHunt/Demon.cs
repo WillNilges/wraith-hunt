@@ -110,12 +110,16 @@ namespace WraithHunt
         {
             if (_TKCandidate != null && TKTick <= 0)
             {
-                _TKCandidate.space.X -= 20;
-                _TKCandidate.space.Y -= 20;
-                _TKCandidate._velocityX -= 10;
-                _TKCandidate._velocityY -= 100;
+                int dirMod = 1;
+                if (facing == Direction.LEFT)
+                    dirMod = -1;
+                _TKCandidate.space.X += 5 * dirMod;
+                _TKCandidate.space.Y -= 5;
+                _TKCandidate._velocityX += 30 * dirMod;
+                _TKCandidate._velocityY -= 10;
+                _TKCandidate._currentGravity -= 20;
                 TKTick = TKCooldown;
-                return new DamageBox(_TKCandidate.space.X, _TKCandidate.space.Y, Direction.LEFT, _blastRange, _blastHeight, Color.Orange, _blastDuration, 0, _blastDecays, this);
+                return new DamageBox(_TKCandidate.space.X, _TKCandidate.space.Y, Direction.LEFT, 20, 20, Color.Orange, _blastDuration, 0, _blastDecays, this);
             }
             return new DamageBox(0, 0, facing, 0, 0, Color.Orange, 0, 0, true, this);
         }
