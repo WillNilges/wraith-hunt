@@ -36,9 +36,6 @@ namespace WraithHunt
         private int _jumpGrace;
 
         private int _topSpeed = 4;
-        protected Direction _wallDirection = Direction.NONE;
-
-        private int _speed = 2;
 
         public int healthMax = 10;
         public int health = 10;
@@ -55,7 +52,7 @@ namespace WraithHunt
             space.Y = (int) pos.Y;
         }
 
-        public void UpdatePhysics(List<WorldObject> platforms, TmxMap map, Texture2D tileset)
+        public virtual void UpdatePhysics(List<WorldObject> platforms, TmxMap map, Texture2D tileset)
         {
 
             // If you die, reset position to the top of screen and fall back into the world (for now)
@@ -74,7 +71,6 @@ namespace WraithHunt
             int tileHeight;
             int tilesetTilesWide;
             int tilesetTilesHigh;
-
 
             tileWidth = map.Tilesets[0].TileWidth;
             tileHeight = map.Tilesets[0].TileHeight;

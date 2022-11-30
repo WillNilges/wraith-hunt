@@ -31,7 +31,9 @@ namespace WraithHunt
 
         private List<WorldObject> _platforms; // For stuff you can stand on
         private List<DamageBox> _dmgBoxes; // For stuff that hurts
-        private DamageBox killPlane;
+        private DamageBox killPlane; // For the thing that kills you
+        private List<Furniture> _furniture; // Stuff that can be thrown
+        private int _furnitureMax;
 
         // Sprites n Textures
         private Texture2D _redButton;
@@ -105,9 +107,6 @@ namespace WraithHunt
             this.camera = new Camera(this._graphics.GraphicsDevice);
             this.demonCamera = new Camera(this._graphics.GraphicsDevice);
 
-
-            // Create Killplane
-
 			base.Initialize();
 		}
 
@@ -170,9 +169,12 @@ namespace WraithHunt
             _dmgBoxes = new List<DamageBox>(); 
 
             // Kill Plane
-//            willard = new Player(-10000, -10000, 1, 1, Color.Green); // I'm in your walls
             killPlane = new DamageBox(-1000, 3000, Direction.RIGHT, 10000, 10000, Color.Red, -1, 1000000, false, null);
             _dmgBoxes.Add(killPlane);
+
+            // Furniture
+            _furniture = new List<Furniture>();
+            _furnitureMax = 10;
 
             // Players
             medium = new Medium(70, 350, 10, 10, Color.White);
@@ -330,10 +332,20 @@ namespace WraithHunt
                         demon.SwitchPlanes();
                     }
 
+                    if (myState.IsKeyDown(Keys.O) || Input.GetButtonDown(2, Input.ArcadeButtons.A4))
+                    {
+                        _dmgBoxes.Add(demon.TKBlast());
+                    }
+
                     medium.UpdatePhysics(_platforms, map, tileset);
                     medium.abilitiesTick();
-                    demon.UpdatePhysics(_platforms, map, tileset);
-                    demon.abilitiesTick();
+                    demon.UpdatePhysics(_platforms, map, tileset, _furniture);
+                    //demon.abilitiesTick();
+
+                    foreach (Furniture furn in _furniture)
+                    {
+                        furn.UpdatePhysics(_platforms, map, tileset);
+                    }
                     break;
                 case GameState.MEDIUM_WON:
                 case GameState.DEMON_WON:
@@ -344,9 +356,18 @@ namespace WraithHunt
                     break;
                 case GameState.START:
                     demon.demonReset(new Vector2(1600,1500));
-                    medium.mediumReset(new Vector2(20,20));
+                    medium.mediumReset(new Vector2(300,600));
                     state = GameState.PLAYING;
                     killPlane.ClearHit(); 
+                    // Create furntiure
+                    for (i = 0; i < _furnitureMax; i++)
+                    {
+                        _furniture.Add(new Furniture(300 + 30*i, 600, 20, 20, Color.Green));
+                    }
+                    Furniture chom = new Furniture(1610, 1490, 20, 20, Color.Green);
+                    _furniture.Add(chom);
+                    chom._velocityX = 30;
+
                     break;
                 default:
                     break;
@@ -436,18 +457,21 @@ namespace WraithHunt
                 obj.DirectDraw(_spriteBatch);
                 //obj.DrawBox(_spriteBatch);
             }
+            // Draw the furniture
+            foreach(Furniture obj in _furniture)
+            {
+                obj.DrawBox(_spriteBatch);
+            }
             foreach(DamageBox obj in _dmgBoxes)
             {
                 obj.DrawBox(_spriteBatch);
             }
             if (player.currentPlane == medium.currentPlane)
             {
-                //medium.DrawBox(_spriteBatch);
                 medium.Draw(_spriteBatch);
             }
             if (player.currentPlane == demon.currentPlane)
             {
-                //demon.DrawBox(_spriteBatch);
                 demon.Draw(_spriteBatch);
             }
             _spriteBatch.End();
@@ -505,6 +529,7 @@ namespace WraithHunt
                 if (demon.planeSwitchTick > 0)
                     planeshiftTextColor = Color.Gray;
 
+                // Planeshift cooldown bar
                 string textPlaneshift = "PLANESHIFT";
                 Vector2 textPlaneshiftSize = _HUDFont.MeasureString(textPlaneshift);
                 _spriteBatch.DrawString(
@@ -535,6 +560,42 @@ namespace WraithHunt
                         HUDHeight + 50,
                         (int)(((float)defaultViewport.Width/5.0f) * 
                             ((float) demon.planeSwitchTick / (float) demon.planeSwitchCooldown)),
+                        5
+                    ),
+                    Color.Orange
+                );
+
+                // Telekinesis cooldown bar
+                string textTK = "TELEKINESIS";
+                Vector2 textTKSize = _HUDFont.MeasureString(textTK);
+                _spriteBatch.DrawString(
+                    _HUDFont, 
+                    textTK, 
+                    new Vector2(
+                        20,
+                        HUDHeight + 60
+                    ), 
+                    planeshiftTextColor
+                );
+
+                RectangleSprite.FillRectangle(
+                    _spriteBatch,
+                    new Rectangle(
+                        20,
+                        HUDHeight + 80,
+                        defaultViewport.Width/5,
+                        5
+                    ),
+                    Color.Black
+                );
+
+                RectangleSprite.FillRectangle(
+                    _spriteBatch,
+                    new Rectangle(
+                        20,
+                        HUDHeight + 80,
+                        (int)(((float)defaultViewport.Width/5.0f) * 
+                            ((float) demon.TKTick / (float) demon.TKCooldown)),
                         5
                     ),
                     Color.Orange

@@ -40,7 +40,7 @@ namespace WraithHunt
             spriteOffsetRight = 0;
         }
 
-        public void Draw(SpriteBatch batch)
+        public virtual void Draw(SpriteBatch batch)
         {
             SpriteEffects effects = SpriteEffects.None;
             if (facing == Direction.LEFT)
