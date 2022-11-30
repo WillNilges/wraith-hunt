@@ -566,6 +566,11 @@ namespace WraithHunt
                 );
 
                 // Telekinesis cooldown bar
+                Color TKTextColor = Color.White;
+                if (demon.TKTick > 0)
+                    TKTextColor = Color.Gray;
+
+
                 string textTK = "TELEKINESIS";
                 Vector2 textTKSize = _HUDFont.MeasureString(textTK);
                 _spriteBatch.DrawString(
@@ -575,7 +580,7 @@ namespace WraithHunt
                         20,
                         HUDHeight + 60
                     ), 
-                    planeshiftTextColor
+                    TKTextColor
                 );
 
                 RectangleSprite.FillRectangle(

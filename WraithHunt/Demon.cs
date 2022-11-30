@@ -104,6 +104,11 @@ namespace WraithHunt
                     _TKCandidate = furn;
                 }
             }
+            int distX = Math.Abs(_TKCandidate.space.X - space.X);
+            int distY = Math.Abs(_TKCandidate.space.Y - space.Y);
+            int pythag = (int) Math.Sqrt(distX*distX + distY*distY);
+            if (pythag > _TKRange)
+                _TKCandidate = null;
         }
 
         public DamageBox TKBlast()
