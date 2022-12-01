@@ -11,6 +11,11 @@ using TiledSharp;
 // For camera functionality
 using Comora;
 
+// For fiziks
+using tainicom.Aether.Physics2D.Dynamics;
+using System.Numerics;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
+
 namespace WraithHunt
 {
 
@@ -29,27 +34,25 @@ namespace WraithHunt
 		private GraphicsDeviceManager _graphics;
 		private SpriteBatch _spriteBatch;
 
-        private List<WorldObject> _platforms; // For stuff you can stand on
+        private World world; // Our world, which will keep track of all physics
+
+        // These guys are on THIN fuckin' ice.
         private List<DamageBox> _dmgBoxes; // For stuff that hurts
         private DamageBox killPlane; // For the thing that kills you
-        private List<Furniture> _furniture; // Stuff that can be thrown
-        private int _furnitureMax;
+
 
         // Sprites n Textures
-        private Texture2D _redButton;
-        private Texture2D platformSprite;
-        private Texture2D platformBackground;
+        private Texture2D _redButton; // Appears on the game over screen
 
-        private Medium medium;
+        // Player 1 and Player 2
+        private AEPlayer medium;
         private Demon demon;
-//        private Player willard;
 
         private KeyboardState _lastState;
 
         private Camera camera;
         private Camera demonCamera;
 
-        // Here be dragons
         // Stuff for viewport
         Viewport defaultViewport;
         Viewport leftViewport;
@@ -101,13 +104,22 @@ namespace WraithHunt
 			_graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
 			_graphics.ApplyChanges();
 #endif
-			#endregion
-			
-			// TODO: Add your initialization logic here
+            #endregion
+
+            // TODO: Add your initialization logic here
+            world = new World();
+            world.Gravity = new Vector2(0, 1);
+
             this.camera = new Camera(this._graphics.GraphicsDevice);
             this.demonCamera = new Camera(this._graphics.GraphicsDevice);
 
-			base.Initialize();
+            medium = new AEPlayer(
+               "medium_placeholder_01_white",
+               new Vector2(30, 30),
+               world.CreateRectangle(30, 30, 1, new Vector2(1500, 1500), 0, BodyType.Static)
+            );
+
+            base.Initialize();
 		}
 
 		/// <summary>
@@ -135,26 +147,6 @@ namespace WraithHunt
             halfprojectionMatrix = Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.PiOver4, 1.0f, 2.0f / 3.0f, 10000f);
 
-            // Platforms
-            _platforms = new List<WorldObject>();
-            //platformSprite = Content.Load<Texture2D>("IndustrialTile_79");
-            //platformBackground = Content.Load<Texture2D>("IndustrialTile_26");
-            //for (int i = 0; i < 10; i++)
-            //{
-            //    for (int j = 0; j < 5; j ++)
-            //    {
-            //        WorldObject skz = new WorldObject(400 * j,100 + i*100,100,10,Color.DarkGray);
-            //        skz.sprite = platformSprite;
-            //        skz.spriteParams = new Rectangle(
-            //            200 * j,
-            //            600000 + i*100,
-            //            100,
-            //            10
-            //        );
-            //        _platforms.Add(skz);
-            //    }
-            //}
-
             // New Map Stuff
             map = new TmxMap("Content/apartment_block.tmx");
             tileset = Content.Load<Texture2D>("chom_map_2");//map.Tilesets[0].Name.ToString());
@@ -172,21 +164,18 @@ namespace WraithHunt
             killPlane = new DamageBox(-1000, 3000, Direction.RIGHT, 10000, 10000, Color.Red, -1, 1000000, false, null);
             _dmgBoxes.Add(killPlane);
 
-            // Furniture
-            _furniture = new List<Furniture>();
-            _furnitureMax = 10;
-
             // Players
-            medium = new Medium(70, 350, 10, 10, Color.White);
-            medium.sprite = Content.Load<Texture2D>("medium_placeholder_01_white");
-            medium.spriteParams = new Rectangle(
+            medium.LoadContent(Content);
+            //medium.body = ;
+            //medium.sprite = Content.Load<Texture2D>("medium_placeholder_01_white");
+            /*medium.spriteParams = new Rectangle(
                 medium.space.X-15,
                 medium.space.Y-15,
                 30,
                 30
             );
             medium.spriteOffsetLeft = 15;
-            medium.spriteOffsetRight = 0;
+            medium.spriteOffsetRight = 0;*/
 
             demon = new Demon(600, 350, 15, 15, Color.Red);
             demon.sprite = Content.Load<Texture2D>("demon_placeholder_01");
@@ -245,7 +234,7 @@ namespace WraithHunt
 
                     // Medium's Camera
                     this.camera.Update(gameTime);
-                    Vector2 mediumPos = new Vector2(medium.space.X, medium.space.Y);
+                    Vector2 mediumPos = new Vector2(medium.Position().X, medium.Position().Y);
                     this.camera.Position = mediumPos;
 
                     // Demon's Camera
@@ -271,7 +260,7 @@ namespace WraithHunt
                         // TODO: Do the rest of the collision logic for damage boxes.
                         // if a character is inside of one, they die, or whatever.
                         // Also you need to draw damage boxes.
-                        _dmgBoxes[i].checkCollision(medium);
+                        //_dmgBoxes[i].checkCollision(medium);
                         _dmgBoxes[i].checkCollision(demon);
                         i++;
                     }
@@ -298,12 +287,12 @@ namespace WraithHunt
 
                     if (myState.IsKeyDown(Keys.Q) || Input.GetButtonDown(1, Input.ArcadeButtons.A2))
                     {
-                        _dmgBoxes.Add(medium.BeamAttack());
+                        //_dmgBoxes.Add(medium.BeamAttack());
                     }
 
                     if (myState.IsKeyDown(Keys.S) || Input.GetButtonDown(1, Input.ArcadeButtons.A3))
                     {
-                        _dmgBoxes.Add(medium.blink(Direction.UP));
+                        //_dmgBoxes.Add(medium.blink(Direction.UP));
                     }
 
                     // Demon Keys
@@ -337,15 +326,17 @@ namespace WraithHunt
                         _dmgBoxes.Add(demon.TKBlast());
                     }
 
-                    medium.UpdatePhysics(_platforms, map, tileset);
-                    medium.abilitiesTick();
-                    demon.UpdatePhysics(_platforms, map, tileset, _furniture);
+                    //medium.UpdatePhysics(_platforms, map, tileset);
+                    //medium.abilitiesTick();
+                    //demon.UpdatePhysics(_platforms, map, tileset, _furniture);
                     //demon.abilitiesTick();
 
-                    foreach (Furniture furn in _furniture)
-                    {
-                        furn.UpdatePhysics(_platforms, map, tileset);
-                    }
+                    //foreach (Furniture furn in _furniture)
+                    //{
+                    //    furn.UpdatePhysics(_platforms, map, tileset);
+                    //}
+
+                    world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
                     break;
                 case GameState.MEDIUM_WON:
                 case GameState.DEMON_WON:
@@ -356,11 +347,11 @@ namespace WraithHunt
                     break;
                 case GameState.START:
                     demon.demonReset(new Vector2(1600,1500));
-                    medium.mediumReset(new Vector2(300,600));
+                    //medium.mediumReset(new Vector2(300,600));
                     state = GameState.PLAYING;
                     killPlane.ClearHit(); 
 
-                    _furniture.Add(new Furniture(300 + 30, 600, 20, 20, Color.Green));
+                    //_furniture.Add(new Furniture(300 + 30, 600, 20, 20, Color.Green));
                     // Create furntiure
                     /*
                     for (i = 0; i < _furnitureMax; i++)
@@ -408,7 +399,7 @@ namespace WraithHunt
                 }
             }
         }
-
+        /*
         private void viewportSprites(Viewport port, Camera cam, Player player)
         {
             GraphicsDevice.Viewport = port;
@@ -430,42 +421,7 @@ namespace WraithHunt
             // TODO: Add your drawing code here
             // Draw the world map background
             drawNewMap();
-            foreach(WorldObject obj in _platforms)
-            {
-                // Now draw some backgrounds. Give a little texture.
-                for (int i = 0; i < 2; i++)
-                {
-                    for (int j = 0; j < 2; j++)
-                    {
-                        _spriteBatch.Draw(
-                            platformBackground,
-                            new Rectangle(
-                                obj.space.X+(50*i),
-                                obj.space.Y-50-(50*j),
-                                50,
-                                50 
-                            ),
-                            null,
-                            Color.White,
-                            0,
-                            new Vector2(0,0),
-                            SpriteEffects.None,
-                            0
-                        );
-                    }
-                }
-            }
-            // Draw the platforms
-            foreach(WorldObject obj in _platforms)
-            {
-                obj.DirectDraw(_spriteBatch);
-                //obj.DrawBox(_spriteBatch);
-            }
-            // Draw the furniture
-            foreach(Furniture obj in _furniture)
-            {
-                obj.DrawBox(_spriteBatch);
-            }
+            
             foreach(DamageBox obj in _dmgBoxes)
             {
                 obj.DrawBox(_spriteBatch);
@@ -727,6 +683,7 @@ namespace WraithHunt
                 0
             );
         }
+        */
 
 		/// <summary>
 		/// Your main draw loop. This runs once every frame, over and over.
@@ -742,10 +699,21 @@ namespace WraithHunt
             {
                 case GameState.START:
                 case GameState.PLAYING:
-                    viewportSprites(leftViewport, camera, medium);
-                    drawHUD(medium, true);
-                    viewportSprites(rightViewport, demonCamera, demon);
-                    drawHUD(demon, false);
+
+                    //viewportSprites(leftViewport, camera, medium);
+                    //drawHUD(medium, true);
+                    //viewportSprites(rightViewport, demonCamera, demon);
+                    //drawHUD(demon, false);
+
+
+                    GraphicsDevice.Viewport = leftViewport;
+                    _spriteBatch.Begin(camera);
+
+                    // TODO: Add your drawing code here
+                    // Draw the world map background
+                    drawNewMap();
+                    medium.Draw(gameTime, _spriteBatch);
+                    _spriteBatch.End();
 
                     GraphicsDevice.Viewport = defaultViewport;
                     _spriteBatch.Begin();
@@ -768,7 +736,7 @@ namespace WraithHunt
                 case GameState.DEMON_WON:
                     GraphicsDevice.Viewport = defaultViewport;
                     _spriteBatch.Begin();
-                    drawWinner();
+                    //drawWinner();
                     _spriteBatch.End();
 
                     GraphicsDevice.Viewport = rightViewport;
