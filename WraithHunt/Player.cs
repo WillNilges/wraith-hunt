@@ -54,14 +54,6 @@ namespace WraithHunt
 
         public virtual void UpdatePhysics(List<WorldObject> platforms, TmxMap map, Texture2D tileset)
         {
-            // If you die, reset position to the top of screen and fall back into the world (for now)
-            /*if (health <= 0)
-            {
-                space.X = 150;
-                space.Y = 0;
-                health = healthMax;
-            }*/
-
             _airborne = _hasJumped;
             _collide = false;
             _wallDirection = Direction.NONE;
@@ -106,12 +98,17 @@ namespace WraithHunt
             if (_collide) 
             {
                 VelocityY = 0;
+                _gravityAccel = 0;
                 _jumpGrace = _jumpGraceMax;
                 _jumpTick = 0;
             }
             else if (VelocityY < TerminalVelocityY && _jumpTick == 0)
             {
-                VelocityY += _gravityAccel;
+                _gravityAccel += _gravitySnap;
+                int grav = (int)((double) _gravitySnap * ((double) _gravityAccel / (double) TerminalVelocityY));
+                VelocityY = grav > 0 ? grav : 2;
+                if (VelocityY > TerminalVelocityY)
+                    VelocityY = TerminalVelocityY;
             }
 
             // X velocity collision stuff
@@ -133,10 +130,10 @@ namespace WraithHunt
                 VelocityY = -1 * (int)((double) _jumpInc * ((double) _jumpTick / (double) _jumpPower));
                 _jumpTick--;
             }
-            else
-            {
-                VelocityY = (int)((double) _gravityAccel * ((double) VelocityY / (double) TerminalVelocityY));
-            }
+            //else
+            //{
+            //    VelocityY = (int)((double) _gravityAccel * ((double) VelocityY / (double) TerminalVelocityY));
+            //}
             space.Y += VelocityY;
         }
 

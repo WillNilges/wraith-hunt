@@ -359,7 +359,10 @@ namespace WraithHunt
                     medium.mediumReset(new Vector2(300,600));
                     state = GameState.PLAYING;
                     killPlane.ClearHit(); 
+
+                    _furniture.Add(new Furniture(300 + 30, 600, 20, 20, Color.Green));
                     // Create furntiure
+                    /*
                     for (i = 0; i < _furnitureMax; i++)
                     {
                         _furniture.Add(new Furniture(300 + 30*i, 600, 20, 20, Color.Green));
@@ -368,7 +371,7 @@ namespace WraithHunt
                     {
                         _furniture.Add(new Furniture(1510 + 40*i, 1490, 20, 20, Color.Green));
                     }
-
+                    */
                     break;
                 default:
                     break;

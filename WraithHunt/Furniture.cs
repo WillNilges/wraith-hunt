@@ -20,7 +20,8 @@ namespace WraithHunt
         public int VelocityY = 0; // Current horizontal velocity. Positive is Down 
         public int VelocityX = 0; // Current vertical velocity. Positive is Right
 
-        protected int _gravityAccel = 8; // Gravitational Acceleration
+        protected int _gravityAccel = 0; // Gravitational Acceleration
+        protected int _gravitySnap = 4; // Gravitational Snap (fuck.)
 
         public int TerminalVelocityY = 30;
         public int TerminalVelocityX = 100;
@@ -149,37 +150,6 @@ namespace WraithHunt
                     }
                     if (_collide)
                         break;
-                }
-            }
-
-            // Check if we're colliding with a world object.
-            foreach(WorldObject platform in platforms)
-            {
-                if (
-                    _airborne && VelocityY < 0 &&
-                    platform.space.X < space.X + space.width &&
-                    space.X < platform.space.X + platform.space.width &&
-                    space.Y > platform.space.Y + platform.space.height &&
-                    space.Y - VelocityY < platform.space.Y + platform.space.height
-                )
-                {
-                    _collide = true;
-//                    _collidingWith = platform;
-                    space.Y = platform.space.Y + platform.space.height + 1;
-                    break;
-                }
-                if (
-                    platform.space.X < space.X + space.width &&
-                    space.X < platform.space.X + platform.space.width &&
-                    platform.space.Y < space.Y + space.height &&
-                    space.Y < platform.space.Y + platform.space.height
-                )
-                {
-                    _collide = true;
-                    _airborne = false;
-                    //_collidingWith = platform;
-                    space.Y = platform.space.Y - space.height + 1;
-                    break;
                 }
             }
 
