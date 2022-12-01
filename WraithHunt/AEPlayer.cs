@@ -3,23 +3,26 @@ using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using tainicom.Aether.Physics2D.Dynamics;
+using tainicom.Aether.Physics2D.Dynamics.Contacts;
 using Transform;
 
 namespace WraithHunt
 {
     public class AEPlayer
     {
-        private string spritePath;
-        private Texture2D sprite;
-        public Vector2 spriteSize;
-        private Body body;
+        private string _spritePath;
+        private Texture2D _sprite;
+        public Vector2 SpriteSize;
+        private Body _body;
 
         // Health
         public int healthMax = 10;
         public int health = 10;
 
-        // Planar nonsense
+        // Grounded
+        //private bool _grounded = true;
 
+        // Planar nonsense
         public Plane currentPlane;
 
         /// <summary>
@@ -29,9 +32,13 @@ namespace WraithHunt
 
         public AEPlayer(string spritePath, Vector2 spriteSize, Body body)
         {
-            this.spritePath = spritePath;
-            this.spriteSize = spriteSize;
-            this.body = body;
+            this._spritePath = spritePath;
+            this.SpriteSize = spriteSize;
+            this._body = body;
+            this._body.LinearVelocity = new Vector2(10, 1000);
+            _body.Mass = 1;
+
+            this._body.OnCollision += CollisionHandler;
         }
 
         /**** FUN STUFF ****/
@@ -41,22 +48,24 @@ namespace WraithHunt
             switch (dir)
             {
                 case Direction.LEFT:
-                    
+                    _body.LinearVelocity += new Vector2(-100, 0);
                     break;
                 case Direction.RIGHT:
-                    
+                    _body.LinearVelocity += new Vector2(100, 0);
                     break;
             }
         }
 
         public void Jump()
         {
-
+            if (Colliding)
+            //_body.ApplyLinearImpulse(new Vector2(0, -20));
+                _body.LinearVelocity += new Vector2(0, -50);
         }
 
         /**** DATA ****/
 
-        public Vector2 Position() => body.Position;
+        public Vector2 Position() => _body.Position;
 
         /**** MONOGAME PLUMBING ****/
 
@@ -66,7 +75,7 @@ namespace WraithHunt
         /// <param name="contentManager">The content manager to use</param>
         public void LoadContent(ContentManager contentManager)
         {
-            sprite = contentManager.Load<Texture2D>(spritePath);
+            _sprite = contentManager.Load<Texture2D>(_spritePath);
         }
 
         /// <summary>
@@ -77,6 +86,7 @@ namespace WraithHunt
         {
             // Clear the colliding flag 
             Colliding = false;
+            _body.Rotation = 0;
         }
 
         /// <summary>
@@ -90,12 +100,12 @@ namespace WraithHunt
             Color color = (Colliding) ? Color.Green : Color.White;
 
             spriteBatch.Draw(
-                sprite,
+                _sprite,
                 new Rectangle(
-                    (int) body.Position.X,
-                    (int) body.Position.Y,
-                    (int) spriteSize.X,
-                    (int) spriteSize.Y
+                    (int) _body.Position.X,
+                    (int) _body.Position.Y,
+                    (int) SpriteSize.X,
+                    (int) SpriteSize.Y
                 ),
                 null,
                 Color.White,
@@ -106,5 +116,13 @@ namespace WraithHunt
             );
 
         }
+
+
+        bool CollisionHandler(Fixture fixture, Fixture other, Contact contact)
+        {
+            Colliding = true;
+            return true;
+        }
+
     }
 }
