@@ -115,11 +115,11 @@ namespace WraithHunt
             camera = new Camera(_graphics.GraphicsDevice);
             demonCamera = new Camera(_graphics.GraphicsDevice);
 
-            camera.Zoom = 5;
+            camera.Zoom = 2;
 
             medium = new AEPlayer(
                "medium_placeholder_01_white",
-               new Vector2(15f, 15f),
+               new Vector2(24, 24),
                world.CreateRectangle(15f, 15f, 1, new Vector2(1500, 1000), 0, BodyType.Dynamic)
             );
 
@@ -256,9 +256,7 @@ namespace WraithHunt
                         int column = tileFrame % tilesetTilesWide;
                         int row = (int)Math.Floor((double)tileFrame / (double)tilesetTilesWide);
 
-                        // Eeach tile is going to be 5x5 metres
-                        int tileWidth = 2;
-                        int tileHeight = 2;
+                        // Eeach tile is going to be 2x2 metres
 
                         float x = (i % map.Width) * tileWidth;
                         float y = (float)Math.Floor(i / (double)map.Width) * tileHeight;
