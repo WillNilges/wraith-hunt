@@ -21,9 +21,9 @@ namespace WraithHunt
         public int VelocityX = 0; // Current vertical velocity. Positive is Right
 
         protected int _gravityAccel = 0; // Gravitational Acceleration
-        protected int _gravitySnap = 4; // Gravitational Snap (fuck.)
+        protected int _gravitySnap = 3; // Gravitational Snap (fuck.)
 
-        public int TerminalVelocityY = 30;
+        public int TerminalVelocityY = 20;
         public int TerminalVelocityX = 100;
 
         protected Rectangle _collidingWith = new Rectangle(0,0,0,0);
@@ -160,15 +160,24 @@ namespace WraithHunt
             }
             else if (VelocityY < TerminalVelocityY)
             {
-                VelocityY += _gravityAccel;
+                doGravity();
             }
 
-            space.Y += (int)((double) _gravityAccel * ((double) VelocityY / (double) TerminalVelocityY));
+            space.Y += VelocityY; //(int)((double) _gravityAccel * ((double) VelocityY / (double) TerminalVelocityY));
             space.X += VelocityX;
             if (VelocityX > 0)
                 VelocityX--;
             if (VelocityX < 0)
                 VelocityX++;
+        }
+
+        protected void doGravity()
+        {
+            _gravityAccel += _gravitySnap;
+            int grav = (int)((double) _gravitySnap * ((double) _gravityAccel / (double) TerminalVelocityY));
+            VelocityY = grav > 0 ? grav : 2;
+            if (VelocityY > TerminalVelocityY)
+                VelocityY = TerminalVelocityY;
         }
 
         protected Direction checkTileCollision(TmxMap map, Texture2D tileset)
@@ -266,6 +275,8 @@ namespace WraithHunt
 
                         // Check Y Collisions
                         // Upper collision
+                        // FIXME: If velocity is low enough, you can clip through
+                        // a tile.
                         if (
                             layer != 2 &&
                             _airborne &&

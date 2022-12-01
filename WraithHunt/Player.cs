@@ -104,11 +104,7 @@ namespace WraithHunt
             }
             else if (VelocityY < TerminalVelocityY && _jumpTick == 0)
             {
-                _gravityAccel += _gravitySnap;
-                int grav = (int)((double) _gravitySnap * ((double) _gravityAccel / (double) TerminalVelocityY));
-                VelocityY = grav > 0 ? grav : 2;
-                if (VelocityY > TerminalVelocityY)
-                    VelocityY = TerminalVelocityY;
+                doGravity();
             }
 
             // X velocity collision stuff
