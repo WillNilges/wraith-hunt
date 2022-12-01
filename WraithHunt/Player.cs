@@ -72,11 +72,11 @@ namespace WraithHunt
             switch (_wallDirection)
             {
                 case Direction.LEFT:
-                    _velocityX = 0;
+                    VelocityX = 0;
                     space.X = (int) _collidingWith.X + _collidingWith.Width + 1;
                     break;
                 case Direction.RIGHT:
-                    _velocityX = 0;
+                    VelocityX = 0;
                     space.X = (int) _collidingWith.X - space.width - 1;
                     break;
                 case Direction.UP:
@@ -105,39 +105,39 @@ namespace WraithHunt
             // Do stuff if we're colliding.
             if (_collide) 
             {
-                _currentGravity = 0;
+                VelocityY = 0;
                 _jumpGrace = _jumpGraceMax;
                 _jumpTick = 0;
             }
-            else if (_currentGravity < _gravityMax && _jumpTick == 0)
+            else if (VelocityY < TerminalVelocityY && _jumpTick == 0)
             {
-                _currentGravity += _gravityAccel;
+                VelocityY += _gravityAccel;
             }
 
             // X velocity collision stuff
-            if (_velocityX < 0 && _wallDirection != Direction.LEFT)
-                space.X += _velocityX;
+            if (VelocityX < 0 && _wallDirection != Direction.LEFT)
+                space.X += VelocityX;
 
-            if (_velocityX > 0 && _wallDirection != Direction.RIGHT)
-                space.X += _velocityX;
+            if (VelocityX > 0 && _wallDirection != Direction.RIGHT)
+                space.X += VelocityX;
 
             // Decay X Velocity
-            if (_velocityX < 0)
-                _velocityX++;
-            else if (_velocityX > 0)
-                _velocityX--;
+            if (VelocityX < 0)
+                VelocityX++;
+            else if (VelocityX > 0)
+                VelocityX--;
 
             // Do vertical physics differently if we're jumping
             if (_jumpTick > 0)
             {
-                _velocityY = -1 * (int)((double) _jumpInc * ((double) _jumpTick / (double) _jumpPower));
+                VelocityY = -1 * (int)((double) _jumpInc * ((double) _jumpTick / (double) _jumpPower));
                 _jumpTick--;
             }
             else
             {
-                _velocityY = (int)((double) _gravityInc * ((double) _currentGravity / (double) _gravityMax));
+                VelocityY = (int)((double) _gravityAccel * ((double) VelocityY / (double) TerminalVelocityY));
             }
-            space.Y += _velocityY;
+            space.Y += VelocityY;
         }
 
         public void Walk(Direction dir)
@@ -146,12 +146,12 @@ namespace WraithHunt
             switch (dir)
             {
                 case Direction.LEFT:
-                    if (Math.Abs(_velocityX) < _topSpeed && _wallDirection != Direction.LEFT)
-                        _velocityX -= _speed;
+                    if (Math.Abs(VelocityX) < _topSpeed && _wallDirection != Direction.LEFT)
+                        VelocityX -= _speed;
                     break;
                 case Direction.RIGHT:
-                    if (Math.Abs(_velocityX) < _topSpeed && _wallDirection != Direction.RIGHT)
-                        _velocityX += _speed;
+                    if (Math.Abs(VelocityX) < _topSpeed && _wallDirection != Direction.RIGHT)
+                        VelocityX += _speed;
                     break;
             }
         }

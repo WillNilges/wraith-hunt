@@ -12,18 +12,18 @@ namespace WraithHunt
 {
     public class Furniture : WorldObject
     {
-        protected int _gravityMax = 30; // Terminal Velocity 
-        protected int _gravityAccel = 1; // Acceleration
-        protected int _gravityInc = 8;
-        public int _currentGravity = 0;
-
         protected bool _collide = false;
         protected Direction _wallDirection = Direction.NONE;
         protected bool _airborne = false;
 
-        protected int _speed = 2;
-        public int _velocityY = 0;
-        public int _velocityX = 0;
+        protected int _speed = 2; // How fast the entity is able to move on its own
+        public int VelocityY = 0; // Current horizontal velocity. Positive is Down 
+        public int VelocityX = 0; // Current vertical velocity. Positive is Right
+
+        protected int _gravityAccel = 8; // Gravitational Acceleration
+
+        public int TerminalVelocityY = 30;
+        public int TerminalVelocityX = 100;
 
         protected Rectangle _collidingWith = new Rectangle(0,0,0,0);
 
@@ -70,11 +70,11 @@ namespace WraithHunt
                         );
 
                         Rectangle futureMove = getHitbox();
-                        if (_velocityX < 0)
+                        if (VelocityX < 0)
                         {
                             futureMove.X -= _speed;
                             futureMove.Width += _speed;
-                        } else if (_velocityX > 0)
+                        } else if (VelocityX > 0)
                         {
                             futureMove.X += _speed;
                             //futureMove.Width += _speed;
@@ -83,18 +83,18 @@ namespace WraithHunt
                         // Left X collision
                         if (
                             layer != 2 &&
-                            _velocityX < 0 &&
+                            VelocityX < 0 &&
                             collisionRect.Intersects(futureMove) &&
                             /*Check if the player is on the same horizontal plane as the tile*/
                             space.Y > (int) y &&
                             space.Y < (int) y + tileHeight &&
                             /*Check if going further left will intersect the tile with the player*/
                             futureMove.X - _speed < (int) x + tileWidth &&
-                            futureMove.X - _speed - _velocityX - 1 < (int) x + tileWidth
+                            futureMove.X - _speed - VelocityX - 1 < (int) x + tileWidth
                         )
                         {
                             _wallDirection = Direction.LEFT;
-                            _velocityX = 0;
+                            VelocityX = 0;
                             space.X = (int) x + tileWidth + 1;
                             continue;
                         }
@@ -102,18 +102,18 @@ namespace WraithHunt
                         // Right X collision
                         if (
                             layer != 2 &&
-                            _velocityX > 0 &&
+                            VelocityX > 0 &&
                             collisionRect.Intersects(futureMove) &&
                             /*Check if the player is on the same horizontal plane as the tile*/
                             space.Y > (int) y &&
                             space.Y < (int) y + tileHeight &&
                             /*Check if going further left will intersect the tile with the player*/
                             futureMove.X + futureMove.Width + _speed > (int) x &&
-                            futureMove.X + futureMove.Width + _speed + _velocityX > (int) x 
+                            futureMove.X + futureMove.Width + _speed + VelocityX > (int) x 
                         )
                         {
                             _wallDirection = Direction.RIGHT;
-                            _velocityX = 0;
+                            VelocityX = 0;
                             space.X = (int) x - space.width - 1;
                             continue;
                         }
@@ -124,7 +124,7 @@ namespace WraithHunt
                             x < space.X + space.width &&
                             space.X < x + tileWidth &&
                             space.Y > y + tileHeight &&
-                            space.Y - _velocityY < y + tileHeight
+                            space.Y - VelocityY < y + tileHeight
                         )
                         {
                             _collide = true;
@@ -156,11 +156,11 @@ namespace WraithHunt
             foreach(WorldObject platform in platforms)
             {
                 if (
-                    _airborne && _currentGravity < 0 &&
+                    _airborne && VelocityY < 0 &&
                     platform.space.X < space.X + space.width &&
                     space.X < platform.space.X + platform.space.width &&
                     space.Y > platform.space.Y + platform.space.height &&
-                    space.Y - _velocityY < platform.space.Y + platform.space.height
+                    space.Y - VelocityY < platform.space.Y + platform.space.height
                 )
                 {
                     _collide = true;
@@ -185,20 +185,20 @@ namespace WraithHunt
 
             if (_collide) 
             {
-                _currentGravity = 0;
-                _velocityX = 0;
+                VelocityY = 0;
+                VelocityX = 0;
             }
-            else if (_currentGravity < _gravityMax)
+            else if (VelocityY < TerminalVelocityY)
             {
-                _currentGravity += _gravityAccel;
+                VelocityY += _gravityAccel;
             }
 
-            space.Y += (int)((double) _gravityInc * ((double) _currentGravity / (double) _gravityMax));
-            space.X += _velocityX;
-            if (_velocityX > 0)
-                _velocityX--;
-            if (_velocityX < 0)
-                _velocityX++;
+            space.Y += (int)((double) _gravityAccel * ((double) VelocityY / (double) TerminalVelocityY));
+            space.X += VelocityX;
+            if (VelocityX > 0)
+                VelocityX--;
+            if (VelocityX < 0)
+                VelocityX++;
         }
 
         protected Direction checkTileCollision(TmxMap map, Texture2D tileset)
@@ -239,11 +239,11 @@ namespace WraithHunt
 
                         // Check furniture's next position if it were to keep moving
                         Rectangle futureMove = getHitbox();
-                        if (_velocityX < 0)
+                        if (VelocityX < 0)
                         {
                             futureMove.X -= _speed;
                             futureMove.Width += _speed;
-                        } else if (_velocityX > 0)
+                        } else if (VelocityX > 0)
                         {
                             futureMove.X += _speed;
                             //futureMove.Width += _speed;
@@ -252,19 +252,19 @@ namespace WraithHunt
                         // Left X collision
                         if (
                             layer != 2 &&
-                            _velocityX < 0 &&
+                            VelocityX < 0 &&
                             collisionRect.Intersects(futureMove) &&
                             /*Check if the player is on the same horizontal plane as the tile*/
                             space.Y > (int) y &&
                             space.Y < (int) y + tileHeight &&
                             /*Check if going further left will intersect the tile with the player*/
                             futureMove.X - _speed < (int) x + tileWidth &&
-                            futureMove.X - _speed - _velocityX - 1 < (int) x + tileWidth
+                            futureMove.X - _speed - VelocityX - 1 < (int) x + tileWidth
                         )
                         {
                             /*
                             _wallDirection = Direction.LEFT;
-                            _velocityX = 0;
+                            VelocityX = 0;
                             space.X = (int) x + tileWidth + 1;
                             */
 
@@ -275,19 +275,19 @@ namespace WraithHunt
                         // Right X collision
                         if (
                             layer != 2 &&
-                            _velocityX > 0 &&
+                            VelocityX > 0 &&
                             collisionRect.Intersects(futureMove) &&
                             /*Check if the player is on the same horizontal plane as the tile*/
                             space.Y > (int) y &&
                             space.Y < (int) y + tileHeight &&
                             /*Check if going further left will intersect the tile with the player*/
                             futureMove.X + futureMove.Width + _speed > (int) x &&
-                            futureMove.X + futureMove.Width + _speed + _velocityX > (int) x 
+                            futureMove.X + futureMove.Width + _speed + VelocityX > (int) x 
                         )
                         {
                             /*
                             _wallDirection = Direction.RIGHT;
-                            _velocityX = 0;
+                            VelocityX = 0;
                             space.X = (int) x - space.width - 1;
                             */
                             _collidingWith = collisionRect;
@@ -302,7 +302,7 @@ namespace WraithHunt
                             x < space.X + space.width &&
                             space.X < x + tileWidth &&
                             space.Y > y + tileHeight &&
-                            space.Y + _velocityY < y + tileHeight
+                            space.Y + VelocityY < y + tileHeight
                         )
                         {
                             /*

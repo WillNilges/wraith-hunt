@@ -364,9 +364,10 @@ namespace WraithHunt
                     {
                         _furniture.Add(new Furniture(300 + 30*i, 600, 20, 20, Color.Green));
                     }
-                    Furniture chom = new Furniture(1610, 1490, 20, 20, Color.Green);
-                    _furniture.Add(chom);
-                    chom._velocityX = 30;
+                    for (i = 0; i < _furnitureMax; i++)
+                    {
+                        _furniture.Add(new Furniture(1510 + 40*i, 1490, 20, 20, Color.Green));
+                    }
 
                     break;
                 default:
