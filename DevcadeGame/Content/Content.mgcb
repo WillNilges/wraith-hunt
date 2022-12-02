@@ -13,6 +13,37 @@
 
 #---------------------------------- Content ---------------------------------#
 
+
+#begin apartment_block.tmx
+/copy:apartment_block.tmx
+
+#begin chom.tsx
+/copy:chom.tsx
+
+#begin chom_map_2.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:chom_map_2.png
+
+#begin demon_placeholder_01.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:demon_placeholder_01.png
+
 #begin ground_placeholder.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -25,6 +56,25 @@
 /processorParam:TextureFormat=Color
 /build:ground_placeholder.png
 
+#begin hudfont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:hudfont.spritefont
+
+#begin medium_placeholder_01_white.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:medium_placeholder_01_white.png
+
 #begin medium_placeholder.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -36,4 +86,23 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:medium_placeholder.png
+
+#begin red_button.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:red_button.png
+
+#begin titlefont.spritefont
+/importer:FontDescriptionImporter
+/processor:FontDescriptionProcessor
+/processorParam:PremultiplyAlpha=True
+/processorParam:TextureFormat=Compressed
+/build:titlefont.spritefont
 
