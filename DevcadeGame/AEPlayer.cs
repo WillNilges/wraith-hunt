@@ -34,10 +34,10 @@ namespace WraithHunt
             this._spritePath = spritePath;
             this.BodySize = spriteSize;
             this._body = body;
-            this._body.LinearVelocity = new Vector2(10, 1000);
             _body.Mass = 1;
 
             this._body.OnCollision += CollisionHandler;
+            this._body.FixedRotation = true;
         }
 
         /**** FUN STUFF ****/

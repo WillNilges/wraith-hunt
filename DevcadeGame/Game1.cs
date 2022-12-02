@@ -50,12 +50,12 @@ namespace DevcadeGame
 			// TODO: Add your initialization logic here
 
 			world = new World();
-			world.Gravity = new Vector2(0, -20);
+			world.Gravity = new Vector2(0, -20f);
 
             medium = new AEPlayer(
 			   "medium_placeholder",
 				new Vector2(1.5f, 1.5f),
-			   world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(0f, 0f), 0, BodyType.Dynamic)
+			   world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(0f, 100f), 0, BodyType.Dynamic)
 			);
 
             platform = new AEPlayer(
