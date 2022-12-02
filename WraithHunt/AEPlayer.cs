@@ -20,7 +20,7 @@ namespace WraithHunt
         public int health = 10;
 
         // Grounded
-        //private bool _grounded = true;
+        private bool _hasJumped = true;
 
         // Planar nonsense
         public Plane currentPlane;
@@ -48,19 +48,21 @@ namespace WraithHunt
             switch (dir)
             {
                 case Direction.LEFT:
-                    _body.LinearVelocity += new Vector2(-100, 0);
+                    _body.ApplyLinearImpulse(new Vector2(-100, 0));
                     break;
                 case Direction.RIGHT:
-                    _body.LinearVelocity += new Vector2(100, 0);
+                    _body.ApplyLinearImpulse(new Vector2(100, 0));
                     break;
             }
         }
 
         public void Jump()
         {
-            if (Colliding)
-            //_body.ApplyLinearImpulse(new Vector2(0, -20));
-                _body.LinearVelocity += new Vector2(0, -50);
+            if (!_hasJumped)
+            {
+                _body.ApplyLinearImpulse(new Vector2(0, -20000));
+                _hasJumped = true;
+            }
         }
 
         /**** DATA ****/
@@ -98,29 +100,24 @@ namespace WraithHunt
         {
             // Use Green for visual collision indication
             Color color = (Colliding) ? Color.Green : Color.White;
-
             spriteBatch.Draw(
                 _sprite,
-                new Rectangle(
-                    (int) _body.Position.X,
-                    (int) _body.Position.Y,
-                    (int) SpriteSize.X,
-                    (int) SpriteSize.Y
-                ),
+                _body.Position,
                 null,
                 Color.White,
-                0,
-                new Vector2(0, 0),
+                _body.Rotation,
+                new Vector2(0,0),
+                new Vector2(1f, 1f),
                 SpriteEffects.None,
-                0
+                0f
             );
-
         }
 
 
         bool CollisionHandler(Fixture fixture, Fixture other, Contact contact)
         {
             Colliding = true;
+            _hasJumped = false;
             return true;
         }
 
