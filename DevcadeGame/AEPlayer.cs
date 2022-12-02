@@ -1,10 +1,9 @@
-﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using tainicom.Aether.Physics2D.Dynamics;
 using tainicom.Aether.Physics2D.Dynamics.Contacts;
-using Transform;
 
 namespace WraithHunt
 {
@@ -12,8 +11,8 @@ namespace WraithHunt
     {
         private string _spritePath;
         private Texture2D _sprite;
-        public Vector2 SpriteSize;
         private Body _body;
+        public Vector2 BodySize;
 
         // Health
         public int healthMax = 10;
@@ -33,7 +32,7 @@ namespace WraithHunt
         public AEPlayer(string spritePath, Vector2 spriteSize, Body body)
         {
             this._spritePath = spritePath;
-            this.SpriteSize = spriteSize;
+            this.BodySize = spriteSize;
             this._body = body;
             this._body.LinearVelocity = new Vector2(10, 1000);
             _body.Mass = 1;
@@ -42,19 +41,6 @@ namespace WraithHunt
         }
 
         /**** FUN STUFF ****/
-
-        public void Walk(Direction dir)
-        {
-            switch (dir)
-            {
-                case Direction.LEFT:
-                    _body.ApplyLinearImpulse(new Vector2(-100, 0));
-                    break;
-                case Direction.RIGHT:
-                    _body.ApplyLinearImpulse(new Vector2(100, 0));
-                    break;
-            }
-        }
 
         public void Jump()
         {
