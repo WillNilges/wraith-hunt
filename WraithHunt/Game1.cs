@@ -73,6 +73,8 @@ namespace WraithHunt
         Texture2D tileset;
         private List<Body> mapBodies;
 
+        Body platform;
+
         int tileWidth;
         int tileHeight;
         int tilesetTilesWide;
@@ -110,20 +112,20 @@ namespace WraithHunt
 
             // TODO: Add your initialization logic here
             world = new World();
-            world.Gravity = new Vector2(0, 100f);
+            world.Gravity = new Vector2(0, -20f);
 
             camera = new Camera(_graphics.GraphicsDevice);
             demonCamera = new Camera(_graphics.GraphicsDevice);
 
-            camera.Zoom = 2;
-
             medium = new AEPlayer(
                "medium_placeholder_01_white",
                new Vector2(24, 24),
-               world.CreateRectangle(15f, 15f, 1, new Vector2(1500, 1000), 0, BodyType.Dynamic)
+               world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(0f, 0f), 0, BodyType.Dynamic)
             );
 
-             mapBodies = new List<Body>();
+            platform = world.CreateRectangle(20f, 1f, 1, new Vector2(0f, -10f), 0, BodyType.Dynamic);
+
+            mapBodies = new List<Body>();
 
             base.Initialize();
 		}
@@ -163,7 +165,7 @@ namespace WraithHunt
             tilesetTilesWide = tileset.Width / tileWidth;
             tilesetTilesHigh = tileset.Height / tileHeight;
 
-            mapHitboxes();
+            //mapHitboxes();
 
             // Attack System
             _dmgBoxes = new List<DamageBox>(); 
@@ -270,7 +272,7 @@ namespace WraithHunt
                             BodyType.Static
                         );
 
-                        mapBody.SetFriction(100.75f);
+                        mapBody.SetFriction(0.75f);
                         mapBody.SetRestitution(0);
 
                         mapBodies.Add(mapBody);
@@ -301,8 +303,23 @@ namespace WraithHunt
                         float x = (i % map.Width) * map.TileWidth;
                         float y = (float)Math.Floor(i / (double)map.Width) * map.TileHeight;
 
+                        
                         Rectangle tilesetRec = new Rectangle(tileWidth * column, tileHeight * row, tileWidth, tileHeight);
                         _spriteBatch.Draw(tileset, new Rectangle((int)x, (int)y, tileWidth, tileHeight), tilesetRec, Color.White);
+                        
+
+
+                        /*_spriteBatch.Draw(
+                            tileset,
+                            new Vector2(x, y),
+                            null,
+                            Color.White,
+                            0,
+                            new Vector2(0, 0),
+                            new Vector2(1f, 1f),
+                            SpriteEffects.None,
+                            0f
+                        );*/
                     }
                 }
             }
@@ -323,7 +340,7 @@ namespace WraithHunt
 
             // TODO: Add your drawing code here
             // Draw the world map background
-            drawNewMap();
+            //drawNewMap();
             medium.Draw(gameTime, _spriteBatch);
 
             _spriteBatch.End();
