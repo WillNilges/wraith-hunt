@@ -11,6 +11,7 @@ namespace WraithHunt
     {
         private string _spritePath;
         private Texture2D _sprite;
+        private float _spriteScale;
         private Body _body;
         public Vector2 BodySize;
 
@@ -29,10 +30,11 @@ namespace WraithHunt
         /// </summary>
         public bool Colliding { get; protected set; }
 
-        public AEPlayer(string spritePath, Vector2 spriteSize, Body body)
+        public AEPlayer(string spritePath, float spriteScale, Vector2 bodySize, Body body)
         {
             this._spritePath = spritePath;
-            this.BodySize = spriteSize;
+            this._spriteScale = spriteScale;
+            this.BodySize = bodySize;
             this._body = body;
             _body.Mass = 1;
 
@@ -46,7 +48,7 @@ namespace WraithHunt
         {
             if (!_hasJumped)
             {
-                _body.ApplyLinearImpulse(new Vector2(0, -20000));
+                _body.ApplyLinearImpulse(new Vector2(0, -30));
                 _hasJumped = true;
             }
         }
@@ -84,19 +86,23 @@ namespace WraithHunt
         /// <param name="spriteBatch">The spritebatch to render with</param>
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            // Use Green for visual collision indication
-            Color color = (Colliding) ? Color.Green : Color.White;
+            Vector2 screenCoords = new Vector2(_body.Position.X, _body.Position.Y);
+
+            spriteBatch.Draw(_sprite, new Rectangle((int)(screenCoords.X * _spriteScale), (int)(screenCoords.Y * _spriteScale), (int)(BodySize.X * _spriteScale), (int)(BodySize.Y * _spriteScale)), Color.White);
+
+            /*
             spriteBatch.Draw(
                 _sprite,
-                _body.Position,
+                screenCoords,
                 null,
                 Color.White,
                 _body.Rotation,
                 new Vector2(0,0),
-                new Vector2(1f, 1f),
+                new Vector2(.5f, .5f),
                 SpriteEffects.None,
                 0f
             );
+            */
         }
 
 
