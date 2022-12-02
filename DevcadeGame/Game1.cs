@@ -20,6 +20,8 @@ namespace DevcadeGame
 		private AEPlayer medium;
 		private List<AEObject> platforms;
 
+		private Map map;
+
         private Camera camera;
 
 		/// <summary>
@@ -59,6 +61,8 @@ namespace DevcadeGame
 
 			world = new World();
 			world.Gravity = new Vector2(0, 20f);
+
+			map = new Map("Content/apartment_block.tmx", "chom_map_2", _spriteScale);
 
 			medium = new AEPlayer(
 			   "medium_placeholder",
@@ -117,6 +121,8 @@ namespace DevcadeGame
 
 			foreach (AEObject AEObj in platforms)
 				AEObj.LoadContent(Content);
+
+			map.LoadContent(Content, world);
         }
 
 		/// <summary>
@@ -138,6 +144,8 @@ namespace DevcadeGame
 			}
 
 			// TODO: Add your update logic here
+
+			map.Update(gameTime);
 
 			medium.Update(gameTime);
 			foreach(AEObject AEObj in platforms) AEObj.Update(gameTime);
@@ -184,6 +192,8 @@ namespace DevcadeGame
                 AEObj.Draw(gameTime, _spriteBatch);
             }
             medium.Draw(gameTime, _spriteBatch);
+
+			map.Draw(gameTime, _spriteBatch);
             _spriteBatch.End();
 
 			base.Draw(gameTime);
