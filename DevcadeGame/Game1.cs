@@ -5,6 +5,7 @@ using Devcade;
 using WraithHunt;
 using tainicom.Aether.Physics2D.Dynamics;
 using Comora;
+using System.Collections.Generic;
 
 namespace DevcadeGame
 {
@@ -12,13 +13,14 @@ namespace DevcadeGame
 	{
 		private GraphicsDeviceManager _graphics;
 		private SpriteBatch _spriteBatch;
+		private float _spriteScale = 100f;
 
 		private World world;
 
 		private AEPlayer medium;
-		private AEPlayer platform;
+		private List<AEObject> platforms;
 
-		private Camera camera;
+        private Camera camera;
 
 		/// <summary>
 		/// Game constructor
@@ -53,25 +55,48 @@ namespace DevcadeGame
 			// TODO: Add your initialization logic here
 
 			camera = new Camera(_graphics.GraphicsDevice);
-			camera.Zoom = 0.5f;
+			camera.Zoom = 0.1f;
 
 			world = new World();
 			world.Gravity = new Vector2(0, 20f);
 
 			medium = new AEPlayer(
 			   "medium_placeholder",
-			   100.0f,
-				new Vector2(1.5f, 1.5f),
+			   _spriteScale,
+			   new Vector2(1.5f, 1.5f),
 			   world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(0f, -50f), 0, BodyType.Dynamic)
 			);
 
-            platform = new AEPlayer(
-               "ground_placeholder",
-               100.0f,
-                new Vector2(20f, 1f),
-               world.CreateRectangle(20f, 1f, 1, new Vector2(0f, -30f), 0, BodyType.Static)
-            );
+			platforms = new List<AEObject>();
 
+            platforms.Add(new AEObject(
+               "ground_placeholder",
+               _spriteScale,
+               new Vector2(5f, 5f),
+               world.CreateRectangle(5f, 5f, 1, new Vector2(0f, -30f), 0, BodyType.Static)
+            ));
+
+            platforms.Add(new AEObject(
+               "ground_placeholder",
+               _spriteScale,
+               new Vector2(5f, 5f),
+               world.CreateRectangle(5f, 5f, 1, new Vector2(5f, -25f), 0, BodyType.Static)
+            ));
+
+            platforms.Add(new AEObject(
+               "ground_placeholder",
+               _spriteScale,
+               new Vector2(20f, 5f),
+               world.CreateRectangle(20f, 5f, 1, new Vector2(20f, -25f), 0, BodyType.Static)
+            ));
+
+
+            platforms.Add(new AEObject(
+               "ground_placeholder",
+               _spriteScale,
+               new Vector2(200f, 5f),
+               world.CreateRectangle(200f, 5f, 1, new Vector2(-10f, -0f), 0, BodyType.Static)
+            ));
 
             base.Initialize();
 		}
@@ -89,7 +114,9 @@ namespace DevcadeGame
             // texture = Content.Load<Texture2D>("fileNameWithoutExtention");
 
             medium.LoadContent(Content);
-            platform.LoadContent(Content);
+
+			foreach (AEObject AEObj in platforms)
+				AEObj.LoadContent(Content);
         }
 
 		/// <summary>
@@ -113,17 +140,28 @@ namespace DevcadeGame
 			// TODO: Add your update logic here
 
 			medium.Update(gameTime);
-			platform.Update(gameTime);
+			foreach(AEObject AEObj in platforms) AEObj.Update(gameTime);
 
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
-			camera.Position = new Vector2(medium.Position().X * 100f, medium.Position().Y * 100f);
+			camera.Position = new Vector2(medium.Position().X * _spriteScale, medium.Position().Y * _spriteScale);
 			camera.Update(gameTime);
 
             KeyboardState myState = Keyboard.GetState();
+			/** Player 1 **/
             if (myState.IsKeyDown(Keys.W) || Input.GetButtonDown(1, Input.ArcadeButtons.A1))
             {
                 medium.Jump();
+            }
+
+            if (myState.IsKeyDown(Keys.A) || Input.GetButtonHeld(1, Input.ArcadeButtons.StickLeft))
+            {
+                medium.Walk(Direction.LEFT);
+            }
+
+            if (myState.IsKeyDown(Keys.D) || Input.GetButtonHeld(1, Input.ArcadeButtons.StickRight))
+            {
+                medium.Walk(Direction.RIGHT);
             }
 
             base.Update(gameTime);
@@ -141,7 +179,10 @@ namespace DevcadeGame
             _spriteBatch.Begin(camera);
 			//_spriteBatch.Begin(transformMatrix: Matrix.CreateScale(10));
             // TODO: Add your drawing code here
-            platform.Draw(gameTime, _spriteBatch);
+			foreach (AEObject AEObj in platforms)
+			{
+                AEObj.Draw(gameTime, _spriteBatch);
+            }
             medium.Draw(gameTime, _spriteBatch);
             _spriteBatch.End();
 
