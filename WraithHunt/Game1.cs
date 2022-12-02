@@ -114,8 +114,8 @@ namespace WraithHunt
             world = new World();
             world.Gravity = new Vector2(0, -20f);
 
-            camera = new Camera(_graphics.GraphicsDevice);
-            demonCamera = new Camera(_graphics.GraphicsDevice);
+            //camera = new Camera(_graphics.GraphicsDevice);
+            //demonCamera = new Camera(_graphics.GraphicsDevice);
 
             medium = new AEPlayer(
                "medium_placeholder_01_white",
@@ -123,7 +123,7 @@ namespace WraithHunt
                world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(0f, 0f), 0, BodyType.Dynamic)
             );
 
-            platform = world.CreateRectangle(20f, 1f, 1, new Vector2(0f, -10f), 0, BodyType.Dynamic);
+            platform = world.CreateRectangle(20f, 1f, 1, new Vector2(-10f, -30f), 0, BodyType.Static);
 
             mapBodies = new List<Body>();
 
@@ -210,8 +210,10 @@ namespace WraithHunt
 
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
+            /*
             this.camera.Position = medium.Position();
             this.camera.Update(gameTime);
+            */
 
             // Controls
             if (_lastState == null)
@@ -334,7 +336,13 @@ namespace WraithHunt
             // Draw the background and the separation bar.
             GraphicsDevice.Viewport = defaultViewport;
 			GraphicsDevice.Clear(Color.DarkSlateGray);
+            _spriteBatch.Begin();
+            medium.Draw(gameTime, _spriteBatch);
 
+
+
+            /*
+             // split screen shit
             GraphicsDevice.Viewport = leftViewport;
             _spriteBatch.Begin(camera);
 
@@ -358,6 +366,8 @@ namespace WraithHunt
                 ),
                 Color.Black
             );
+            
+            */
             _spriteBatch.End();
 
             GraphicsDevice.Viewport = rightViewport;
