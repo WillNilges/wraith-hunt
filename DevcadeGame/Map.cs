@@ -5,6 +5,7 @@ using System;
 using tainicom.Aether.Physics2D.Dynamics;
 using TiledSharp;
 using System.Collections.Generic;
+using WraithHunt;
 
 namespace DevcadeGame
 {
@@ -92,6 +93,14 @@ namespace DevcadeGame
                     }
                 }
             }
+
+            // This is an interesting idea... Instead of having Bodies, have AEObjects and somehow use the
+            // map data to get sprites, and build these instead of just straight-up bodies.
+
+            // Regardless, I think the above WILL NOT work. We'll need to use the positional data from the bodies in order to
+            // correctly draw. Chicken-and-egg scenario here.
+            /*foreach (AEObject AEObj in tileBodies)
+                AEObj.Draw(gameTime, spriteBatch);*/
         }
     }
 }
