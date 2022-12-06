@@ -20,6 +20,7 @@ namespace DevcadeGame
         private World world;
 
 		private AEPlayer medium;
+		private AEPlayer wraith;
 
 		private Map map;
 
@@ -72,6 +73,13 @@ namespace DevcadeGame
 			   world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(10f, 150f), 0, BodyType.Dynamic)
 			);
 
+            wraith =  new AEPlayer(
+			   "wraith_placeholder",
+			   _spriteScale,
+			   new Vector2(1.5f, 1.5f),
+			   world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(12f, 150f), 0, BodyType.Dynamic)
+			);
+
             base.Initialize();
 		}
 
@@ -89,6 +97,7 @@ namespace DevcadeGame
             _HUDFont = Content.Load<SpriteFont>("hudfont"); 
 
             medium.LoadContent(Content);
+            wraith.LoadContent(Content);
 
 			map.LoadContent(Content, world);
         }
@@ -115,6 +124,7 @@ namespace DevcadeGame
 			map.Update(gameTime);
 
 			medium.Update(gameTime);
+			wraith.Update(gameTime);
 
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
@@ -138,6 +148,22 @@ namespace DevcadeGame
                 medium.Walk(Direction.RIGHT);
             }
 
+			/** Player 2 **/
+            if (myState.IsKeyDown(Keys.I) || Input.GetButtonDown(2, Input.ArcadeButtons.A1))
+            {
+                wraith.Jump();
+            }
+
+            if (myState.IsKeyDown(Keys.J) || Input.GetButtonHeld(2, Input.ArcadeButtons.StickLeft))
+            {
+                wraith.Walk(Direction.LEFT);
+            }
+
+            if (myState.IsKeyDown(Keys.L) || Input.GetButtonHeld(2, Input.ArcadeButtons.StickRight))
+            {
+                wraith.Walk(Direction.RIGHT);
+            }
+
             base.Update(gameTime);
 		}
 
@@ -155,6 +181,7 @@ namespace DevcadeGame
             // TODO: Add your drawing code here
 			map.Draw(gameTime, _spriteBatch);
             medium.Draw(gameTime, _spriteBatch);
+            wraith.Draw(gameTime, _spriteBatch);
             _spriteBatch.End();
 
             // Draw HUDs and other important stuff

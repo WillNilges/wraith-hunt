@@ -13,12 +13,8 @@
 
 #---------------------------------- Content ---------------------------------#
 
-
 #begin apartment_block.tmx
 /copy:apartment_block.tmx
-
-#begin chom.tsx
-/copy:chom.tsx
 
 #begin chom_map_2.png
 /importer:TextureImporter
@@ -31,6 +27,9 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:chom_map_2.png
+
+#begin chom.tsx
+/copy:chom.tsx
 
 #begin demon_placeholder_01.png
 /importer:TextureImporter
@@ -105,4 +104,16 @@
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:titlefont.spritefont
+
+#begin wraith_placeholder.png
+/importer:TextureImporter
+/processor:TextureProcessor
+/processorParam:ColorKeyColor=255,0,255,255
+/processorParam:ColorKeyEnabled=True
+/processorParam:GenerateMipmaps=False
+/processorParam:PremultiplyAlpha=True
+/processorParam:ResizeToPowerOfTwo=False
+/processorParam:MakeSquare=False
+/processorParam:TextureFormat=Color
+/build:wraith_placeholder.png
 
