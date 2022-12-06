@@ -19,6 +19,7 @@ namespace DevcadeGame
         private Texture2D tileset;
 
         protected float _spriteScale;
+        protected float _worldScale;
 
         private int tileWidth;
         private int tileHeight;
@@ -33,7 +34,8 @@ namespace DevcadeGame
             // tileset = Content.Load<Texture2D>("chom_map_2");
             this.tmxPath = tmxPath;
             this.tilesetPath = tilesetPath;
-            this._spriteScale = spriteScale;
+            this._spriteScale = 10f; // Oops lol I gotta manually hardcode this. Tiled moment!
+            this._worldScale = 10f; // Oops lol I gotta manually hardcode this. Tiled moment!
         }
 
 
@@ -73,23 +75,24 @@ namespace DevcadeGame
                         float x = (i % map.Width) * map.TileWidth;
                         float y = (float)Math.Floor(i / (double)map.Width) * map.TileHeight;
 
-                        Console.WriteLine($"Loading map body at {x / _spriteScale}, {y / _spriteScale}");
+                        // Load in the Aether Body to do collision
+                        Console.WriteLine($"Loading map body at {x / _worldScale}, {y / _worldScale}");
 
-                        tileBodies.Add(
-                            new AEObject(
-                               "ground_placeholder",
-                               _spriteScale,
-                               new Vector2(tileWidth / _spriteScale, tileHeight / _spriteScale),
-                               world.CreateRectangle(
-                                   tileWidth / _spriteScale,
-                                   tileHeight / _spriteScale, 
-                                   1,
-                                   new Vector2(x / _spriteScale, y / _spriteScale),
-                                   0,
-                                   BodyType.Static
-                               )
-                            )
+                        AEObject block = new AEObject(
+                           "ground_placeholder",
+                           _worldScale,
+                           new Vector2(tileWidth / _worldScale, tileHeight / _worldScale),
+                           world.CreateRectangle(
+                               tileWidth / _worldScale,
+                               tileHeight / _worldScale, 
+                               1,
+                               new Vector2(x / _worldScale, y / _worldScale),
+                               0,
+                               BodyType.Static
+                           )
                         );
+                        block.LoadContent(contentManager);
+                        tileBodies.Add(block);
                     }
                 }
             }
@@ -102,11 +105,10 @@ namespace DevcadeGame
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            /*
             foreach (AEObject block in tileBodies)
             {
                 block.Draw(gameTime, spriteBatch);
-            }*/
+            }
             
             for (var layer = 0; layer < map.Layers.Count; layer++)
             {
@@ -128,14 +130,15 @@ namespace DevcadeGame
                         float x = (i % map.Width) * map.TileWidth;
                         float y = (float)Math.Floor(i / (double)map.Width) * map.TileHeight;
 
-                        Rectangle tilesetRec = new Rectangle(tileWidth * column, tileHeight * row, tileWidth, tileHeight);
+                        Rectangle tilesetRec = 
+                            new Rectangle(tileWidth * column, tileHeight * row, tileWidth, tileHeight);
                         spriteBatch.Draw(
                             tileset,
                             new Rectangle(
-                                (int)(x / _spriteScale),
-                                (int)(y / _spriteScale),
-                                (int)(tileWidth / _spriteScale),
-                                (int) (tileHeight / _spriteScale)
+                                (int)(x * _spriteScale - (tileWidth * _spriteScale) / 2.0f),
+                                (int)(y * _spriteScale - (tileHeight * _spriteScale) / 2.0f),
+                                (int)(tileWidth * _spriteScale),
+                                (int) (tileHeight * _spriteScale)
                             ),
                             tilesetRec,
                             Color.White

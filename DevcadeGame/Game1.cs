@@ -59,7 +59,7 @@ namespace DevcadeGame
 			// TODO: Add your initialization logic here
 
 			camera = new Camera(_graphics.GraphicsDevice);
-			camera.Zoom = 0.01f;
+			camera.Zoom = 0.1f;
 
 			world = new World();
 			world.Gravity = new Vector2(0, 40f);
@@ -191,13 +191,13 @@ namespace DevcadeGame
             _spriteBatch.Begin(camera);
 			//_spriteBatch.Begin(transformMatrix: Matrix.CreateScale(10));
             // TODO: Add your drawing code here
+			map.Draw(gameTime, _spriteBatch);
 			foreach (AEObject AEObj in platforms)
 			{
                 AEObj.Draw(gameTime, _spriteBatch);
             }
             medium.Draw(gameTime, _spriteBatch);
 
-			map.Draw(gameTime, _spriteBatch);
             _spriteBatch.End();
 
             _spriteBatch.Begin();
