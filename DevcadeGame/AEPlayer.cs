@@ -15,9 +15,10 @@ namespace WraithHunt
         public int health = 10;
 
         // Movement
-        private float _moveSpeed = 1.0f;
+        private float _walkAccel = 1.0f;
+        private float _maxWalkSpeed = 20.0f;
         private bool _hasJumped = true;
-        private float _jumpPower = 15.0f;
+        private float _jumpPower = 30.0f;
 
         // Planar nonsense
         public Plane currentPlane;
@@ -43,13 +44,15 @@ namespace WraithHunt
 
         public void Walk(Direction direction)
         {
+            if (Math.Abs(_body.LinearVelocity.X) > _maxWalkSpeed)
+                return;
             switch (direction)
             {
                 case Direction.LEFT:
-                    _body.ApplyLinearImpulse(new Vector2(-1 * _moveSpeed, 0));
+                    _body.ApplyLinearImpulse(new Vector2(-1 * _walkAccel, 0));
                     break;
                 case Direction.RIGHT:
-                    _body.ApplyLinearImpulse(new Vector2(_moveSpeed, 0));
+                    _body.ApplyLinearImpulse(new Vector2(_walkAccel, 0));
                     break;
                 default:
                     break;
