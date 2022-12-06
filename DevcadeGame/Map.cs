@@ -38,7 +38,6 @@ namespace DevcadeGame
             this._worldScale = 10f; // Oops lol I gotta manually hardcode this. Tiled moment!
         }
 
-
         /**** MONOGAME PLUMBING ****/
 
         public void LoadContent(ContentManager contentManager, World world)
@@ -76,15 +75,13 @@ namespace DevcadeGame
                         float y = (float)Math.Floor(i / (double)map.Width) * map.TileHeight;
 
                         // Load in the Aether Body to do collision
-                        Console.WriteLine($"Loading map body at {x / _worldScale}, {y / _worldScale}");
-
                         AEObject block = new AEObject(
                            "ground_placeholder",
                            _worldScale,
                            new Vector2(tileWidth / _worldScale, tileHeight / _worldScale),
                            world.CreateRectangle(
                                tileWidth / _worldScale,
-                               tileHeight / _worldScale, 
+                               layer == 2 ? tileHeight/4 / _worldScale : tileHeight / _worldScale, 
                                1,
                                new Vector2(x / _worldScale, y / _worldScale),
                                0,
@@ -105,17 +102,11 @@ namespace DevcadeGame
 
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
-            foreach (AEObject block in tileBodies)
-            {
-                block.Draw(gameTime, spriteBatch);
-            }
-            
             for (var layer = 0; layer < map.Layers.Count; layer++)
             {
                 for (var i = 0; i < map.Layers[layer].Tiles.Count; i++)
                 {
                     int gid = map.Layers[layer].Tiles[i].Gid;
-
                     // Empty tile, do nothing
                     if (gid == 0)
                     {

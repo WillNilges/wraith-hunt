@@ -20,7 +20,6 @@ namespace DevcadeGame
         private World world;
 
 		private AEPlayer medium;
-		private List<AEObject> platforms;
 
 		private Map map;
 
@@ -70,39 +69,8 @@ namespace DevcadeGame
 			   "medium_placeholder",
 			   _spriteScale,
 			   new Vector2(1.5f, 1.5f),
-			   world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(0f, -50f), 0, BodyType.Dynamic)
+			   world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(10f, 150f), 0, BodyType.Dynamic)
 			);
-
-			platforms = new List<AEObject>();
-
-            platforms.Add(new AEObject(
-               "ground_placeholder",
-               _spriteScale,
-               new Vector2(5f, 5f),
-               world.CreateRectangle(5f, 5f, 1, new Vector2(0f, -30f), 0, BodyType.Static)
-            ));
-
-            platforms.Add(new AEObject(
-               "ground_placeholder",
-               _spriteScale,
-               new Vector2(5f, 5f),
-               world.CreateRectangle(5f, 5f, 1, new Vector2(5f, -25f), 0, BodyType.Static)
-            ));
-
-            platforms.Add(new AEObject(
-               "ground_placeholder",
-               _spriteScale,
-               new Vector2(20f, 5f),
-               world.CreateRectangle(20f, 5f, 1, new Vector2(20f, -25f), 0, BodyType.Static)
-            ));
-
-
-            platforms.Add(new AEObject(
-               "ground_placeholder",
-               _spriteScale,
-               new Vector2(200f, 5f),
-               world.CreateRectangle(200f, 5f, 1, new Vector2(-10f, -0f), 0, BodyType.Static)
-            ));
 
             base.Initialize();
 		}
@@ -114,7 +82,6 @@ namespace DevcadeGame
 		{
 			_spriteBatch = new SpriteBatch(GraphicsDevice);
 
-
             // TODO: use this.Content to load your game content here
             // ex.
             // texture = Content.Load<Texture2D>("fileNameWithoutExtention");
@@ -122,9 +89,6 @@ namespace DevcadeGame
             _HUDFont = Content.Load<SpriteFont>("hudfont"); 
 
             medium.LoadContent(Content);
-
-			foreach (AEObject AEObj in platforms)
-				AEObj.LoadContent(Content);
 
 			map.LoadContent(Content, world);
         }
@@ -148,11 +112,9 @@ namespace DevcadeGame
 			}
 
 			// TODO: Add your update logic here
-
 			map.Update(gameTime);
 
 			medium.Update(gameTime);
-			foreach(AEObject AEObj in platforms) AEObj.Update(gameTime);
 
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
@@ -192,14 +154,10 @@ namespace DevcadeGame
 			//_spriteBatch.Begin(transformMatrix: Matrix.CreateScale(10));
             // TODO: Add your drawing code here
 			map.Draw(gameTime, _spriteBatch);
-			foreach (AEObject AEObj in platforms)
-			{
-                AEObj.Draw(gameTime, _spriteBatch);
-            }
             medium.Draw(gameTime, _spriteBatch);
-
             _spriteBatch.End();
 
+            // Draw HUDs and other important stuff
             _spriteBatch.Begin();
             medium.DebugDraw(gameTime, _spriteBatch, _HUDFont);
             _spriteBatch.End();

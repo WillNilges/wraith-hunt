@@ -44,8 +44,8 @@ namespace WraithHunt
 
         public void Walk(Direction direction)
         {
-            //if (Math.Abs(_body.LinearVelocity.X) > _maxWalkSpeed)
-            //    return;
+            if (Math.Abs(_body.LinearVelocity.X) > _maxWalkSpeed)
+                return;
             switch (direction)
             {
                 case Direction.LEFT:
@@ -64,32 +64,13 @@ namespace WraithHunt
             if (!_hasJumped)
             {
                 _body.ApplyLinearImpulse(new Vector2(0, -1 * _jumpPower));
-                //_hasJumped = true;
+                _hasJumped = true;
             }
         }
 
         /**** DATA ****/
 
         /**** MONOGAME PLUMBING ****/
-
-        /// <summary>
-        /// Draws the ball using the provided spritebatch
-        /// </summary>
-        /// <param name="gameTime">an object representing time in the game</param>
-        /// <param name="spriteBatch">The spritebatch to render with</param>
-        /*public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            spriteBatch.Draw(
-                _sprite,
-                new Rectangle(
-                    (int)((_body.Position.X * _spriteScale)),
-                    (int)((_body.Position.Y * _spriteScale)),
-                    (int)(BodySize.X * _spriteScale),
-                    (int)(BodySize.Y * _spriteScale)
-                ),
-                Color.White
-            );
-        }*/
 
         bool CollisionHandler(Fixture fixture, Fixture other, Contact contact)
         {
