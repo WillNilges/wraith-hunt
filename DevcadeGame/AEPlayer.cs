@@ -44,8 +44,8 @@ namespace WraithHunt
 
         public void Walk(Direction direction)
         {
-            if (Math.Abs(_body.LinearVelocity.X) > _maxWalkSpeed)
-                return;
+            //if (Math.Abs(_body.LinearVelocity.X) > _maxWalkSpeed)
+            //    return;
             switch (direction)
             {
                 case Direction.LEFT:
@@ -64,7 +64,7 @@ namespace WraithHunt
             if (!_hasJumped)
             {
                 _body.ApplyLinearImpulse(new Vector2(0, -1 * _jumpPower));
-                _hasJumped = true;
+                //_hasJumped = true;
             }
         }
 

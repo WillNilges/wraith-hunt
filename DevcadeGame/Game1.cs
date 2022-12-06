@@ -15,7 +15,9 @@ namespace DevcadeGame
 		private SpriteBatch _spriteBatch;
 		private float _spriteScale = 100f;
 
-		private World world;
+        public SpriteFont _HUDFont;	
+
+        private World world;
 
 		private AEPlayer medium;
 		private List<AEObject> platforms;
@@ -117,6 +119,8 @@ namespace DevcadeGame
             // ex.
             // texture = Content.Load<Texture2D>("fileNameWithoutExtention");
 
+            _HUDFont = Content.Load<SpriteFont>("hudfont"); 
+
             medium.LoadContent(Content);
 
 			foreach (AEObject AEObj in platforms)
@@ -194,6 +198,10 @@ namespace DevcadeGame
             medium.Draw(gameTime, _spriteBatch);
 
 			map.Draw(gameTime, _spriteBatch);
+            _spriteBatch.End();
+
+            _spriteBatch.Begin();
+            medium.DebugDraw(gameTime, _spriteBatch, _HUDFont);
             _spriteBatch.End();
 
 			base.Draw(gameTime);

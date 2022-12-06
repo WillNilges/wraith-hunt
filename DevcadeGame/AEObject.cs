@@ -83,6 +83,21 @@ namespace WraithHunt
             );
         }
 
+        // Draw debug info on the screen, like position.
+        public void DebugDraw(GameTime gameTime, SpriteBatch spriteBatch, SpriteFont font)
+        {
+            string text = $"Position: {_body.Position.X}, {_body.Position.Y}";
+            //Console.WriteLine(text);
+            //Vector2 size = font.MeasureString(text);
+            spriteBatch.DrawString(
+                font, 
+                text, 
+                new Vector2(
+                    1, 1
+                    ), 
+                Color.Yellow
+            );
+        }
 
         bool CollisionHandler(Fixture fixture, Fixture other, Contact contact)
         {
