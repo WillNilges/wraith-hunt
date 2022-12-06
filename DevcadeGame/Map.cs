@@ -81,7 +81,7 @@ namespace DevcadeGame
                            new Vector2(tileWidth / _worldScale, tileHeight / _worldScale),
                            world.CreateRectangle(
                                tileWidth / _worldScale,
-                               layer == 2 ? tileHeight/4 / _worldScale : tileHeight / _worldScale, 
+                               tileHeight / _worldScale, 
                                1,
                                new Vector2(x / _worldScale, y / _worldScale),
                                0,

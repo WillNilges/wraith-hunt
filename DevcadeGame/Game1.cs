@@ -25,6 +25,15 @@ namespace DevcadeGame
 		private Map map;
 
         private Camera camera;
+        private Camera wraithCamera;
+
+        // Here be dragons
+        // Stuff for viewport
+        Viewport defaultViewport;
+        Viewport leftViewport;
+        Viewport rightViewport;
+        Matrix projectionMatrix;
+        Matrix halfprojectionMatrix;
 
 		/// <summary>
 		/// Game constructor
@@ -59,7 +68,9 @@ namespace DevcadeGame
 			// TODO: Add your initialization logic here
 
 			camera = new Camera(_graphics.GraphicsDevice);
+			wraithCamera = new Camera(_graphics.GraphicsDevice);
 			camera.Zoom = 0.1f;
+			wraithCamera.Zoom = 0.1f;
 
 			world = new World();
 			world.Gravity = new Vector2(0, 40f);
@@ -93,6 +104,20 @@ namespace DevcadeGame
             // TODO: use this.Content to load your game content here
             // ex.
             // texture = Content.Load<Texture2D>("fileNameWithoutExtention");
+            
+            // Split Screen
+            defaultViewport = GraphicsDevice.Viewport;
+            leftViewport = defaultViewport;
+            rightViewport = defaultViewport;
+            leftViewport.Height = leftViewport.Height / 2;
+            rightViewport.Height = rightViewport.Height / 2;
+            rightViewport.Y = leftViewport.Height;
+
+            // Projection Matrix
+            projectionMatrix = Matrix.CreatePerspectiveFieldOfView(
+                MathHelper.PiOver4,1.0f, 4.0f / 3.0f, 10000f);
+            halfprojectionMatrix = Matrix.CreatePerspectiveFieldOfView(
+                MathHelper.PiOver4, 1.0f, 2.0f / 3.0f, 10000f);
 
             _HUDFont = Content.Load<SpriteFont>("hudfont"); 
 
@@ -128,8 +153,13 @@ namespace DevcadeGame
 
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
-			camera.Position = new Vector2(medium.Position().X * _spriteScale, medium.Position().Y * _spriteScale);
+			camera.Position =
+                new Vector2(medium.Position().X * _spriteScale, medium.Position().Y * _spriteScale + GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height*2);
 			camera.Update(gameTime);
+
+			wraithCamera.Position =
+                new Vector2(wraith.Position().X * _spriteScale, wraith.Position().Y * _spriteScale + GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height*2);
+			wraithCamera.Update(gameTime);
 
             KeyboardState myState = Keyboard.GetState();
 			/** Player 1 **/
@@ -175,9 +205,16 @@ namespace DevcadeGame
 		{
 			GraphicsDevice.Clear(Color.Black);
 
-			//_spriteBatch.Begin(transformMatrix: Matrix.CreateTranslation(new Vector3(0, 0, 10)));
+            GraphicsDevice.Viewport = leftViewport;
             _spriteBatch.Begin(camera);
-			//_spriteBatch.Begin(transformMatrix: Matrix.CreateScale(10));
+            // TODO: Add your drawing code here
+			map.Draw(gameTime, _spriteBatch);
+            medium.Draw(gameTime, _spriteBatch);
+            wraith.Draw(gameTime, _spriteBatch);
+            _spriteBatch.End();
+
+            GraphicsDevice.Viewport = rightViewport;
+            _spriteBatch.Begin(wraithCamera);
             // TODO: Add your drawing code here
 			map.Draw(gameTime, _spriteBatch);
             medium.Draw(gameTime, _spriteBatch);
@@ -185,6 +222,7 @@ namespace DevcadeGame
             _spriteBatch.End();
 
             // Draw HUDs and other important stuff
+            GraphicsDevice.Viewport = defaultViewport;
             _spriteBatch.Begin();
             medium.DebugDraw(gameTime, _spriteBatch, _HUDFont);
             _spriteBatch.End();
