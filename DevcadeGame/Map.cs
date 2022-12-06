@@ -25,7 +25,7 @@ namespace DevcadeGame
         private int tilesetTilesWide;
         private int tilesetTilesHigh;
 
-        private List<Body> tileBodies;
+        private List<AEObject> tileBodies;
 
         public Map(string tmxPath, string tilesetPath, float spriteScale)
 		{
@@ -49,6 +49,41 @@ namespace DevcadeGame
 
             tilesetTilesWide = tileset.Width / tileWidth;
             tilesetTilesHigh = tileset.Height / tileHeight;
+
+			tileBodies = new List<AEObject>();
+
+            // Map tile locations in the tile map to space in the world.
+            for (var layer = 1; layer < map.Layers.Count; layer++)
+            {
+                for (var i = 0; i < map.Layers[layer].Tiles.Count; i++)
+                {
+                    int gid = map.Layers[layer].Tiles[i].Gid;
+
+                    // Empty tile, do nothing
+                    if (gid == 0)
+                    {
+
+                    }
+                    else
+                    {
+                        int tileFrame = gid - 1;
+                        int column = tileFrame % tilesetTilesWide;
+                        int row = (int)Math.Floor((double)tileFrame / (double)tilesetTilesWide);
+
+                        float x = (i % map.Width) * map.TileWidth;
+                        float y = (float)Math.Floor(i / (double)map.Width) * map.TileHeight;
+
+                        tileBodies.Add(
+                            new AEObject(
+                               "ground_placeholder",
+                               _spriteScale,
+                               new Vector2(tileWidth, tileHeight),
+                               world.CreateRectangle(tileWidth, tileHeight, 1, new Vector2(x, y), 0, BodyType.Static)
+                            )
+                        );
+                    }
+                }
+            }
         }
 
         public void Update(GameTime gameTime)

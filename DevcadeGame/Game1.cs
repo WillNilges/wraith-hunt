@@ -57,10 +57,10 @@ namespace DevcadeGame
 			// TODO: Add your initialization logic here
 
 			camera = new Camera(_graphics.GraphicsDevice);
-			camera.Zoom = 0.1f;
+			camera.Zoom = 0.01f;
 
 			world = new World();
-			world.Gravity = new Vector2(0, 20f);
+			world.Gravity = new Vector2(0, 40f);
 
 			map = new Map("Content/apartment_block.tmx", "chom_map_2", _spriteScale);
 
