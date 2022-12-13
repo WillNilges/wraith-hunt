@@ -225,6 +225,19 @@ namespace DevcadeGame
             GraphicsDevice.Viewport = defaultViewport;
             _spriteBatch.Begin();
             medium.DebugDraw(gameTime, _spriteBatch, _HUDFont);
+            // Draw black dividing bar
+            RectangleSprite.FillRectangle(
+                _spriteBatch,
+                new Rectangle(
+                    0,
+                    defaultViewport.Height / 2,
+                    defaultViewport.Width,
+                    5
+                ),
+                Color.Black
+			);
+			medium.drawHUD(_spriteBatch, defaultViewport, _HUDFont, false);
+            wraith.drawHUD(_spriteBatch, defaultViewport, _HUDFont, true);
             _spriteBatch.End();
 
 			base.Draw(gameTime);
