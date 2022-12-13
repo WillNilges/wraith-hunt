@@ -3,11 +3,21 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
 using System;
+using System.Numerics;
 using tainicom.Aether.Physics2D.Dynamics;
 using tainicom.Aether.Physics2D.Dynamics.Contacts;
+using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace WraithHunt
 {
+
+    public enum Plane
+    {
+        MATERIAL,
+        ETHEREAL
+
+    }
+
     public class AEPlayer : AEObject
     {
         // Health
@@ -79,5 +89,48 @@ namespace WraithHunt
             return true;
         }
 
+        public void drawHUD(SpriteBatch spriteBatch, Viewport defaultViewport, SpriteFont font, bool drawOnBottom)
+        {
+            int HUDHeight = defaultViewport.Height / 2 - 50;
+            if (drawOnBottom)
+            {
+                HUDHeight = defaultViewport.Height / 2 + 50;
+            }
+
+            // Life Bar
+            string textHP = $"LIFE: {health}";
+            Vector2 HUDSize = font.MeasureString(textHP);
+            spriteBatch.DrawString(
+                font,
+                textHP,
+                new Vector2(
+                    defaultViewport.Width / 2 - HUDSize.X / 2,
+                    HUDHeight + (drawOnBottom ? -10 : 0)
+                    ),
+                Color.White
+            );
+
+            RectangleSprite.FillRectangle(
+                spriteBatch,
+                new Rectangle(
+                    0,
+                    HUDHeight + (drawOnBottom ? -20 : 20),
+                    defaultViewport.Width,
+                    10
+                ),
+                Color.Red
+            );
+
+            RectangleSprite.FillRectangle(
+                spriteBatch,
+                new Rectangle(
+                    0,
+                    HUDHeight + (drawOnBottom ? -20 : 20),
+                    (int)((float)defaultViewport.Width * ((float)health / (float)healthMax)),
+                    10
+                ),
+                Color.Green
+            );
+        }
     }
 }
