@@ -31,25 +31,26 @@ namespace WraithHunt
             if (_blastAttackTick < TimeSpan.Zero)
             {
                 _blastAttackTick = _blastAttackCooldown;
+                Vector2 attackSize = new Vector2(5.5f, 5.5f);
                 return new AEDamageBox(
                     _spritePath,
                     _spriteScale,
-                    new Vector2(5.5f, 5.5f),
+                    attackSize,
                     world.CreateRectangle(
                         5.5f,
                         5.5f,
                         1,
                         new Vector2(
-                            _body.LinearVelocity.X > 0 ? _body.Position.X + .5f : _body.Position.X - 1.5f - .5f,
-                            _body.Position.Y
+                            _body.Position.X + (_body.LinearVelocity.X > 0 ? attackSize.X/2 + .5f : -1 * ( attackSize.Y/2 + .5f)),
+                            _body.Position.Y - attackSize.Y/4
                         ),
                         0,
                         BodyType.Dynamic
                     ),
-                    new DamageFrom(this, 4),
+                    new DamageFrom(this, 4, new Vector2(15, -15)),
                     new TimeSpan(0, 0, 0, 0, 500),
                     true,
-                    Color.Red,
+                    Color.Orange,
                     new Vector2(_body.LinearVelocity.X > 0 ? 10 : -10, 0)
                     );
 

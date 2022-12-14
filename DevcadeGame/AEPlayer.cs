@@ -64,10 +64,10 @@ namespace WraithHunt
             switch (direction)
             {
                 case Direction.LEFT:
-                    _body.ApplyLinearImpulse(new Vector2(-1 * _walkAccel, 0));
+                    _body.ApplyLinearImpulse(new Vector2(-1 * _walkAccel, 0.01f));
                     break;
                 case Direction.RIGHT:
-                    _body.ApplyLinearImpulse(new Vector2(_walkAccel, 0));
+                    _body.ApplyLinearImpulse(new Vector2(_walkAccel, 0.01f));
                     break;
                 default:
                     break;
@@ -94,11 +94,9 @@ namespace WraithHunt
             if (other.Tag is DamageFrom && ((DamageFrom)other.Tag).player != this)
             {
                 health -= ((DamageFrom)other.Tag).damage;
+                Vector2 kb = ((DamageFrom)other.Tag).knockback;
                 _body.ApplyLinearImpulse(
-                    new Vector2(
-                        other.Body.LinearVelocity.X > 0 ? 10 : -10,
-                        -10
-                    )
+                    new Vector2(other.Body.LinearVelocity.X > 0 ? kb.X : -1 * kb.X, kb.Y)
                 );
                 other.Tag = 0;
             }
