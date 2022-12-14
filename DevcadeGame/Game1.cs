@@ -108,7 +108,7 @@ namespace DevcadeGame
 				"wraith_placeholder",
 				_spriteScale,
 				new Vector2(1.5f, 1.5f),
-				world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(12f, 150f), 0, BodyType.Dynamic),
+				world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(50f, 100f), 0, BodyType.Dynamic),
                 AETag.MEDIUM
             );
 

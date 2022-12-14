@@ -102,7 +102,8 @@ namespace WraithHunt
             // Only refresh jump if you're standing ON TOP of something.
             if (other.Tag is AETag && (AETag) other.Tag == AETag.WORLD)
             {
-                if (_body.Position.Y - BodySize.Y < other.Body.Position.Y)
+                if (_body.Position.Y - BodySize.Y < other.Body.Position.Y
+                    && _body.LinearVelocity.Y >= 0)
                     _hasJumped = false;
                 return true;
             }
