@@ -78,6 +78,12 @@ namespace WraithHunt
             }
         }
 
+        public AEDamageBox Attack(World world)
+        {
+            // Create a DamageBox that will last for 3 seconds.
+            return new AEDamageBox(_spritePath, _spriteScale, BodySize, world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(_body.Position.X, _body.Position.Y), 0, BodyType.Dynamic), true, 1, new TimeSpan(0, 0, 3), Color.Red);
+        }
+
         /**** DATA ****/
 
         /**** MONOGAME PLUMBING ****/

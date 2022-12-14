@@ -6,6 +6,7 @@ using WraithHunt;
 using tainicom.Aether.Physics2D.Dynamics;
 using Comora;
 using System.Collections.Generic;
+using System;
 
 namespace DevcadeGame
 {
@@ -21,6 +22,8 @@ namespace DevcadeGame
 
 		private AEPlayer medium;
 		private AEPlayer wraith;
+
+		private List<AEDamageBox> damageBoxes;
 
 		private Map map;
 
@@ -91,6 +94,8 @@ namespace DevcadeGame
 			   world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(12f, 150f), 0, BodyType.Dynamic)
 			);
 
+			damageBoxes = new List<AEDamageBox>();
+
             base.Initialize();
 		}
 
@@ -151,6 +156,14 @@ namespace DevcadeGame
 			medium.Update(gameTime);
 			wraith.Update(gameTime);
 
+            foreach (AEDamageBox box in damageBoxes)
+            {
+                box.Update(gameTime, world);
+            }
+
+			// Delete damage boxes whose timers have expired
+            damageBoxes.RemoveAll(x => x.duration < TimeSpan.Zero);
+
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
 			camera.Position =
@@ -178,7 +191,12 @@ namespace DevcadeGame
                 medium.Walk(Direction.RIGHT);
             }
 
-			/** Player 2 **/
+			if (myState.IsKeyDown(Keys.E) || Input.GetButtonHeld(1, Input.ArcadeButtons.A2))
+			{
+				damageBoxes.Add(medium.Attack(world));
+			}
+
+            /** Player 2 **/
             if (myState.IsKeyDown(Keys.I) || Input.GetButtonDown(2, Input.ArcadeButtons.A1))
             {
                 wraith.Jump();
@@ -205,20 +223,27 @@ namespace DevcadeGame
 		{
 			GraphicsDevice.Clear(Color.Black);
 
+			void drawThings()
+			{
+                // TODO: Add your drawing code here
+                map.Draw(gameTime, _spriteBatch);
+                medium.Draw(gameTime, _spriteBatch);
+                wraith.Draw(gameTime, _spriteBatch);
+
+                foreach (AEDamageBox box in damageBoxes)
+                {
+                    box.DrawBox(gameTime, _spriteBatch);
+                }
+            }
+
             GraphicsDevice.Viewport = leftViewport;
             _spriteBatch.Begin(camera);
-            // TODO: Add your drawing code here
-			map.Draw(gameTime, _spriteBatch);
-            medium.Draw(gameTime, _spriteBatch);
-            wraith.Draw(gameTime, _spriteBatch);
+			drawThings();
             _spriteBatch.End();
 
             GraphicsDevice.Viewport = rightViewport;
             _spriteBatch.Begin(wraithCamera);
-            // TODO: Add your drawing code here
-			map.Draw(gameTime, _spriteBatch);
-            medium.Draw(gameTime, _spriteBatch);
-            wraith.Draw(gameTime, _spriteBatch);
+			drawThings();
             _spriteBatch.End();
 
             // Draw HUDs and other important stuff
