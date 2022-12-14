@@ -52,7 +52,7 @@ namespace WraithHunt
                         0,
                         BodyType.Dynamic
                     ),
-                    new DamageFrom(this, 2),
+                    new DamageFrom(this, 2, new Vector2(10, -10)),
                     new TimeSpan(0,0,0,1,500),
                     true,
                     new Color(198, 107, 255),

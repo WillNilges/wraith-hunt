@@ -11,11 +11,13 @@ namespace WraithHunt
     public struct DamageFrom {
         public AEPlayer player;
         public int damage;
+        public Vector2 knockback;
 
-        public DamageFrom(AEPlayer player, int damage)
+        public DamageFrom(AEPlayer player, int damage, Vector2 knockback)
         {
             this.player = player;
             this.damage = damage;
+            this.knockback = knockback;
         }
     }
     public class AEDamageBox : AEObject
@@ -39,7 +41,7 @@ namespace WraithHunt
             this.tick = duration;
             //this.damage = damage;
             this.color = color;
-            //this._body.OnCollision += CollisionHandler;
+            this._body.OnCollision += CollisionHandler;
 
             this._body.FixtureList[0].Tag = damage;
             this._body.IgnoreGravity = true;
@@ -87,6 +89,11 @@ namespace WraithHunt
                 ),
                 color
             );
+        }
+
+        protected bool PlayerCollisionHandler(Fixture fixture, Fixture other, Contact contact)
+        {
+            return false;
         }
     }
 }
