@@ -30,6 +30,7 @@ namespace WraithHunt
             base.Update(gameTime);
             _beamAttackTick -= gameTime.ElapsedGameTime;
         }
+
         public AEDamageBox Attack(World world)
         {
             if (_beamAttackTick < TimeSpan.Zero)

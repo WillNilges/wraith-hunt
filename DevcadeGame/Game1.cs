@@ -216,6 +216,13 @@ namespace DevcadeGame
                 wraith.Walk(Direction.RIGHT);
             }
 
+            if (myState.IsKeyDown(Keys.O) || Input.GetButtonHeld(2, Input.ArcadeButtons.A2))
+            {
+                AEDamageBox box = wraith.Attack(world);
+                if (box != null)
+                    damageBoxes.Add(box);
+            }
+
             base.Update(gameTime);
 		}
 
