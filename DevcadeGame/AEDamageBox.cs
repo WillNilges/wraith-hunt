@@ -24,6 +24,7 @@ namespace WraithHunt
         private bool _decay;
         public int damage;
         public TimeSpan duration;
+        public TimeSpan tick;
 
         private Color color;
 
@@ -35,6 +36,7 @@ namespace WraithHunt
          ) : base(spritePath, spriteScale, bodySize, body) {
             this._decay = decays;
             this.duration = duration;
+            this.tick = duration;
             //this.damage = damage;
             this.color = color;
             //this._body.OnCollision += CollisionHandler;
@@ -50,11 +52,12 @@ namespace WraithHunt
         /// <param name="gameTime">An object representing time in the game</param>
         public void Update(GameTime gameTime, World world)
         {
-            duration -= gameTime.ElapsedGameTime;
-            if (duration < TimeSpan.Zero)
+            tick -= gameTime.ElapsedGameTime;
+            color = color * (float) (tick.TotalMilliseconds / duration.TotalMilliseconds);
+            if (tick < TimeSpan.Zero)
             {
-                Console.WriteLine("hohohohoh time is up >:3");
                 world.Remove(_body);
+                
             }
         }
 
