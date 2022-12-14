@@ -22,7 +22,11 @@ namespace WraithHunt
             this.duration = duration;
             this.damage = damage;
             this.color = color;
-            //this._body.OnCollision += CollisionHandler;
+            this._body.OnCollision += CollisionHandler;
+
+            this._body.FixtureList[0].Tag = AEObjectType.DAMAGE;
+            this._body.IgnoreGravity = true;
+            this._body.LinearVelocity = new Vector2(10, 0);
 
         }
 
@@ -73,6 +77,7 @@ namespace WraithHunt
             if (!_hasHit)
             {
                 _hasHit = true;
+                _body.FixtureList[0].Tag = AEObjectType.NONE;
                 return true;
             }
             return false;

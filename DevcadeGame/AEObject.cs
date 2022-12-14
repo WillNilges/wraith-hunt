@@ -8,6 +8,16 @@ using tainicom.Aether.Physics2D.Dynamics.Contacts;
 
 namespace WraithHunt
 {
+
+    public enum AEObjectType
+    {
+        WORLD,
+        MEDIUM,
+        WRAITH,
+        DAMAGE,
+        NONE
+    }
+
     public class AEObject
     {
         protected string _spritePath;
@@ -32,6 +42,7 @@ namespace WraithHunt
 
             this._body.OnCollision += CollisionHandler;
             this._body.FixedRotation = true;
+            this._body.FixtureList[0].Tag = AEObjectType.NONE;
         }
 
         /**** FUN STUFF ****/
@@ -99,7 +110,7 @@ namespace WraithHunt
             );
         }
 
-        protected virtual bool CollisionHandler(Fixture fixture, Fixture other, Contact contact)
+        public bool CollisionHandler(Fixture fixture, Fixture other, Contact contact)
         {
             Colliding = true;
             return true;
