@@ -57,7 +57,6 @@ namespace WraithHunt
         }
 
         /**** FUN STUFF ****/
-
         public void Walk(Direction direction)
         {
             if (Math.Abs(_body.LinearVelocity.X) > _maxWalkSpeed)
