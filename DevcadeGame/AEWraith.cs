@@ -8,7 +8,10 @@ namespace WraithHunt
     public class AEWraith : AEPlayer
     {
         TimeSpan _blastAttackCooldown = new TimeSpan(0, 0, 0, 0, 500);
-        TimeSpan _blastAttackTick;
+        TimeSpan _blastAttackTick = TimeSpan.Zero;
+
+        TimeSpan _planeSwitchCooldown = new TimeSpan(0, 0, 10);
+        TimeSpan _planeSwitchTick = TimeSpan.Zero;
 
         public AEWraith(
             string spritePath, float spriteScale, Vector2 bodySize, Body body, AETag playerType
@@ -24,6 +27,7 @@ namespace WraithHunt
         {
             base.Update(gameTime);
             _blastAttackTick -= gameTime.ElapsedGameTime;
+            _planeSwitchTick -= gameTime.ElapsedGameTime;
         }
 
         public AEDamageBox Attack(World world)
@@ -57,6 +61,23 @@ namespace WraithHunt
                 //true, 1, new TimeSpan(0, 0, 0, 0, 500), Color.Red, playerType, new Vector2(_body.LinearVelocity.X > 0 ? 30 : -30, 0));
             }
             return null;
+        }
+
+        public void SwitchPlanes()
+        {
+            if (_planeSwitchTick <= TimeSpan.Zero)
+            {
+                System.Diagnostics.Debug.WriteLine("Switching Planes...");
+                if (currentPlane == WHPlane.MATERIAL)
+                {
+                    currentPlane = WHPlane.ETHEREAL;
+                }
+                else if (currentPlane == WHPlane.ETHEREAL)
+                {
+                    currentPlane = WHPlane.MATERIAL;
+                }
+                _planeSwitchTick = _planeSwitchCooldown;
+            }
         }
     }
 }

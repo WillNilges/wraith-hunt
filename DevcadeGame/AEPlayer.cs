@@ -10,8 +10,7 @@ using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace WraithHunt
 {
-
-    public enum Plane
+    public enum WHPlane
     {
         MATERIAL,
         ETHEREAL
@@ -33,7 +32,7 @@ namespace WraithHunt
         protected float floorTileCludge = 0.001f;
         
         // Planar nonsense
-        public Plane currentPlane;
+        public WHPlane currentPlane;
 
         /// <summary>
         /// A boolean indicating if this ball is colliding with another

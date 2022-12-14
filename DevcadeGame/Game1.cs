@@ -288,6 +288,11 @@ namespace DevcadeGame
                         if (box != null)
                             damageBoxes.Add(box);
                     }
+
+                    if (myState.IsKeyDown(Keys.K) || Input.GetButtonDown(2, Input.ArcadeButtons.A3))
+                    {
+                        wraith.SwitchPlanes();
+                    }
                     break;
                 default:
                     break;
@@ -304,12 +309,30 @@ namespace DevcadeGame
         {
             GraphicsDevice.Clear(Color.DarkSlateGray);
 
-            void drawThings()
+            void drawThings(Camera cam, AEPlayer player)
             {
-                // TODO: Add your drawing code here
+                if (player.currentPlane == WHPlane.ETHEREAL)
+                {
+//                    System.Diagnostics.Debug.WriteLine("Drawing ethereal plane");
+                    RectangleSprite.FillRectangle(
+                        _spriteBatch,
+                        new Rectangle(
+                            (int)cam.Position.X - 10000,
+                            (int)cam.Position.Y - 10000,
+                            GraphicsDevice.Viewport.Width * (int) _spriteScale,
+                            GraphicsDevice.Viewport.Height * (int) _spriteScale
+                        ),
+                        new Color(0, 20, 50)
+                    );
+                    //GraphicsDevice.Clear(new Color(0, 20, 50));
+                }
+
                 map.Draw(gameTime, _spriteBatch);
-                medium.Draw(gameTime, _spriteBatch);
-                wraith.Draw(gameTime, _spriteBatch);
+
+                if (player.currentPlane == medium.currentPlane)
+                    medium.Draw(gameTime, _spriteBatch);
+                if (player.currentPlane == wraith.currentPlane)
+                    wraith.Draw(gameTime, _spriteBatch);
 
                 foreach (AEDamageBox box in damageBoxes)
                 {
@@ -317,17 +340,18 @@ namespace DevcadeGame
                 }
                 //killPlane.DrawBox(gameTime, _spriteBatch); // Don't draw the killplane; We don't need it.
             }
+
             switch (state)
             {
                 case GameState.PLAYING:
                     GraphicsDevice.Viewport = leftViewport;
                     _spriteBatch.Begin(camera);
-                    drawThings();
+                    drawThings(camera, medium);
                     _spriteBatch.End();
 
                     GraphicsDevice.Viewport = rightViewport;
                     _spriteBatch.Begin(wraithCamera);
-                    drawThings();
+                    drawThings(wraithCamera, wraith);
                     _spriteBatch.End();
 
                     // Draw HUDs and other important stuff
