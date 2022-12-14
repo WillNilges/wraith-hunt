@@ -22,7 +22,7 @@ namespace WraithHunt
         // Health
         public int healthMax = 10;
         public int health = 10;
-        protected AEObjectType playerType;
+        protected AETag playerType;
 
         // Movement
         protected float _walkAccel = 1.0f;
@@ -39,7 +39,7 @@ namespace WraithHunt
         public bool Colliding { get; protected set; }
 
         public AEPlayer(
-            string spritePath, float spriteScale, Vector2 bodySize, Body body, AEObjectType playerType
+            string spritePath, float spriteScale, Vector2 bodySize, Body body, AETag playerType
         ) : base(
             spritePath, spriteScale, bodySize, body
         )
@@ -85,6 +85,27 @@ namespace WraithHunt
         }
 
         /**** DATA ****/
+        protected bool PlayerCollisionHandler(Fixture fixture, Fixture other, Contact contact)
+        {
+            Colliding = true;
+            _hasJumped = false;
+            if (other.Tag == null)
+                return true;
+
+            if (other.Tag is DamageFrom && ((DamageFrom)other.Tag).player != this)
+            {
+                health -= ((DamageFrom)other.Tag).damage;
+                _body.ApplyLinearImpulse(
+                    new Vector2(
+                        other.Body.LinearVelocity.X > 0 ? 10 : -10,
+                        -10
+                    )
+                );
+                other.Tag = 0;
+            }
+
+            return false;
+        }
 
         /**** MONOGAME PLUMBING ****/
 

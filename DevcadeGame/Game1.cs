@@ -85,7 +85,7 @@ namespace DevcadeGame
 				_spriteScale,
 				new Vector2(1.5f, 1.5f),
 				world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(10f, 150f), 0, BodyType.Dynamic),
-				AEObjectType.WRAITH
+				AETag.WRAITH
 			);
 
             wraith = new AEWraith(
@@ -93,7 +93,7 @@ namespace DevcadeGame
 				_spriteScale,
 				new Vector2(1.5f, 1.5f),
 				world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(12f, 150f), 0, BodyType.Dynamic),
-				AEObjectType.MEDIUM
+                AETag.MEDIUM
             );
 
 			damageBoxes = new List<AEDamageBox>();

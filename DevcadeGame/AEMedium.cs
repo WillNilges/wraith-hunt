@@ -16,13 +16,13 @@ namespace WraithHunt
         TimeSpan _beamAttackTick;
 
         public AEMedium(
-            string spritePath, float spriteScale, Vector2 bodySize, Body body, AEObjectType playerType
+            string spritePath, float spriteScale, Vector2 bodySize, Body body, AETag playerType
         ) : base (
             spritePath, spriteScale, bodySize, body, playerType
         )
         {
-            this._body.OnCollision -= base.CollisionHandler;
-            this._body.OnCollision += CollisionHandler;
+            this._body.OnCollision -= CollisionHandler;
+            this._body.OnCollision += base.PlayerCollisionHandler;
         }
 
         public void Update(GameTime gameTime)
@@ -50,11 +50,11 @@ namespace WraithHunt
                         0,
                         BodyType.Dynamic
                     ),
-                    2,
+                    new DamageFrom(this, 2),
                     new TimeSpan(0,0,0,0,500),
                     true,
                     Color.Red,
-                    new Vector2(_body.LinearVelocity.X > 0 ? 30 : -30, 0)
+                    new Vector2(_body.LinearVelocity.X > 0 ? 50 : -50, 0)
                     ); 
 
 
@@ -62,20 +62,5 @@ namespace WraithHunt
             }
             return null;
         }
-
-        bool CollisionHandler(Fixture fixture, Fixture other, Contact contact)
-        {
-            Colliding = true;
-            _hasJumped = false;
-
-            if (other.Tag != null && (int) other.Tag < 0)
-            {
-                health -= -1 * (int) other.Tag;
-                other.Tag = 0;
-            }
-
-            return true;
-        }
-
     }
 }
