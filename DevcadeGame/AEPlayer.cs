@@ -29,6 +29,7 @@ namespace WraithHunt
         protected float _maxWalkSpeed = 20.0f;
         protected bool _hasJumped = true;
         protected float _jumpPower = 30.0f;
+        protected float _slideCollideCompensation = 0.1f;
 
         // Planar nonsense
         public Plane currentPlane;
@@ -64,10 +65,10 @@ namespace WraithHunt
             switch (direction)
             {
                 case Direction.LEFT:
-                    _body.ApplyLinearImpulse(new Vector2(-1 * _walkAccel, 0.01f));
+                    _body.ApplyLinearImpulse(new Vector2(-1 * _walkAccel, -1 * _slideCollideCompensation));
                     break;
                 case Direction.RIGHT:
-                    _body.ApplyLinearImpulse(new Vector2(_walkAccel, 0.01f));
+                    _body.ApplyLinearImpulse(new Vector2(_walkAccel, -1 * _slideCollideCompensation));
                     break;
                 default:
                     break;
@@ -98,7 +99,8 @@ namespace WraithHunt
                 _body.ApplyLinearImpulse(
                     new Vector2(other.Body.LinearVelocity.X > 0 ? kb.X : -1 * kb.X, kb.Y)
                 );
-                other.Tag = 0;
+                if (((DamageFrom)other.Tag).player != null) // Don't yeet the killplane
+                    other.Tag = 0;
             }
 
             return false;

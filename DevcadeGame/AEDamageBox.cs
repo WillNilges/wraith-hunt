@@ -54,7 +54,8 @@ namespace WraithHunt
         /// <param name="gameTime">An object representing time in the game</param>
         public void Update(GameTime gameTime, World world)
         {
-            tick -= gameTime.ElapsedGameTime;
+            if (_decay)
+                tick -= gameTime.ElapsedGameTime;
             color = color * (float) (tick.TotalMilliseconds / duration.TotalMilliseconds);
             if (tick < TimeSpan.Zero)
             {

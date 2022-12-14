@@ -37,8 +37,8 @@ namespace WraithHunt
                     _spriteScale,
                     attackSize,
                     world.CreateRectangle(
-                        5.5f,
-                        5.5f,
+                        attackSize.X,
+                        attackSize.Y,
                         1,
                         new Vector2(
                             _body.Position.X + (_body.LinearVelocity.X > 0 ? attackSize.X/2 + .5f : -1 * ( attackSize.Y/2 + .5f)),

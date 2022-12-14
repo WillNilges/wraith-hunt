@@ -16,6 +16,7 @@ namespace WraithHunt
         WRAITH,
         MEDIUMATTACK,
         WRAITHATTACK,
+        KILLPLANE,
         NONE
     }
 
