@@ -25,6 +25,8 @@ namespace DevcadeGame
 
 		private List<AEDamageBox> damageBoxes;
 
+		private AEDamageBox killPlane;
+
 		private Map map;
 
         private Camera camera;
@@ -97,6 +99,29 @@ namespace DevcadeGame
             );
 
 			damageBoxes = new List<AEDamageBox>();
+
+            Vector2 killPlaneSize = new Vector2(1000f, 10f);
+
+            killPlane = new AEDamageBox(
+                null,
+                _spriteScale,
+                killPlaneSize,
+                world.CreateRectangle(
+                    killPlaneSize.X,
+                    killPlaneSize.Y,
+                    1,
+                    new Vector2(
+                        -100f, 200f
+                    ),
+                    0,
+                    BodyType.Static
+                ),
+                new DamageFrom(null, 100, new Vector2(15, -15)),
+                new TimeSpan(1, 0, 0, 0, 0),
+                false,
+                Color.DarkGray,
+                new Vector2(0,0)
+            );
 
             base.Initialize();
 		}
@@ -245,6 +270,7 @@ namespace DevcadeGame
                 {
                     box.DrawBox(gameTime, _spriteBatch);
                 }
+                killPlane.DrawBox(gameTime, _spriteBatch);
             }
 
             GraphicsDevice.Viewport = leftViewport;
