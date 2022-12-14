@@ -10,13 +10,25 @@ using System;
 
 namespace DevcadeGame
 {
-	public class Game1 : Game
+    public enum GameState
+    {
+        PLAYING,
+        MEDIUM_WON,
+        WRAITH_WON,
+        START,
+        MENU,
+        PAUSE
+    }
+
+    public class Game1 : Game
 	{
 		private GraphicsDeviceManager _graphics;
 		private SpriteBatch _spriteBatch;
 		private float _spriteScale = 100f;
 
-        public SpriteFont _HUDFont;	
+        public SpriteFont _HUDFont;
+        public SpriteFont _titleFont;
+        private Texture2D _redButton;
 
         private World world;
 
@@ -31,6 +43,8 @@ namespace DevcadeGame
 
         private Camera camera;
         private Camera wraithCamera;
+
+        public GameState state = GameState.START;
 
         // Here be dragons
         // Stuff for viewport
@@ -151,7 +165,9 @@ namespace DevcadeGame
             halfprojectionMatrix = Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.PiOver4, 1.0f, 2.0f / 3.0f, 10000f);
 
-            _HUDFont = Content.Load<SpriteFont>("hudfont"); 
+            _HUDFont = Content.Load<SpriteFont>("hudfont");
+            _titleFont = Content.Load<SpriteFont>("titlefont");
+            _redButton = Content.Load<Texture2D>("red_button");
 
             medium.LoadContent(Content);
             wraith.LoadContent(Content);
@@ -177,90 +193,119 @@ namespace DevcadeGame
 				Exit();
 			}
 
-			// TODO: Add your update logic here
-			map.Update(gameTime);
-
-			medium.Update(gameTime);
-			wraith.Update(gameTime);
-
-            foreach (AEDamageBox box in damageBoxes)
-            {
-                box.Update(gameTime, world);
-            }
-
-			// Delete damage boxes whose timers have expired
-            damageBoxes.RemoveAll(x => x.tick < TimeSpan.Zero);
-
-            world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
-
-			camera.Position =
-                new Vector2(medium.Position().X * _spriteScale, medium.Position().Y * _spriteScale + GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height*2);
-			camera.Update(gameTime);
-
-			wraithCamera.Position =
-                new Vector2(wraith.Position().X * _spriteScale, wraith.Position().Y * _spriteScale + GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height*2);
-			wraithCamera.Update(gameTime);
-
+            // TODO: Add your update logic here
             KeyboardState myState = Keyboard.GetState();
-			/** Player 1 **/
-            if (myState.IsKeyDown(Keys.W) || Input.GetButtonDown(1, Input.ArcadeButtons.A1))
+            switch (state)
             {
-                medium.Jump();
-            }
+                case GameState.START:
+                    medium.Reset();
+                    wraith.Reset();
+                    state = GameState.PLAYING;
+                    break;
+                case GameState.MEDIUM_WON:
+                case GameState.WRAITH_WON:
+                    if (myState.IsKeyDown(Keys.Enter) || Input.GetButtonDown(1, Input.ArcadeButtons.A1))
+                    {
+                        state = GameState.START;
+                    }
+                    break;
+                case GameState.PLAYING:
+                    world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
-            if (myState.IsKeyDown(Keys.A) || Input.GetButtonHeld(1, Input.ArcadeButtons.StickLeft))
-            {
-                medium.Walk(Direction.LEFT);
-            }
+                    if (wraith.health <= 0)
+                    {
+                        state = GameState.MEDIUM_WON;
+                        break;
+                    }
+                    if (medium.health <= 0)
+                    {
+                        state = GameState.WRAITH_WON;
+                        break;
+                    }
+                    map.Update(gameTime);
 
-            if (myState.IsKeyDown(Keys.D) || Input.GetButtonHeld(1, Input.ArcadeButtons.StickRight))
-            {
-                medium.Walk(Direction.RIGHT);
-            }
+                    medium.Update(gameTime);
+                    wraith.Update(gameTime);
 
-			if (myState.IsKeyDown(Keys.E) || Input.GetButtonHeld(1, Input.ArcadeButtons.A2))
-			{
-				AEDamageBox box = medium.Attack(world);
-				if (box != null)
-					damageBoxes.Add(box);
-			}
+                    foreach (AEDamageBox box in damageBoxes)
+                    {
+                        box.Update(gameTime, world);
+                    }
 
-            /** Player 2 **/
-            if (myState.IsKeyDown(Keys.I) || Input.GetButtonDown(2, Input.ArcadeButtons.A1))
-            {
-                wraith.Jump();
-            }
+                    // Delete damage boxes whose timers have expired
+                    damageBoxes.RemoveAll(x => x.tick < TimeSpan.Zero);
 
-            if (myState.IsKeyDown(Keys.J) || Input.GetButtonHeld(2, Input.ArcadeButtons.StickLeft))
-            {
-                wraith.Walk(Direction.LEFT);
-            }
+                    camera.Position =
+                        new Vector2(medium.Position().X * _spriteScale, medium.Position().Y * _spriteScale + GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height * 2);
+                    camera.Update(gameTime);
 
-            if (myState.IsKeyDown(Keys.L) || Input.GetButtonHeld(2, Input.ArcadeButtons.StickRight))
-            {
-                wraith.Walk(Direction.RIGHT);
-            }
+                    wraithCamera.Position =
+                        new Vector2(wraith.Position().X * _spriteScale, wraith.Position().Y * _spriteScale + GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height * 2);
+                    wraithCamera.Update(gameTime);
 
-            if (myState.IsKeyDown(Keys.O) || Input.GetButtonHeld(2, Input.ArcadeButtons.A2))
-            {
-                AEDamageBox box = wraith.Attack(world);
-                if (box != null)
-                    damageBoxes.Add(box);
+                    /** Player 1 **/
+                    if (myState.IsKeyDown(Keys.W) || Input.GetButtonDown(1, Input.ArcadeButtons.A1))
+                    {
+                        medium.Jump();
+                    }
+
+                    if (myState.IsKeyDown(Keys.A) || Input.GetButtonHeld(1, Input.ArcadeButtons.StickLeft))
+                    {
+                        medium.Walk(Direction.LEFT);
+                    }
+
+                    if (myState.IsKeyDown(Keys.D) || Input.GetButtonHeld(1, Input.ArcadeButtons.StickRight))
+                    {
+                        medium.Walk(Direction.RIGHT);
+                    }
+
+                    if (myState.IsKeyDown(Keys.E) || Input.GetButtonHeld(1, Input.ArcadeButtons.A2))
+                    {
+                        AEDamageBox box = medium.Attack(world);
+                        if (box != null)
+                            damageBoxes.Add(box);
+                    }
+
+                    /** Player 2 **/
+                    if (myState.IsKeyDown(Keys.I) || Input.GetButtonDown(2, Input.ArcadeButtons.A1))
+                    {
+                        wraith.Jump();
+                    }
+
+                    if (myState.IsKeyDown(Keys.J) || Input.GetButtonHeld(2, Input.ArcadeButtons.StickLeft))
+                    {
+                        wraith.Walk(Direction.LEFT);
+                    }
+
+                    if (myState.IsKeyDown(Keys.L) || Input.GetButtonHeld(2, Input.ArcadeButtons.StickRight))
+                    {
+                        wraith.Walk(Direction.RIGHT);
+                    }
+
+                    if (myState.IsKeyDown(Keys.O) || Input.GetButtonHeld(2, Input.ArcadeButtons.A2))
+                    {
+                        AEDamageBox box = wraith.Attack(world);
+                        if (box != null)
+                            damageBoxes.Add(box);
+                    }
+                    break;
+                default:
+                    break;
             }
 
             base.Update(gameTime);
 		}
 
-		/// <summary>
-		/// Your main draw loop. This runs once every frame, over and over.
-		/// </summary>
-		/// <param name="gameTime">This is the gameTime object you can use to get the time since last frame.</param>
-		protected override void Draw(GameTime gameTime)
-		{
-			GraphicsDevice.Clear(Color.DarkSlateGray);
+        /// <summary>
+        /// Your main draw loop. This runs once every frame, over and over.
+        /// </summary>
+        /// <param name="gameTime">This is the gameTime object you can use to get the time since last frame.</param>
+        protected override void Draw(GameTime gameTime)
+        {
+            GraphicsDevice.Clear(Color.DarkSlateGray);
 
-			void drawThings()
-			{
+            void drawThings()
+            {
                 // TODO: Add your drawing code here
                 map.Draw(gameTime, _spriteBatch);
                 medium.Draw(gameTime, _spriteBatch);
@@ -270,37 +315,49 @@ namespace DevcadeGame
                 {
                     box.DrawBox(gameTime, _spriteBatch);
                 }
-                killPlane.DrawBox(gameTime, _spriteBatch);
+                //killPlane.DrawBox(gameTime, _spriteBatch); // Don't draw the killplane; We don't need it.
             }
+            switch (state)
+            {
+                case GameState.PLAYING:
+                    GraphicsDevice.Viewport = leftViewport;
+                    _spriteBatch.Begin(camera);
+                    drawThings();
+                    _spriteBatch.End();
 
-            GraphicsDevice.Viewport = leftViewport;
-            _spriteBatch.Begin(camera);
-			drawThings();
-            _spriteBatch.End();
+                    GraphicsDevice.Viewport = rightViewport;
+                    _spriteBatch.Begin(wraithCamera);
+                    drawThings();
+                    _spriteBatch.End();
 
-            GraphicsDevice.Viewport = rightViewport;
-            _spriteBatch.Begin(wraithCamera);
-			drawThings();
-            _spriteBatch.End();
-
-            // Draw HUDs and other important stuff
-            GraphicsDevice.Viewport = defaultViewport;
-            _spriteBatch.Begin();
-            medium.DebugDraw(gameTime, _spriteBatch, _HUDFont);
-            // Draw black dividing bar
-            RectangleSprite.FillRectangle(
-                _spriteBatch,
-                new Rectangle(
-                    0,
-                    defaultViewport.Height / 2,
-                    defaultViewport.Width,
-                    5
-                ),
-                Color.Black
-			);
-			medium.drawHUD(_spriteBatch, defaultViewport, _HUDFont, false);
-            wraith.drawHUD(_spriteBatch, defaultViewport, _HUDFont, true);
-            _spriteBatch.End();
+                    // Draw HUDs and other important stuff
+                    GraphicsDevice.Viewport = defaultViewport;
+                    _spriteBatch.Begin();
+                    medium.DebugDraw(gameTime, _spriteBatch, _HUDFont);
+                    // Draw black dividing bar
+                    RectangleSprite.FillRectangle(
+                        _spriteBatch,
+                        new Rectangle(
+                            0,
+                            defaultViewport.Height / 2,
+                            defaultViewport.Width,
+                            5
+                        ),
+                        Color.Black
+                    );
+                    medium.drawHUD(_spriteBatch, defaultViewport, _HUDFont, false);
+                    wraith.drawHUD(_spriteBatch, defaultViewport, _HUDFont, true);
+                    _spriteBatch.End();
+                    break;
+                case GameState.WRAITH_WON:
+                case GameState.MEDIUM_WON:
+                    _spriteBatch.Begin();
+                    WHScreens.drawWinner(state, GraphicsDevice, defaultViewport, _spriteBatch, _HUDFont, _titleFont, _redButton);
+                    _spriteBatch.End();
+                    break;
+                default:
+                    break;
+            }
 
 			base.Draw(gameTime);
 		}
