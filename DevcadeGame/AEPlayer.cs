@@ -25,12 +25,13 @@ namespace WraithHunt
         protected AETag playerType;
 
         // Movement
+        protected Vector2 _startPosition;
         protected float _walkAccel = 1.0f;
         protected float _maxWalkSpeed = 20.0f;
         protected bool _hasJumped = true;
         protected float _jumpPower = 30.0f;
-        protected float _slideCollideCompensation = 0.1f;
-
+        protected float floorTileCludge = 0.001f;
+        
         // Planar nonsense
         public Plane currentPlane;
 
@@ -55,6 +56,7 @@ namespace WraithHunt
             this._body.FixedRotation = true;
             //this._body.FixtureList[0].Tag = &this;
             this.playerType = playerType;
+            this._startPosition = this._body.Position;
         }
 
         /**** FUN STUFF ****/
@@ -65,10 +67,15 @@ namespace WraithHunt
             switch (direction)
             {
                 case Direction.LEFT:
-                    _body.ApplyLinearImpulse(new Vector2(-1 * _walkAccel, -1 * _slideCollideCompensation));
+                    // REALLY cludgy hack to prevent the player from getting caught on floor tile corners.
+                    if (_body.LinearVelocity.X == 0)
+                        _body.Position = new Vector2(_body.Position.X - floorTileCludge, _body.Position.Y);
+                    _body.ApplyLinearImpulse(new Vector2(-1 * _walkAccel, 0f));
                     break;
                 case Direction.RIGHT:
-                    _body.ApplyLinearImpulse(new Vector2(_walkAccel, -1 * _slideCollideCompensation));
+                    if (_body.LinearVelocity.X == 0)
+                        _body.Position = new Vector2(_body.Position.X + floorTileCludge, _body.Position.Y);
+                    _body.ApplyLinearImpulse(new Vector2(_walkAccel, 0f));
                     break;
                 default:
                     break;
@@ -88,9 +95,17 @@ namespace WraithHunt
         protected bool PlayerCollisionHandler(Fixture fixture, Fixture other, Contact contact)
         {
             Colliding = true;
-            _hasJumped = false;
+
             if (other.Tag == null)
                 return true;
+
+            // Only refresh jump if you're standing ON TOP of something.
+            if (other.Tag is AETag && (AETag) other.Tag == AETag.WORLD)
+            {
+                if (_body.Position.Y - BodySize.Y < other.Body.Position.Y)
+                    _hasJumped = false;
+                return true;
+            }
 
             if (other.Tag is DamageFrom && ((DamageFrom)other.Tag).player != this)
             {
@@ -107,6 +122,13 @@ namespace WraithHunt
         }
 
         /**** MONOGAME PLUMBING ****/
+
+        public void Reset()
+        {
+            this._body.Position = _startPosition;
+            this._body.LinearVelocity = Vector2.Zero;
+            health = healthMax;
+        }
 
         public void drawHUD(SpriteBatch spriteBatch, Viewport defaultViewport, SpriteFont font, bool drawOnBottom)
         {

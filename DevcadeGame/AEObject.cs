@@ -45,7 +45,7 @@ namespace WraithHunt
             this._body.OnCollision += CollisionHandler;
             this._body.FixedRotation = true;
             //this._body.FixtureList[0].Tag = AEObjectType.NONE;
-            //this._body.FixtureList[0].Tag = AETag.WORLD;
+            this._body.FixtureList[0].Tag = AETag.WORLD;
         }
 
         /**** FUN STUFF ****/
