@@ -99,7 +99,7 @@ namespace WraithHunt
             );
         }
 
-        bool CollisionHandler(Fixture fixture, Fixture other, Contact contact)
+        protected virtual bool CollisionHandler(Fixture fixture, Fixture other, Contact contact)
         {
             Colliding = true;
             return true;
