@@ -20,8 +20,8 @@ namespace DevcadeGame
 
         private World world;
 
-		private AEPlayer medium;
-		private AEPlayer wraith;
+		private AEMedium medium;
+		private AEWraith wraith;
 
 		private List<AEDamageBox> damageBoxes;
 
@@ -80,19 +80,21 @@ namespace DevcadeGame
 
 			map = new Map("Content/apartment_block.tmx", "chom_map_2", _spriteScale);
 
-			medium = new AEPlayer(
-			   "medium_placeholder",
-			   _spriteScale,
-			   new Vector2(1.5f, 1.5f),
-			   world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(10f, 150f), 0, BodyType.Dynamic)
+			medium = new AEMedium(
+				"medium_placeholder",
+				_spriteScale,
+				new Vector2(1.5f, 1.5f),
+				world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(10f, 150f), 0, BodyType.Dynamic),
+				AEObjectType.WRAITH
 			);
 
-            wraith =  new AEPlayer(
-			   "wraith_placeholder",
-			   _spriteScale,
-			   new Vector2(1.5f, 1.5f),
-			   world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(12f, 150f), 0, BodyType.Dynamic)
-			);
+            wraith = new AEWraith(
+				"wraith_placeholder",
+				_spriteScale,
+				new Vector2(1.5f, 1.5f),
+				world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(12f, 150f), 0, BodyType.Dynamic),
+				AEObjectType.MEDIUM
+            );
 
 			damageBoxes = new List<AEDamageBox>();
 
@@ -193,7 +195,9 @@ namespace DevcadeGame
 
 			if (myState.IsKeyDown(Keys.E) || Input.GetButtonHeld(1, Input.ArcadeButtons.A2))
 			{
-				damageBoxes.Add(medium.Attack(world));
+				AEDamageBox box = medium.Attack(world);
+				if (box != null)
+					damageBoxes.Add(box);
 			}
 
             /** Player 2 **/

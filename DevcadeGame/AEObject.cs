@@ -9,12 +9,13 @@ using tainicom.Aether.Physics2D.Dynamics.Contacts;
 namespace WraithHunt
 {
 
-    public enum AEObjectType
+    public enum AETag
     {
         WORLD,
         MEDIUM,
         WRAITH,
-        DAMAGE,
+        MEDIUMATTACK,
+        WRAITHATTACK,
         NONE
     }
 
@@ -42,7 +43,8 @@ namespace WraithHunt
 
             this._body.OnCollision += CollisionHandler;
             this._body.FixedRotation = true;
-            this._body.FixtureList[0].Tag = AEObjectType.NONE;
+            //this._body.FixtureList[0].Tag = AEObjectType.NONE;
+            //this._body.FixtureList[0].Tag = AETag.WORLD;
         }
 
         /**** FUN STUFF ****/
