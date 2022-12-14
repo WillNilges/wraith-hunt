@@ -8,29 +8,13 @@ namespace WraithHunt
     public class AEWraith : AEPlayer
     {
         public AEWraith(
-            string spritePath, float spriteScale, Vector2 bodySize, Body body, AEObjectType playerType
+            string spritePath, float spriteScale, Vector2 bodySize, Body body, AETag playerType
         ) : base(
             spritePath, spriteScale, bodySize, body, playerType
         )
         {
-            this._body.OnCollision -= base.CollisionHandler;
-            this._body.OnCollision += CollisionHandler;
+            this._body.OnCollision -= CollisionHandler;
+            this._body.OnCollision += base.PlayerCollisionHandler;
         }
-
-        bool CollisionHandler(Fixture fixture, Fixture other, Contact contact)
-        {
-            Colliding = true;
-            _hasJumped = false;
-
-            if (other.Tag != null && (int)other.Tag > 0)
-            {
-                health -= (int)other.Tag;
-                other.Tag = 0;
-            }
-
-            return true;
-        }
-
-
     }
 }

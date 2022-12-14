@@ -8,6 +8,16 @@ using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace WraithHunt
 {
+    public struct DamageFrom {
+        public AEPlayer player;
+        public int damage;
+
+        public DamageFrom(AEPlayer player, int damage)
+        {
+            this.player = player;
+            this.damage = damage;
+        }
+    }
     public class AEDamageBox : AEObject
     {
         private bool _hasHit = false;
@@ -21,7 +31,7 @@ namespace WraithHunt
 
         public AEDamageBox(
             string spritePath, float spriteScale, Vector2 bodySize, Body body,
-            int damage, TimeSpan duration, bool decays, Color color, Vector2 velocity
+            DamageFrom damage, TimeSpan duration, bool decays, Color color, Vector2 velocity
          ) : base(spritePath, spriteScale, bodySize, body) {
             this._decay = decays;
             this.duration = duration;
