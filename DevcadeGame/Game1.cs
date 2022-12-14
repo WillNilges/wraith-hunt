@@ -164,7 +164,7 @@ namespace DevcadeGame
             }
 
 			// Delete damage boxes whose timers have expired
-            damageBoxes.RemoveAll(x => x.duration < TimeSpan.Zero);
+            damageBoxes.RemoveAll(x => x.tick < TimeSpan.Zero);
 
             world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
@@ -232,7 +232,7 @@ namespace DevcadeGame
 		/// <param name="gameTime">This is the gameTime object you can use to get the time since last frame.</param>
 		protected override void Draw(GameTime gameTime)
 		{
-			GraphicsDevice.Clear(Color.Black);
+			GraphicsDevice.Clear(Color.DarkSlateGray);
 
 			void drawThings()
 			{

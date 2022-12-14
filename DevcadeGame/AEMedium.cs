@@ -36,26 +36,27 @@ namespace WraithHunt
             if (_beamAttackTick < TimeSpan.Zero)
             {
                 _beamAttackTick = _beamAttackCooldown;
+                Vector2 spriteSize = new Vector2(15f, .5f);
                 return new AEDamageBox(
                     _spritePath,
                     _spriteScale,
-                    BodySize,
+                    spriteSize,
                     world.CreateRectangle(
-                        1.5f,
-                        1.5f,
+                        15f,
+                        .5f,
                         1,
                         new Vector2(
-                            _body.LinearVelocity.X > 0 ? _body.Position.X + .5f : _body.Position.X - 1.5f - .5f,
+                            _body.LinearVelocity.X > 0 ? _body.Position.X + spriteSize.X/2 + .5f : _body.Position.X - spriteSize.X/2 - .5f,
                             _body.Position.Y
                         ),
                         0,
                         BodyType.Dynamic
                     ),
                     new DamageFrom(this, 2),
-                    new TimeSpan(0,0,0,0,500),
+                    new TimeSpan(0,0,0,1,500),
                     true,
-                    Color.Red,
-                    new Vector2(_body.LinearVelocity.X > 0 ? 50 : -50, 0)
+                    new Color(198, 107, 255),
+                    new Vector2(_body.LinearVelocity.X > 0 ? 100 : -100, 0)
                     ); 
 
 
