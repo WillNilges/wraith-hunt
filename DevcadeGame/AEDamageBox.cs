@@ -17,17 +17,21 @@ namespace WraithHunt
 
         private Color color;
 
-        public AEDamageBox(string spritePath, float spriteScale, Vector2 bodySize, Body body, bool decays, int damage, TimeSpan duration, Color color) : base(spritePath, spriteScale, bodySize, body) {
+        public AEPlayer owner; // Who owns this device?
+
+        public AEDamageBox(
+            string spritePath, float spriteScale, Vector2 bodySize, Body body,
+            int damage, TimeSpan duration, bool decays, Color color, Vector2 velocity
+         ) : base(spritePath, spriteScale, bodySize, body) {
             this._decay = decays;
             this.duration = duration;
-            this.damage = damage;
+            //this.damage = damage;
             this.color = color;
-            this._body.OnCollision += CollisionHandler;
+            //this._body.OnCollision += CollisionHandler;
 
-            this._body.FixtureList[0].Tag = AEObjectType.DAMAGE;
+            this._body.FixtureList[0].Tag = damage;
             this._body.IgnoreGravity = true;
-            this._body.LinearVelocity = new Vector2(10, 0);
-
+            this._body.LinearVelocity = velocity;
         }
 
         /// <summary>
@@ -71,17 +75,5 @@ namespace WraithHunt
                 color
             );
         }
-
-        protected virtual bool CollisionHandler(Fixture fixture, Fixture other, Contact contact)
-        {
-            if (!_hasHit)
-            {
-                _hasHit = true;
-                _body.FixtureList[0].Tag = AEObjectType.NONE;
-                return true;
-            }
-            return false;
-        }
-
     }
 }

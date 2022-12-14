@@ -22,12 +22,13 @@ namespace WraithHunt
         // Health
         public int healthMax = 10;
         public int health = 10;
+        protected AEObjectType playerType;
 
         // Movement
-        private float _walkAccel = 1.0f;
-        private float _maxWalkSpeed = 20.0f;
-        private bool _hasJumped = true;
-        private float _jumpPower = 30.0f;
+        protected float _walkAccel = 1.0f;
+        protected float _maxWalkSpeed = 20.0f;
+        protected bool _hasJumped = true;
+        protected float _jumpPower = 30.0f;
 
         // Planar nonsense
         public Plane currentPlane;
@@ -37,7 +38,11 @@ namespace WraithHunt
         /// </summary>
         public bool Colliding { get; protected set; }
 
-        public AEPlayer(string spritePath, float spriteScale, Vector2 bodySize, Body body) : base(spritePath, spriteScale, bodySize, body)
+        public AEPlayer(
+            string spritePath, float spriteScale, Vector2 bodySize, Body body, AEObjectType playerType
+        ) : base(
+            spritePath, spriteScale, bodySize, body
+        )
         {
             this._spritePath = spritePath;
             this._spriteScale = spriteScale;
@@ -45,9 +50,10 @@ namespace WraithHunt
             this._body = body;
             _body.Mass = 1;
 
-            this._body.OnCollision += CollisionHandler;
+            //this._body.OnCollision += CollisionHandler;
             this._body.FixedRotation = true;
-            this._body.Tag = 0;
+            //this._body.FixtureList[0].Tag = &this;
+            this.playerType = playerType;
         }
 
         /**** FUN STUFF ****/
@@ -78,28 +84,9 @@ namespace WraithHunt
             }
         }
 
-        public AEDamageBox Attack(World world)
-        {
-            // Create a DamageBox that will last for 3 seconds.
-            return new AEDamageBox(_spritePath, _spriteScale, BodySize, world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(_body.Position.X+2f, _body.Position.Y), 0, BodyType.Dynamic), true, 1, new TimeSpan(0, 0, 3), Color.Red);
-        }
-
         /**** DATA ****/
 
         /**** MONOGAME PLUMBING ****/
-
-        bool CollisionHandler(Fixture fixture, Fixture other, Contact contact)
-        {
-            Colliding = true;
-            _hasJumped = false;
-
-            if ((AEObjectType) other.Tag == AEObjectType.DAMAGE)
-            {
-                health -= 2;
-            }
-
-            return true;
-        }
 
         public void drawHUD(SpriteBatch spriteBatch, Viewport defaultViewport, SpriteFont font, bool drawOnBottom)
         {
