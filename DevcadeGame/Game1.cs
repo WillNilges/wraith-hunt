@@ -266,6 +266,13 @@ namespace DevcadeGame
                             damageBoxes.Add(box);
                     }
 
+                    if (myState.IsKeyDown(Keys.S) || Input.GetButtonDown(1, Input.ArcadeButtons.A3))
+                    {
+                        AEDamageBox box = medium.Blink(Direction.UP, world);
+                        if (box != null)
+                            damageBoxes.Add(box);
+                    }
+
                     /** Player 2 **/
                     if (myState.IsKeyDown(Keys.I) || Input.GetButtonDown(2, Input.ArcadeButtons.A1))
                     {
