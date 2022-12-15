@@ -1,4 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using System;
 using tainicom.Aether.Physics2D.Dynamics;
 using tainicom.Aether.Physics2D.Dynamics.Contacts;
@@ -28,6 +29,59 @@ namespace WraithHunt
             base.Update(gameTime);
             _blastAttackTick -= gameTime.ElapsedGameTime;
             _planeSwitchTick -= gameTime.ElapsedGameTime;
+        }
+
+
+        public void drawHUD(SpriteBatch spriteBatch, Viewport defaultViewport, SpriteFont font, bool drawOnBottom)
+        {
+            base.drawHUD(spriteBatch, defaultViewport, font, drawOnBottom);
+            
+            int HUDHeight = defaultViewport.Height / 2 - 50;
+            if (drawOnBottom)
+            {
+                HUDHeight = defaultViewport.Height / 2 + 50;
+            }
+
+            // PlaneShift Cooldown
+            Color planeshiftTextColor = Color.White;
+            if (_planeSwitchTick > TimeSpan.Zero)
+                planeshiftTextColor = Color.Gray;
+
+            // Planeshift cooldown bar
+            string textPlaneshift = "PLANESHIFT";
+            Vector2 textPlaneshiftSize = font.MeasureString(textPlaneshift);
+            spriteBatch.DrawString(
+                font,
+                textPlaneshift,
+                new Vector2(
+                    20,
+                    HUDHeight + 30
+                ),
+                planeshiftTextColor
+            );
+
+            RectangleSprite.FillRectangle(
+                spriteBatch,
+                new Rectangle(
+                    20,
+                    HUDHeight + 50,
+                    defaultViewport.Width / 5,
+                    5
+                ),
+                Color.Black
+            );
+
+            RectangleSprite.FillRectangle(
+                spriteBatch,
+                new Rectangle(
+                    20,
+                    HUDHeight + 50,
+                    (int)(((float)defaultViewport.Width / 5.0f) *
+                        ((float) _planeSwitchTick.TotalMilliseconds / (float)_planeSwitchCooldown.TotalMilliseconds)),
+                    5
+                ),
+                Color.Orange
+            );
         }
 
         public AEDamageBox Attack(World world)
