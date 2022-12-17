@@ -125,6 +125,15 @@ namespace WraithHunt
 
         public void Reset()
         {
+            // Put wraith on the Ethereal Plane.
+            if (this is AEWraith)
+            {
+                this.currentPlane = WHPlane.ETHEREAL;
+            } else
+            {
+                this.currentPlane = WHPlane.MATERIAL;
+            }
+
             this._body.Position = _startPosition;
             this._body.LinearVelocity = Vector2.Zero;
             health = healthMax;

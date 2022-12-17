@@ -90,6 +90,12 @@ namespace WraithHunt
             );
         }
 
+        public void Reset()
+        {
+            base.Reset();
+            _blinkTick = TimeSpan.Zero;
+        }
+
         public AEDamageBox Attack(World world)
         {
             if (_beamAttackTick < TimeSpan.Zero)
