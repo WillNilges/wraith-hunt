@@ -11,8 +11,8 @@ namespace WraithHunt
         TimeSpan _blastAttackCooldown = new TimeSpan(0, 0, 0, 0, 500);
         TimeSpan _blastAttackTick = TimeSpan.Zero;
 
-        TimeSpan _planeSwitchCooldown = new TimeSpan(0, 0, 10);
-        TimeSpan _planeSwitchTick = TimeSpan.Zero;
+        TimeSpan _planeShiftCooldown = new TimeSpan(0, 0, 10);
+        TimeSpan _planeShiftTick = TimeSpan.Zero;
 
         public AEWraith(
             string spritePath, float spriteScale, Vector2 bodySize, Body body, AETag playerType
@@ -28,7 +28,7 @@ namespace WraithHunt
         {
             base.Update(gameTime);
             _blastAttackTick -= gameTime.ElapsedGameTime;
-            _planeSwitchTick -= gameTime.ElapsedGameTime;
+            _planeShiftTick -= gameTime.ElapsedGameTime;
         }
 
 
@@ -44,7 +44,7 @@ namespace WraithHunt
 
             // PlaneShift Cooldown
             Color planeshiftTextColor = Color.White;
-            if (_planeSwitchTick > TimeSpan.Zero)
+            if (_planeShiftTick > TimeSpan.Zero)
                 planeshiftTextColor = Color.Gray;
 
             // Planeshift cooldown bar
@@ -77,11 +77,18 @@ namespace WraithHunt
                     20,
                     HUDHeight + 50,
                     (int)(((float)defaultViewport.Width / 5.0f) *
-                        ((float) _planeSwitchTick.TotalMilliseconds / (float)_planeSwitchCooldown.TotalMilliseconds)),
+                        ((float) _planeShiftTick.TotalMilliseconds / (float)_planeShiftCooldown.TotalMilliseconds)),
                     5
                 ),
                 Color.Orange
             );
+        }
+
+        public void Reset()
+        {
+            base.Reset();
+            _blastAttackTick = TimeSpan.Zero;
+            _planeShiftTick = TimeSpan.Zero;
         }
 
         public AEDamageBox Attack(World world)
@@ -119,7 +126,7 @@ namespace WraithHunt
 
         public void SwitchPlanes()
         {
-            if (_planeSwitchTick <= TimeSpan.Zero)
+            if (_planeShiftTick <= TimeSpan.Zero)
             {
                 System.Diagnostics.Debug.WriteLine("Switching Planes...");
                 if (currentPlane == WHPlane.MATERIAL)
@@ -130,7 +137,7 @@ namespace WraithHunt
                 {
                     currentPlane = WHPlane.MATERIAL;
                 }
-                _planeSwitchTick = _planeSwitchCooldown;
+                _planeShiftTick = _planeShiftCooldown;
             }
         }
     }
