@@ -35,7 +35,7 @@ namespace WraithHunt
         public void drawHUD(SpriteBatch spriteBatch, Viewport defaultViewport, SpriteFont font, bool drawOnBottom)
         {
             base.drawHUD(spriteBatch, defaultViewport, font, drawOnBottom);
-            
+
             int HUDHeight = defaultViewport.Height / 2 - 50;
             if (drawOnBottom)
             {
@@ -77,7 +77,7 @@ namespace WraithHunt
                     20,
                     HUDHeight + 50,
                     (int)(((float)defaultViewport.Width / 5.0f) *
-                        ((float) _planeShiftTick.TotalMilliseconds / (float)_planeShiftCooldown.TotalMilliseconds)),
+                        ((float)_planeShiftTick.TotalMilliseconds / (float)_planeShiftCooldown.TotalMilliseconds)),
                     5
                 ),
                 Color.Orange
@@ -106,8 +106,8 @@ namespace WraithHunt
                         attackSize.Y,
                         1,
                         new Vector2(
-                            _body.Position.X + (_body.LinearVelocity.X > 0 ? attackSize.X/2 + .5f : -1 * ( attackSize.Y/2 + .5f)),
-                            _body.Position.Y - attackSize.Y/4
+                            _body.Position.X + (_body.LinearVelocity.X > 0 ? attackSize.X / 2 + .5f : -1 * (attackSize.Y / 2 + .5f)),
+                            _body.Position.Y - attackSize.Y / 4
                         ),
                         0,
                         BodyType.Dynamic

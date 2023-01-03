@@ -104,11 +104,11 @@ namespace WraithHunt
             //Console.WriteLine(text);
             //Vector2 size = font.MeasureString(text);
             spriteBatch.DrawString(
-                font, 
-                text, 
+                font,
+                text,
                 new Vector2(
                     1, 1
-                    ), 
+                    ),
                 Color.Yellow
             );
         }

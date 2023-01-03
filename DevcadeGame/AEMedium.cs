@@ -13,7 +13,7 @@ namespace WraithHunt
 {
     public class AEMedium : AEPlayer
     {
-        TimeSpan _beamAttackCooldown = new TimeSpan(0,0,0,0,500);
+        TimeSpan _beamAttackCooldown = new TimeSpan(0, 0, 0, 0, 500);
         TimeSpan _beamAttackTick;
 
         TimeSpan _blinkCooldown = new TimeSpan(0, 0, 12);
@@ -24,7 +24,7 @@ namespace WraithHunt
 
         public AEMedium(
             string spritePath, float spriteScale, Vector2 bodySize, Body body, AETag playerType
-        ) : base (
+        ) : base(
             spritePath, spriteScale, bodySize, body, playerType
         )
         {
@@ -111,21 +111,21 @@ namespace WraithHunt
                         .5f,
                         1,
                         new Vector2(
-                            _body.LinearVelocity.X > 0 ? _body.Position.X + attackSize.X/2 + .5f : _body.Position.X - attackSize.X/2 - .5f,
+                            _body.LinearVelocity.X > 0 ? _body.Position.X + attackSize.X / 2 + .5f : _body.Position.X - attackSize.X / 2 - .5f,
                             _body.Position.Y
                         ),
                         0,
                         BodyType.Dynamic
                     ),
                     new DamageFrom(this, 2, new Vector2(10, -10)),
-                    new TimeSpan(0,0,0,1,500),
+                    new TimeSpan(0, 0, 0, 1, 500),
                     true,
                     new Color(198, 107, 255),
                     new Vector2(_body.LinearVelocity.X > 0 ? 100 : -100, 0)
-                    ); 
+                    );
 
 
-                    //true, 1, new TimeSpan(0, 0, 0, 0, 500), Color.Red, playerType, new Vector2(_body.LinearVelocity.X > 0 ? 30 : -30, 0));
+                //true, 1, new TimeSpan(0, 0, 0, 0, 500), Color.Red, playerType, new Vector2(_body.LinearVelocity.X > 0 ? 30 : -30, 0));
             }
             return null;
         }
