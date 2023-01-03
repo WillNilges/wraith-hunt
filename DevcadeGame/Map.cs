@@ -9,8 +9,8 @@ using WraithHunt;
 
 namespace DevcadeGame
 {
-	public class Map
-	{
+    public class Map
+    {
 
         // New Map Stuff
         private string tmxPath;
@@ -29,7 +29,7 @@ namespace DevcadeGame
         private List<AEObject> tileBodies;
 
         public Map(string tmxPath, string tilesetPath, float spriteScale)
-		{
+        {
             // map = new TmxMap("Content/apartment_block.tmx");
             // tileset = Content.Load<Texture2D>("chom_map_2");
             this.tmxPath = tmxPath;
@@ -51,7 +51,7 @@ namespace DevcadeGame
             tilesetTilesWide = tileset.Width / tileWidth;
             tilesetTilesHigh = tileset.Height / tileHeight;
 
-			tileBodies = new List<AEObject>();
+            tileBodies = new List<AEObject>();
 
             // Map tile locations in the tile map to space in the world.
             for (var layer = 1; layer < map.Layers.Count; layer++)
@@ -81,7 +81,7 @@ namespace DevcadeGame
                            new Vector2(tileWidth / _worldScale, tileHeight / _worldScale),
                            world.CreateRectangle(
                                tileWidth / _worldScale,
-                               tileHeight / _worldScale, 
+                               tileHeight / _worldScale,
                                1,
                                new Vector2(x / _worldScale, y / _worldScale),
                                0,
@@ -121,7 +121,7 @@ namespace DevcadeGame
                         float x = (i % map.Width) * map.TileWidth;
                         float y = (float)Math.Floor(i / (double)map.Width) * map.TileHeight;
 
-                        Rectangle tilesetRec = 
+                        Rectangle tilesetRec =
                             new Rectangle(tileWidth * column, tileHeight * row, tileWidth, tileHeight);
                         spriteBatch.Draw(
                             tileset,
@@ -129,7 +129,7 @@ namespace DevcadeGame
                                 (int)(x * _spriteScale - (tileWidth * _spriteScale) / 2.0f),
                                 (int)(y * _spriteScale - (tileHeight * _spriteScale) / 2.0f),
                                 (int)(tileWidth * _spriteScale),
-                                (int) (tileHeight * _spriteScale)
+                                (int)(tileHeight * _spriteScale)
                             ),
                             tilesetRec,
                             Color.White

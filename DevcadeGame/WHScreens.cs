@@ -8,11 +8,11 @@ namespace WraithHunt
     class WHScreens
     {
         public static void drawWinner(
-            GameState state, 
+            GameState state,
             GraphicsDevice GraphicsDevice,
             Viewport defaultViewport,
-            SpriteBatch _spriteBatch, 
-            SpriteFont _HUDFont, 
+            SpriteBatch _spriteBatch,
+            SpriteFont _HUDFont,
             SpriteFont _titleFont,
             Texture2D _redButton
         )

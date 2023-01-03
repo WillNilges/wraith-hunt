@@ -8,7 +8,8 @@ using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace WraithHunt
 {
-    public struct DamageFrom {
+    public struct DamageFrom
+    {
         public AEPlayer player;
         public int damage;
         public Vector2 knockback;
@@ -35,7 +36,8 @@ namespace WraithHunt
         public AEDamageBox(
             string spritePath, float spriteScale, Vector2 bodySize, Body body,
             DamageFrom damage, TimeSpan duration, bool decays, Color color, Vector2 velocity
-         ) : base(spritePath, spriteScale, bodySize, body) {
+         ) : base(spritePath, spriteScale, bodySize, body)
+        {
             this._decay = decays;
             this.duration = duration;
             this.tick = duration;
@@ -56,11 +58,11 @@ namespace WraithHunt
         {
             if (_decay)
                 tick -= gameTime.ElapsedGameTime;
-            color = color * (float) (tick.TotalMilliseconds / duration.TotalMilliseconds);
+            color = color * (float)(tick.TotalMilliseconds / duration.TotalMilliseconds);
             if (tick < TimeSpan.Zero)
             {
                 world.Remove(_body);
-                
+
             }
         }
 

@@ -21,10 +21,10 @@ namespace DevcadeGame
     }
 
     public class Game1 : Game
-	{
-		private GraphicsDeviceManager _graphics;
-		private SpriteBatch _spriteBatch;
-		private float _spriteScale = 100f;
+    {
+        private GraphicsDeviceManager _graphics;
+        private SpriteBatch _spriteBatch;
+        private float _spriteScale = 100f;
 
         public SpriteFont _HUDFont;
         public SpriteFont _titleFont;
@@ -32,14 +32,14 @@ namespace DevcadeGame
 
         private World world;
 
-		private AEMedium medium;
-		private AEWraith wraith;
+        private AEMedium medium;
+        private AEWraith wraith;
 
-		private List<AEDamageBox> damageBoxes;
+        private List<AEDamageBox> damageBoxes;
 
-		private AEDamageBox killPlane;
+        private AEDamageBox killPlane;
 
-		private Map map;
+        private Map map;
 
         private Camera camera;
         private Camera wraithCamera;
@@ -54,65 +54,65 @@ namespace DevcadeGame
         Matrix projectionMatrix;
         Matrix halfprojectionMatrix;
 
-		/// <summary>
-		/// Game constructor
-		/// </summary>
-		public Game1()
-		{
-			_graphics = new GraphicsDeviceManager(this);
-			Content.RootDirectory = "Content";
-			IsMouseVisible = false;
-		}
+        /// <summary>
+        /// Game constructor
+        /// </summary>
+        public Game1()
+        {
+            _graphics = new GraphicsDeviceManager(this);
+            Content.RootDirectory = "Content";
+            IsMouseVisible = false;
+        }
 
-		/// <summary>
-		/// Does any setup prior to the first frame that doesn't need loaded content.
-		/// </summary>
-		protected override void Initialize()
-		{
-			Input.Initialize(); // Sets up the input library
+        /// <summary>
+        /// Does any setup prior to the first frame that doesn't need loaded content.
+        /// </summary>
+        protected override void Initialize()
+        {
+            Input.Initialize(); // Sets up the input library
 
-			// Set window size if running debug (in release it will be fullscreen)
-			#region
+            // Set window size if running debug (in release it will be fullscreen)
+            #region
 #if DEBUG
-			_graphics.PreferredBackBufferWidth = 420;
-			_graphics.PreferredBackBufferHeight = 980;
-			_graphics.ApplyChanges();
+            _graphics.PreferredBackBufferWidth = 420;
+            _graphics.PreferredBackBufferHeight = 980;
+            _graphics.ApplyChanges();
 #else
 			_graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
 			_graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
 			_graphics.ApplyChanges();
 #endif
-			#endregion
+            #endregion
 
-			// TODO: Add your initialization logic here
+            // TODO: Add your initialization logic here
 
-			camera = new Camera(_graphics.GraphicsDevice);
-			wraithCamera = new Camera(_graphics.GraphicsDevice);
-			camera.Zoom = 0.1f;
-			wraithCamera.Zoom = 0.1f;
+            camera = new Camera(_graphics.GraphicsDevice);
+            wraithCamera = new Camera(_graphics.GraphicsDevice);
+            camera.Zoom = 0.1f;
+            wraithCamera.Zoom = 0.1f;
 
-			world = new World();
-			world.Gravity = new Vector2(0, 40f);
+            world = new World();
+            world.Gravity = new Vector2(0, 40f);
 
-			map = new Map("Content/apartment_block.tmx", "chom_map_2", _spriteScale);
+            map = new Map("Content/apartment_block.tmx", "chom_map_2", _spriteScale);
 
-			medium = new AEMedium(
-				"medium_placeholder",
-				_spriteScale,
-				new Vector2(1.5f, 1.5f),
-				world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(10f, 150f), 0, BodyType.Dynamic),
-				AETag.WRAITH
-			);
+            medium = new AEMedium(
+                "medium_placeholder",
+                _spriteScale,
+                new Vector2(1.5f, 1.5f),
+                world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(10f, 150f), 0, BodyType.Dynamic),
+                AETag.WRAITH
+            );
 
             wraith = new AEWraith(
-				"wraith_placeholder",
-				_spriteScale,
-				new Vector2(1.5f, 1.5f),
-				world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(50f, 100f), 0, BodyType.Dynamic),
+                "wraith_placeholder",
+                _spriteScale,
+                new Vector2(1.5f, 1.5f),
+                world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(50f, 100f), 0, BodyType.Dynamic),
                 AETag.MEDIUM
             );
 
-			damageBoxes = new List<AEDamageBox>();
+            damageBoxes = new List<AEDamageBox>();
 
             Vector2 killPlaneSize = new Vector2(1000f, 10f);
 
@@ -134,23 +134,23 @@ namespace DevcadeGame
                 new TimeSpan(1, 0, 0, 0, 0),
                 false,
                 Color.DarkGray,
-                new Vector2(0,0)
+                new Vector2(0, 0)
             );
 
             base.Initialize();
-		}
+        }
 
-		/// <summary>
-		/// Does any setup prior to the first frame that needs loaded content.
-		/// </summary>
-		protected override void LoadContent()
-		{
-			_spriteBatch = new SpriteBatch(GraphicsDevice);
+        /// <summary>
+        /// Does any setup prior to the first frame that needs loaded content.
+        /// </summary>
+        protected override void LoadContent()
+        {
+            _spriteBatch = new SpriteBatch(GraphicsDevice);
 
             // TODO: use this.Content to load your game content here
             // ex.
             // texture = Content.Load<Texture2D>("fileNameWithoutExtention");
-            
+
             // Split Screen
             defaultViewport = GraphicsDevice.Viewport;
             leftViewport = defaultViewport;
@@ -161,7 +161,7 @@ namespace DevcadeGame
 
             // Projection Matrix
             projectionMatrix = Matrix.CreatePerspectiveFieldOfView(
-                MathHelper.PiOver4,1.0f, 4.0f / 3.0f, 10000f);
+                MathHelper.PiOver4, 1.0f, 4.0f / 3.0f, 10000f);
             halfprojectionMatrix = Matrix.CreatePerspectiveFieldOfView(
                 MathHelper.PiOver4, 1.0f, 2.0f / 3.0f, 10000f);
 
@@ -172,26 +172,26 @@ namespace DevcadeGame
             medium.LoadContent(Content);
             wraith.LoadContent(Content);
 
-			map.LoadContent(Content, world);
+            map.LoadContent(Content, world);
         }
 
-		/// <summary>
-		/// Your main update loop. This runs once every frame, over and over.
-		/// </summary>
-		/// <param name="gameTime">This is the gameTime object you can use to get the time since last frame.</param>
-		protected override void Update(GameTime gameTime)
-		{
-			Input.Update(); // Updates the state of the input library
+        /// <summary>
+        /// Your main update loop. This runs once every frame, over and over.
+        /// </summary>
+        /// <param name="gameTime">This is the gameTime object you can use to get the time since last frame.</param>
+        protected override void Update(GameTime gameTime)
+        {
+            Input.Update(); // Updates the state of the input library
 
-			// Exit when both menu buttons are pressed (or escape for keyboard debuging)
-			// You can change this but it is suggested to keep the keybind of both menu
-			// buttons at once for gracefull exit.
-			if (Keyboard.GetState().IsKeyDown(Keys.Escape) ||
-				(Input.GetButton(1, Input.ArcadeButtons.Menu) &&
-				Input.GetButton(2, Input.ArcadeButtons.Menu)))
-			{
-				Exit();
-			}
+            // Exit when both menu buttons are pressed (or escape for keyboard debuging)
+            // You can change this but it is suggested to keep the keybind of both menu
+            // buttons at once for gracefull exit.
+            if (Keyboard.GetState().IsKeyDown(Keys.Escape) ||
+                (Input.GetButton(1, Input.ArcadeButtons.Menu) &&
+                Input.GetButton(2, Input.ArcadeButtons.Menu)))
+            {
+                Exit();
+            }
 
             // TODO: Add your update logic here
             KeyboardState myState = Keyboard.GetState();
@@ -306,7 +306,7 @@ namespace DevcadeGame
             }
 
             base.Update(gameTime);
-		}
+        }
 
         /// <summary>
         /// Your main draw loop. This runs once every frame, over and over.
@@ -320,14 +320,14 @@ namespace DevcadeGame
             {
                 if (player.currentPlane == WHPlane.ETHEREAL)
                 {
-//                    System.Diagnostics.Debug.WriteLine("Drawing ethereal plane");
+                    //                    System.Diagnostics.Debug.WriteLine("Drawing ethereal plane");
                     RectangleSprite.FillRectangle(
                         _spriteBatch,
                         new Rectangle(
                             (int)cam.Position.X - 10000,
                             (int)cam.Position.Y - 10000,
-                            GraphicsDevice.Viewport.Width * (int) _spriteScale,
-                            GraphicsDevice.Viewport.Height * (int) _spriteScale
+                            GraphicsDevice.Viewport.Width * (int)_spriteScale,
+                            GraphicsDevice.Viewport.Height * (int)_spriteScale
                         ),
                         new Color(0, 20, 50)
                     );
@@ -390,7 +390,7 @@ namespace DevcadeGame
                     break;
             }
 
-			base.Draw(gameTime);
-		}
-	}
+            base.Draw(gameTime);
+        }
+    }
 }
