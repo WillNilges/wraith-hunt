@@ -35,6 +35,8 @@ namespace DevcadeGame
         private AEMedium medium;
         private AEWraith wraith;
 
+        private List<AEObject> tkThrowables; // List of shit the wraith can chuck at people
+
         private List<AEDamageBox> damageBoxes;
 
         private AEDamageBox killPlane;
@@ -112,6 +114,8 @@ namespace DevcadeGame
                 AETag.MEDIUM
             );
 
+            tkThrowables = new List<AEObject>();
+
             damageBoxes = new List<AEDamageBox>();
 
             Vector2 killPlaneSize = new Vector2(1000f, 10f);
@@ -172,6 +176,20 @@ namespace DevcadeGame
             medium.LoadContent(Content);
             wraith.LoadContent(Content);
 
+            for (int i = 0; i < 10; i++)
+            {
+                AEObject throwable = new AEObject(
+                    "ground_placeholder",
+                    _spriteScale,
+                    new Vector2(1.5f, 1.5f),
+                    world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(50f + (float)(i * 10), 100f), 0, BodyType.Dynamic)
+                );
+
+                throwable.LoadContent(Content);
+
+                tkThrowables.Add(throwable);
+            }
+
             map.LoadContent(Content, world);
         }
 
@@ -226,6 +244,11 @@ namespace DevcadeGame
 
                     medium.Update(gameTime);
                     wraith.Update(gameTime);
+
+                    foreach (AEObject throwable in tkThrowables)
+                    {
+                        throwable.Update(gameTime);
+                    }
 
                     foreach (AEDamageBox box in damageBoxes)
                     {
@@ -340,6 +363,11 @@ namespace DevcadeGame
                     medium.Draw(gameTime, _spriteBatch);
                 if (player.currentPlane == wraith.currentPlane)
                     wraith.Draw(gameTime, _spriteBatch);
+
+                foreach (AEObject throwable in tkThrowables)
+                {
+                    throwable.Draw(gameTime, _spriteBatch);
+                }
 
                 foreach (AEDamageBox box in damageBoxes)
                 {
