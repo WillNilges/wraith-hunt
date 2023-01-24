@@ -61,9 +61,13 @@ namespace WraithHunt
                 effects = SpriteEffects.FlipHorizontally;
             }
 
+            Rectangle dimensions = GetCameraCoords();
+            dimensions.X = (int) (dimensions.X / 2f);
+            dimensions.Y = (int)(dimensions.Y / 2f) - dimensions.Height/2;
+
             spriteBatch.Draw(
                 _sprite,
-                GetCameraCoords(),
+                dimensions,
                 null,
                 Color.White,
                 0,
