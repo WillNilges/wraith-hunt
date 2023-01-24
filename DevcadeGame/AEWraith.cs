@@ -1,4 +1,5 @@
-﻿using Microsoft.Xna.Framework;
+﻿using DevcadeGame;
+using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
@@ -38,7 +39,7 @@ namespace WraithHunt
             base.Update(gameTime);
             _blastAttackTick -= gameTime.ElapsedGameTime;
             _planeShiftTick -= gameTime.ElapsedGameTime;
-            _TKCooldown -= gameTime.ElapsedGameTime;
+            _TKTick -= gameTime.ElapsedGameTime;
             TKSearch(throwables);
         }
 
@@ -50,7 +51,7 @@ namespace WraithHunt
         public void DrawExtas(GameTime gameTime, SpriteBatch spriteBatch)
         {
             // Draw an outline of the nearest throwable on the Wraith's screen.
-            if (_TKCandidate != null)
+            if (_TKTick <= TimeSpan.Zero && _TKCandidate != null)
                 _TKCandidate.DrawOutline(spriteBatch);
         }
 
@@ -105,38 +106,47 @@ namespace WraithHunt
                 Color.Orange
             );
 
-            if (_TKCandidate != null)
-            {
-                // DEBUG
-                RectangleSprite.FillRectangle(
-                    spriteBatch,
-                    new Rectangle(
-                        20,
-                        600,
-                        10,
-                        10
-                    ),
-                    Color.Yellow
-                );
 
-                /*
-                //float TKSS = _TKCandidate.getSpriteScale();
-                float TKSS = 2;
+            // TKBlast Cooldown
+            Color tkBlastTextColor = Color.White;
+            if (_TKTick > TimeSpan.Zero || _TKCandidate == null)
+                tkBlastTextColor = Color.Gray;
 
-                int one = (int)((_TKCandidate.Position().X * TKSS) - (_TKCandidate.getBodySize().X * TKSS) / 2.0f);
-                int two = (int)((_TKCandidate.Position().Y * TKSS) - (_TKCandidate.getBodySize().Y * TKSS) / 2.0f);
-                int three = (int)(_TKCandidate.getBodySize().X * TKSS);
-                int four = (int)(_TKCandidate.getBodySize().Y * TKSS);
+            // Planeshift cooldown bar
+            string textTkBlast = "BLAST";
+            Vector2 textTkBlastSize = font.MeasureString(textTkBlast);
+            spriteBatch.DrawString(
+                font,
+                textTkBlast,
+                new Vector2(
+                    20,
+                    HUDHeight + 70
+                ),
+                tkBlastTextColor
+            );
 
-                RectangleSprite.FillRectangle(
-                    spriteBatch,
-                    new Rectangle(
-                        one, two, three, four
-                    ),
-                    Color.Yellow
-                );
-                */
-            }
+            RectangleSprite.FillRectangle(
+                spriteBatch,
+                new Rectangle(
+                    20,
+                    HUDHeight + 90,
+                    defaultViewport.Width / 5,
+                    5
+                ),
+                Color.Black
+            );
+
+            RectangleSprite.FillRectangle(
+                spriteBatch,
+                new Rectangle(
+                    20,
+                    HUDHeight + 90,
+                    (int)(((float)defaultViewport.Width / 5.0f) *
+                        ((float)_TKTick.TotalMilliseconds / (float)_TKCooldown.TotalMilliseconds)),
+                    5
+                ),
+                Color.Orange
+            );
         }
 
         public void Reset()
@@ -144,6 +154,7 @@ namespace WraithHunt
             base.Reset();
             _blastAttackTick = TimeSpan.Zero;
             _planeShiftTick = TimeSpan.Zero;
+            _TKTick = TimeSpan.Zero;
         }
 
         public AEDamageBox Attack(World world)
@@ -223,6 +234,47 @@ namespace WraithHunt
             float pythag = (float)Math.Sqrt(distX * distX + distY * distY);
             if (pythag > _TKRange)
                 _TKCandidate = null;
+        }
+        public AEDamageBox TKBlast(World world)
+        {
+            if (_TKCandidate != null && _TKTick <= TimeSpan.Zero)
+            {
+                int dirMod = 1;
+                /*
+                 * FIXME: FACE DIRECTIONS >:(
+                if (facing == Direction.LEFT)
+                    dirMod = -1;
+                */
+
+                _TKCandidate.setPosition(new Vector2(_TKCandidate.Position().X + 0.5f * dirMod, _TKCandidate.Position().Y - 0.5f));
+
+                _TKCandidate.setVelocity(new Vector2(_TKCandidate.Velocity().X + 30f * dirMod, _TKCandidate.Velocity().Y - 30f));
+                _TKTick = _TKCooldown;
+
+                Vector2 attackSize = new Vector2(5.5f, 5.5f);
+                return new AEDamageBox(
+                    _spritePath,
+                    _spriteScale,
+                    attackSize,
+                    world.CreateRectangle(
+                        attackSize.X,
+                        attackSize.Y,
+                        1,
+                        new Vector2(
+                            _body.Position.X + (_body.LinearVelocity.X > 0 ? attackSize.X / 2 + .5f : -1 * (attackSize.Y / 2 + .5f)),
+                            _body.Position.Y - attackSize.Y / 4
+                        ),
+                        0,
+                        BodyType.Dynamic
+                    ),
+                    new DamageFrom(this, 4, new Vector2(15, -15)),
+                    new TimeSpan(0, 0, 0, 0, 500),
+                    true,
+                    Color.Orange,
+                    new Vector2(_body.LinearVelocity.X > 0 ? 10 : -10, 0)
+                    );
+            }
+            return null;
         }
     }
 }
