@@ -172,7 +172,7 @@ namespace WraithHunt
                         attackSize.Y,
                         1,
                         new Vector2(
-                            _body.Position.X + (_body.LinearVelocity.X > 0 ? attackSize.X / 2 + .5f : -1 * (attackSize.Y / 2 + .5f)),
+                            _body.Position.X + (facing == Direction.RIGHT ? attackSize.X / 2 + .5f : -1 * (attackSize.Y / 2 + .5f)),
                             _body.Position.Y - attackSize.Y / 4
                         ),
                         0,
@@ -182,7 +182,7 @@ namespace WraithHunt
                     new TimeSpan(0, 0, 0, 0, 500),
                     true,
                     Color.Orange,
-                    new Vector2(_body.LinearVelocity.X > 0 ? 10 : -10, 0)
+                    new Vector2(facing == Direction.RIGHT ? 10 : -10, 0)
                     );
 
                 //true, 1, new TimeSpan(0, 0, 0, 0, 500), Color.Red, playerType, new Vector2(_body.LinearVelocity.X > 0 ? 30 : -30, 0));
@@ -240,11 +240,8 @@ namespace WraithHunt
             if (_TKCandidate != null && _TKTick <= TimeSpan.Zero)
             {
                 int dirMod = 1;
-                /*
-                 * FIXME: FACE DIRECTIONS >:(
                 if (facing == Direction.LEFT)
                     dirMod = -1;
-                */
 
                 _TKCandidate.setPosition(new Vector2(_TKCandidate.Position().X + 0.5f * dirMod, _TKCandidate.Position().Y - 0.5f));
 
@@ -261,7 +258,7 @@ namespace WraithHunt
                         attackSize.Y,
                         1,
                         new Vector2(
-                            _body.Position.X + (_body.LinearVelocity.X > 0 ? attackSize.X / 2 + .5f : -1 * (attackSize.Y / 2 + .5f)),
+                            _body.Position.X + (facing == Direction.RIGHT ? attackSize.X / 2 + .5f : -1 * (attackSize.Y / 2 + .5f)),
                             _body.Position.Y - attackSize.Y / 4
                         ),
                         0,
@@ -271,7 +268,7 @@ namespace WraithHunt
                     new TimeSpan(0, 0, 0, 0, 500),
                     true,
                     Color.Orange,
-                    new Vector2(_body.LinearVelocity.X > 0 ? 10 : -10, 0)
+                    new Vector2(facing == Direction.RIGHT ? 10 : -10, 0)
                     );
             }
             return null;

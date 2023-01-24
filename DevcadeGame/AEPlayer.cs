@@ -10,12 +10,6 @@ using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace WraithHunt
 {
-    public enum WHPlane
-    {
-        MATERIAL,
-        ETHEREAL
-    }
-
     public class AEPlayer : AEObject
     {
         // Health
@@ -30,6 +24,7 @@ namespace WraithHunt
         protected bool _hasJumped = true;
         protected float _jumpPower = 30.0f;
         protected float floorTileCludge = 0.001f;
+        protected Direction facing;
 
         // Planar nonsense
         public WHPlane currentPlane;
@@ -57,10 +52,32 @@ namespace WraithHunt
             this.playerType = playerType;
             this._startPosition = this._body.Position;
         }
+        
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            SpriteEffects effects = SpriteEffects.None;
+            if (facing == Direction.RIGHT)
+            {
+                effects = SpriteEffects.FlipHorizontally;
+            }
+
+            spriteBatch.Draw(
+                _sprite,
+                GetCameraCoords(),
+                null,
+                Color.White,
+                0,
+                new Vector2(0, 0),
+                effects,
+                0
+            );
+
+        }
 
         /**** FUN STUFF ****/
         public void Walk(Direction direction)
         {
+            facing = direction;
             if (Math.Abs(_body.LinearVelocity.X) > _maxWalkSpeed)
                 return;
             switch (direction)
@@ -107,12 +124,13 @@ namespace WraithHunt
                 return true;
             }
 
+            // Handle getting hit by an attack
             if (other.Tag is DamageFrom && ((DamageFrom)other.Tag).player != this)
             {
                 health -= ((DamageFrom)other.Tag).damage;
                 Vector2 kb = ((DamageFrom)other.Tag).knockback;
                 _body.ApplyLinearImpulse(
-                    new Vector2(other.Body.LinearVelocity.X > 0 ? kb.X : -1 * kb.X, kb.Y)
+                    new Vector2(other.Body.LinearVelocity.X > 0 ? kb.X : -1 * kb.X, kb.Y) //FIXME: Is this where the unidirectional knockback bug is happening?
                 );
                 if (((DamageFrom)other.Tag).player != null) // Don't yeet the killplane
                     other.Tag = 0;

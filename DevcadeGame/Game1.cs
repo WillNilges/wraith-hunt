@@ -99,7 +99,7 @@ namespace DevcadeGame
             map = new Map("Content/apartment_block.tmx", "chom_map_2", _spriteScale);
 
             medium = new AEMedium(
-                "medium_placeholder",
+                "medium_placeholder_02/medium_placeholder_red_hood_128x128",
                 _spriteScale,
                 new Vector2(1.5f, 1.5f),
                 world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(10f, 150f), 0, BodyType.Dynamic),
@@ -107,7 +107,7 @@ namespace DevcadeGame
             );
 
             wraith = new AEWraith(
-                "wraith_placeholder",
+                "wraith_placeholder_128x128", // FIXME: Wraith placeholder is 160x160
                 _spriteScale,
                 new Vector2(1.5f, 1.5f),
                 world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(50f, 100f), 0, BodyType.Dynamic),
@@ -414,7 +414,9 @@ namespace DevcadeGame
                     _spriteBatch.Begin();
 
                     // DEBUG STATEMENTS
-                    //medium.DebugDraw(_spriteBatch, _HUDFont, $"Position: {medium.Position().X}, {medium.Position().Y}", new Vector2(1, 1));
+                    medium.DebugDraw(_spriteBatch, _HUDFont, $"Position: {medium.Position().X}, {medium.Position().Y}", new Vector2(1, 1));
+                    medium.DebugDraw(_spriteBatch, _HUDFont, $"Cam_Position: {camera.Position.X}, {camera.Position.Y}", new Vector2(1, 20));
+                    medium.DebugDraw(_spriteBatch, _HUDFont, $"Draw_Position: {medium.GetCameraCoords().X}, {medium.GetCameraCoords().Y}", new Vector2(1, 40));
                     //wraith.DebugDraw(_spriteBatch, _HUDFont, $"Position: {wraith.Position().X}, {wraith.Position().Y}", new Vector2(150, 550));
 
                     // Draw black dividing bar
