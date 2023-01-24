@@ -23,6 +23,7 @@ namespace WraithHunt
     {
         protected string _spritePath;
         protected Texture2D _sprite;
+        protected float _spriteOffset;
         protected float _spriteScale;
         protected Body _body;
         public Vector2 BodySize;
@@ -32,9 +33,10 @@ namespace WraithHunt
         /// </summary>
         public bool Colliding { get; protected set; }
 
-        public AEObject(string spritePath, float spriteScale, Vector2 bodySize, Body body)
+        public AEObject(string spritePath, float spriteOffset, float spriteScale, Vector2 bodySize, Body body)
         {
             this._spritePath = spritePath;
+            this._spriteOffset = spriteOffset;
             this._spriteScale = spriteScale;
             this.BodySize = bodySize;
             this._body = body;
@@ -64,7 +66,7 @@ namespace WraithHunt
         /**** MONOGAME PLUMBING ****/
 
         /// <summary>
-        /// Loads the ball's texture
+        /// Loads the object's texture
         /// </summary>
         /// <param name="contentManager">The content manager to use</param>
         public void LoadContent(ContentManager contentManager)
@@ -73,7 +75,7 @@ namespace WraithHunt
         }
 
         /// <summary>
-        /// Updates the ball
+        /// Updates the object
         /// </summary>
         /// <param name="gameTime">An object representing time in the game</param>
         public void Update(GameTime gameTime)
@@ -84,7 +86,7 @@ namespace WraithHunt
         }
 
         /// <summary>
-        /// Draws the ball using the provided spritebatch
+        /// Draws the object using the provided spritebatch
         /// </summary>
         /// <param name="gameTime">an object representing time in the game</param>
         /// <param name="spriteBatch">The spritebatch to render with</param>
@@ -119,8 +121,8 @@ namespace WraithHunt
         public Rectangle GetCameraCoords()
         {
             Rectangle dimensions = new Rectangle(
-                    (int)((_body.Position.X * _spriteScale) - (BodySize.X * _spriteScale) / 2.0f),
-                    (int)((_body.Position.Y * _spriteScale) - (BodySize.Y * _spriteScale) / 2.0f),
+                    (int)((_body.Position.X * _spriteOffset) - (BodySize.X * _spriteOffset) / 2.0f),
+                    (int)((_body.Position.Y * _spriteOffset) - (BodySize.Y * _spriteOffset) / 2.0f),
                     (int)(BodySize.X * _spriteScale),
                     (int)(BodySize.Y * _spriteScale)
                 );
@@ -128,7 +130,9 @@ namespace WraithHunt
         }
 
         // Draw debug info on the screen, like position.
-        // TODO: Boy howdy this is not how I'm using this at all. I think this should go into some kind of separate function. Would be nice if this could be global. Maybe a singleton object.
+        // TODO: Boy howdy this is not how I'm using this at all. I think this
+        // should go into some kind of separate function. Would be nice if
+        // this could be global. Maybe a singleton object.
         public void DebugDraw(SpriteBatch spriteBatch, SpriteFont font, string text, Vector2 position)
         {
             spriteBatch.DrawString(

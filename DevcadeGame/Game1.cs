@@ -100,6 +100,7 @@ namespace DevcadeGame
 
             medium = new AEMedium(
                 "medium_placeholder_02/medium_placeholder_red_hood_128x128",
+                _spriteScale,
                 _spriteScale * 2f,
                 new Vector2(1.5f, 1.5f),
                 world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(10f, 150f), 0, BodyType.Dynamic),
@@ -108,6 +109,7 @@ namespace DevcadeGame
 
             wraith = new AEWraith(
                 "demon_placeholder_01", // FIXME: Wraith placeholder is 160x160
+                _spriteScale,
                 _spriteScale * 2f,
                 new Vector2(1.5f, 1.5f),
                 world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(50f, 100f), 0, BodyType.Dynamic),
@@ -122,6 +124,7 @@ namespace DevcadeGame
 
             killPlane = new AEDamageBox(
                 null,
+                _spriteScale,
                 _spriteScale,
                 killPlaneSize,
                 world.CreateRectangle(
@@ -180,6 +183,7 @@ namespace DevcadeGame
             {
                 AEObject throwable = new AEObject(
                     "ground_placeholder",
+                    _spriteScale,
                     _spriteScale,
                     new Vector2(1.5f, 1.5f),
                     world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(50f + (float)(i * 10), 100f), 0, BodyType.Dynamic)

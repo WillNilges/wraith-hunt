@@ -30,17 +30,18 @@ namespace WraithHunt
         public WHPlane currentPlane;
 
         /// <summary>
-        /// A boolean indicating if this ball is colliding with another
+        /// A boolean indicating if this player is colliding with another
         /// </summary>
         public bool Colliding { get; protected set; }
 
         public AEPlayer(
-            string spritePath, float spriteScale, Vector2 bodySize, Body body, AETag playerType
+            string spritePath, float spriteOffset, float spriteScale, Vector2 bodySize, Body body, AETag playerType
         ) : base(
-            spritePath, spriteScale, bodySize, body
+            spritePath, spriteOffset, spriteScale, bodySize, body
         )
         {
             this._spritePath = spritePath;
+            this._spriteOffset = spriteOffset;
             this._spriteScale = spriteScale;
             this.BodySize = bodySize;
             this._body = body;
@@ -62,8 +63,8 @@ namespace WraithHunt
             }
 
             Rectangle dimensions = GetCameraCoords();
-            dimensions.X = (int) (dimensions.X / 2f);
-            dimensions.Y = (int)(dimensions.Y / 2f) - dimensions.Height/2;
+            /*dimensions.X = (int) (dimensions.X / 2f);*/
+            dimensions.Y -= dimensions.Height/2;
 
             spriteBatch.Draw(
                 _sprite,

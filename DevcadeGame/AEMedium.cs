@@ -23,9 +23,9 @@ namespace WraithHunt
         Color mediumColor = new Color(198, 107, 255);
 
         public AEMedium(
-            string spritePath, float spriteScale, Vector2 bodySize, Body body, AETag playerType
+            string spritePath, float spriteOffset, float spriteScale, Vector2 bodySize, Body body, AETag playerType
         ) : base(
-            spritePath, spriteScale, bodySize, body, playerType
+            spritePath, spriteOffset, spriteScale, bodySize, body, playerType
         )
         {
             this._body.OnCollision -= CollisionHandler;
@@ -104,14 +104,15 @@ namespace WraithHunt
                 Vector2 attackSize = new Vector2(15f, .5f);
                 return new AEDamageBox(
                     _spritePath,
-                    _spriteScale,
+                    _spriteOffset,
+                    _spriteOffset,
                     attackSize,
                     world.CreateRectangle(
                         15f,
                         .5f,
                         1,
                         new Vector2(
-                            _body.LinearVelocity.X > 0 ? _body.Position.X + attackSize.X / 2 + .5f : _body.Position.X - attackSize.X / 2 - .5f,
+                            facing == Direction.RIGHT ? _body.Position.X + attackSize.X / 2 + .5f : _body.Position.X - attackSize.X / 2 - .5f,
                             _body.Position.Y
                         ),
                         0,
@@ -121,7 +122,7 @@ namespace WraithHunt
                     new TimeSpan(0, 0, 0, 1, 500),
                     true,
                     new Color(198, 107, 255),
-                    new Vector2(_body.LinearVelocity.X > 0 ? 100 : -100, 0)
+                    new Vector2(facing == Direction.RIGHT ? 100 : -100, 0)
                     );
 
 
@@ -163,7 +164,8 @@ namespace WraithHunt
                 // TODO: I need a particle system or something.
                 return new AEDamageBox(
                     _spritePath,
-                    _spriteScale,
+                    _spriteOffset,
+                    _spriteOffset,
                     attackSize,
                     world.CreateRectangle(
                         attackSize.X,
