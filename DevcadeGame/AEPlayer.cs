@@ -51,7 +51,70 @@ namespace WraithHunt
             this.playerType = playerType;
             this._startPosition = this._body.Position;
         }
-        
+
+        /**** MONOGAME PLUMBING ****/
+
+        public void Reset()
+        {
+            // Put wraith on the Ethereal Plane.
+            if (this is AEWraith)
+            {
+                this.currentPlane = WHPlane.ETHEREAL;
+            }
+            else
+            {
+                this.currentPlane = WHPlane.MATERIAL;
+            }
+
+            this._body.Position = _startPosition;
+            this._body.LinearVelocity = Vector2.Zero;
+            health = healthMax;
+        }
+
+        public void drawHUD(SpriteBatch spriteBatch, Viewport defaultViewport, SpriteFont font, bool drawOnBottom)
+        {
+            int HUDHeight = defaultViewport.Height / 2 - 50;
+            if (drawOnBottom)
+            {
+                HUDHeight = defaultViewport.Height / 2 + 50;
+            }
+
+            // Life Bar
+            string textHP = $"LIFE: {health}";
+            Vector2 HUDSize = font.MeasureString(textHP);
+            spriteBatch.DrawString(
+                font,
+                textHP,
+                new Vector2(
+                    defaultViewport.Width / 2 - HUDSize.X / 2,
+                    HUDHeight + (drawOnBottom ? -10 : 0)
+                    ),
+                Color.White
+            );
+
+            RectangleSprite.FillRectangle(
+                spriteBatch,
+                new Rectangle(
+                    0,
+                    HUDHeight + (drawOnBottom ? -20 : 20),
+                    defaultViewport.Width,
+                    10
+                ),
+                Color.Red
+            );
+
+            RectangleSprite.FillRectangle(
+                spriteBatch,
+                new Rectangle(
+                    0,
+                    HUDHeight + (drawOnBottom ? -20 : 20),
+                    (int)((float)defaultViewport.Width * ((float)health / (float)healthMax)),
+                    10
+                ),
+                Color.LimeGreen
+            );
+        }
+
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             SpriteEffects effects = SpriteEffects.None;
@@ -154,69 +217,6 @@ namespace WraithHunt
         {
             //if (other.Tag is AETag && (AETag)other.Tag == AETag.WORLD)
             //    _hasJumped = true;
-        }
-
-        /**** MONOGAME PLUMBING ****/
-
-        public void Reset()
-        {
-            // Put wraith on the Ethereal Plane.
-            if (this is AEWraith)
-            {
-                this.currentPlane = WHPlane.ETHEREAL;
-            }
-            else
-            {
-                this.currentPlane = WHPlane.MATERIAL;
-            }
-
-            this._body.Position = _startPosition;
-            this._body.LinearVelocity = Vector2.Zero;
-            health = healthMax;
-        }
-
-        public void drawHUD(SpriteBatch spriteBatch, Viewport defaultViewport, SpriteFont font, bool drawOnBottom)
-        {
-            int HUDHeight = defaultViewport.Height / 2 - 50;
-            if (drawOnBottom)
-            {
-                HUDHeight = defaultViewport.Height / 2 + 50;
-            }
-
-            // Life Bar
-            string textHP = $"LIFE: {health}";
-            Vector2 HUDSize = font.MeasureString(textHP);
-            spriteBatch.DrawString(
-                font,
-                textHP,
-                new Vector2(
-                    defaultViewport.Width / 2 - HUDSize.X / 2,
-                    HUDHeight + (drawOnBottom ? -10 : 0)
-                    ),
-                Color.White
-            );
-
-            RectangleSprite.FillRectangle(
-                spriteBatch,
-                new Rectangle(
-                    0,
-                    HUDHeight + (drawOnBottom ? -20 : 20),
-                    defaultViewport.Width,
-                    10
-                ),
-                Color.Red
-            );
-
-            RectangleSprite.FillRectangle(
-                spriteBatch,
-                new Rectangle(
-                    0,
-                    HUDHeight + (drawOnBottom ? -20 : 20),
-                    (int)((float)defaultViewport.Width * ((float)health / (float)healthMax)),
-                    10
-                ),
-                Color.LimeGreen
-            );
         }
     }
 }
