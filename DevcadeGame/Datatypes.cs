@@ -9,4 +9,9 @@ namespace DevcadeGame
         UP,
         DOWN
     }
+    public enum WHPlane
+    {
+        MATERIAL,
+        ETHEREAL
+    }
 }

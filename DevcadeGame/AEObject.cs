@@ -128,7 +128,7 @@ namespace WraithHunt
         }
 
         // Draw debug info on the screen, like position.
-        // TODO: Boy howdy this is not how I'm using this at all. I think this should go into some kind of separate function. Would be nice if this could be global.
+        // TODO: Boy howdy this is not how I'm using this at all. I think this should go into some kind of separate function. Would be nice if this could be global. Maybe a singleton object.
         public void DebugDraw(SpriteBatch spriteBatch, SpriteFont font, string text, Vector2 position)
         {
             spriteBatch.DrawString(
