@@ -374,6 +374,16 @@ namespace DevcadeGame
                 {
                     box.DrawBox(gameTime, _spriteBatch);
                 }
+
+                /*
+                if (player == medium)
+                {
+                    
+                }*/
+                if (player == wraith)
+                {
+                    wraith.DrawExtas(gameTime, _spriteBatch);
+                }
                 //killPlane.DrawBox(gameTime, _spriteBatch); // Don't draw the killplane; We don't need it.
             }
 
@@ -394,22 +404,9 @@ namespace DevcadeGame
                     GraphicsDevice.Viewport = defaultViewport;
                     _spriteBatch.Begin();
 
-
                     // DEBUG STATEMENTS
-                    medium.DebugDraw(_spriteBatch, _HUDFont, $"Position: {medium.Position().X}, {medium.Position().Y}", new Vector2(1, 1));
-
-                    wraith.DebugDraw(_spriteBatch, _HUDFont, $"Position: {wraith.Position().X}, {wraith.Position().Y}", new Vector2(150, 550));
-
-                    if (wraith.getTkCandidate() != null)
-                    {
-                        wraith.DebugDraw(_spriteBatch, _HUDFont, $"TKCandidate: {wraith.getTkCandidate().Position().X}, {wraith.getTkCandidate().Position().Y}", new Vector2(150, 570));
-
-                        Rectangle tkcan = wraith.getTkCandidate().GetCameraCoords();
-                        wraith.DebugDraw(_spriteBatch, _HUDFont, $"tkcan_cam: {tkcan.X}, {tkcan.Y}", new Vector2(150, 610));
-                    }
-
-                    wraith.DebugDraw(_spriteBatch, _HUDFont, $"Cam: {wraithCamera.Position.X}, {wraithCamera.Position.Y}", new Vector2(150, 590));
-                    wraith.DebugDraw(_spriteBatch, _HUDFont, $"THROW_cam: {tkThrowables[0].GetCameraCoords().X}, {tkThrowables[0].GetCameraCoords().Y}", new Vector2(150, 630));
+                    //medium.DebugDraw(_spriteBatch, _HUDFont, $"Position: {medium.Position().X}, {medium.Position().Y}", new Vector2(1, 1));
+                    //wraith.DebugDraw(_spriteBatch, _HUDFont, $"Position: {wraith.Position().X}, {wraith.Position().Y}", new Vector2(150, 550));
 
                     // Draw black dividing bar
                     RectangleSprite.FillRectangle(
@@ -422,6 +419,8 @@ namespace DevcadeGame
                         ),
                         Color.Black
                     );
+
+                    // Draw HUDs
                     medium.drawHUD(_spriteBatch, defaultViewport, _HUDFont, false);
                     wraith.drawHUD(_spriteBatch, defaultViewport, _HUDFont, true);
                     _spriteBatch.End();
