@@ -28,11 +28,6 @@ namespace WraithHunt
         protected Body _body;
         public Vector2 BodySize;
 
-        /// <summary>
-        /// A boolean indicating if this ball is colliding with another
-        /// </summary>
-        public bool Colliding { get; protected set; }
-
         public AEObject(string spritePath, float spriteOffset, float spriteScale, Vector2 bodySize, Body body)
         {
             this._spritePath = spritePath;
@@ -80,9 +75,7 @@ namespace WraithHunt
         /// <param name="gameTime">An object representing time in the game</param>
         public void Update(GameTime gameTime)
         {
-            // Clear the colliding flag 
-            Colliding = false;
-            _body.Rotation = 0;
+
         }
 
         /// <summary>
@@ -145,7 +138,6 @@ namespace WraithHunt
 
         public bool CollisionHandler(Fixture fixture, Fixture other, Contact contact)
         {
-            Colliding = true;
             return true;
         }
 

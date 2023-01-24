@@ -29,11 +29,6 @@ namespace WraithHunt
         // Planar nonsense
         public WHPlane currentPlane;
 
-        /// <summary>
-        /// A boolean indicating if this player is colliding with another
-        /// </summary>
-        public bool Colliding { get; protected set; }
-
         public AEPlayer(
             string spritePath, float spriteOffset, float spriteScale, Vector2 bodySize, Body body, AETag playerType
         ) : base(
@@ -47,7 +42,10 @@ namespace WraithHunt
             this._body = body;
             _body.Mass = 1;
 
-            //this._body.OnCollision += CollisionHandler;
+
+            this._body.OnCollision -= base.CollisionHandler;
+            this._body.OnCollision += PlayerCollisionHandler;
+            this._body.OnSeparation += PlayerSeparationHandler;
             this._body.FixedRotation = true;
             //this._body.FixtureList[0].Tag = &this;
             this.playerType = playerType;
@@ -64,7 +62,9 @@ namespace WraithHunt
 
             Rectangle dimensions = GetCameraCoords();
             /*dimensions.X = (int) (dimensions.X / 2f);*/
-            dimensions.Y -= dimensions.Height/2;
+
+            dimensions.X -= dimensions.Width / 4;
+            dimensions.Y -= dimensions.Height / 2;
 
             spriteBatch.Draw(
                 _sprite,
@@ -115,8 +115,6 @@ namespace WraithHunt
         /**** DATA ****/
         protected bool PlayerCollisionHandler(Fixture fixture, Fixture other, Contact contact)
         {
-            Colliding = true;
-
             if (other.Tag == null)
                 return true;
 
@@ -142,6 +140,12 @@ namespace WraithHunt
             }
 
             return false;
+        }
+
+        protected void PlayerSeparationHandler(Fixture sender, Fixture other, Contact contact)
+        {
+            if (other.Tag is AETag && (AETag)other.Tag == AETag.WORLD)
+                _hasJumped = true;
         }
 
         /**** MONOGAME PLUMBING ****/

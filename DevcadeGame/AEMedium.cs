@@ -28,8 +28,6 @@ namespace WraithHunt
             spritePath, spriteOffset, spriteScale, bodySize, body, playerType
         )
         {
-            this._body.OnCollision -= CollisionHandler;
-            this._body.OnCollision += base.PlayerCollisionHandler;
         }
 
         public void Update(GameTime gameTime)
