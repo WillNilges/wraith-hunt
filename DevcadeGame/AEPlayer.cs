@@ -180,7 +180,7 @@ namespace WraithHunt
                     (int)((float)defaultViewport.Width * ((float)health / (float)healthMax)),
                     10
                 ),
-                Color.Green
+                Color.LimeGreen
             );
         }
     }

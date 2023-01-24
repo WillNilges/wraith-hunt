@@ -8,7 +8,6 @@ using tainicom.Aether.Physics2D.Dynamics.Contacts;
 
 namespace WraithHunt
 {
-
     public enum AETag
     {
         WORLD,
@@ -55,6 +54,8 @@ namespace WraithHunt
         /**** DATA ****/
 
         public Vector2 Position() => _body.Position;
+        public Vector2 getBodySize() => this.BodySize;
+        public float getSpriteScale() => this._spriteScale;
 
         /**** MONOGAME PLUMBING ****/
 
@@ -87,28 +88,49 @@ namespace WraithHunt
         {
             spriteBatch.Draw(
                 _sprite,
-                new Rectangle(
-                    (int)((_body.Position.X * _spriteScale) - (BodySize.X * _spriteScale) / 2.0f),
-                    (int)((_body.Position.Y * _spriteScale) - (BodySize.Y * _spriteScale) / 2.0f),
-                    (int)(BodySize.X * _spriteScale),
-                    (int)(BodySize.Y * _spriteScale)
-                ),
+                GetCameraCoords(),
                 Color.White
             );
         }
 
-        // Draw debug info on the screen, like position.
-        public void DebugDraw(GameTime gameTime, SpriteBatch spriteBatch, SpriteFont font)
+        public void DirectDraw(SpriteBatch spriteBatch)
         {
-            string text = $"Position: {_body.Position.X}, {_body.Position.Y}";
-            //Console.WriteLine(text);
-            //Vector2 size = font.MeasureString(text);
+            RectangleSprite.FillRectangle(
+                spriteBatch,
+                GetCameraCoords(),
+                Color.Yellow
+            );
+        }
+
+        public void DrawOutline(SpriteBatch spriteBatch)
+        {
+            RectangleSprite.DrawRectangle(
+                spriteBatch,
+                GetCameraCoords(),
+                Color.Yellow,
+                20
+            );
+        }
+
+        public Rectangle GetCameraCoords()
+        {
+            Rectangle dimensions = new Rectangle(
+                    (int)((_body.Position.X * _spriteScale) - (BodySize.X * _spriteScale) / 2.0f),
+                    (int)((_body.Position.Y * _spriteScale) - (BodySize.Y * _spriteScale) / 2.0f),
+                    (int)(BodySize.X * _spriteScale),
+                    (int)(BodySize.Y * _spriteScale)
+                );
+            return dimensions;
+        }
+
+        // Draw debug info on the screen, like position.
+        // TODO: Boy howdy this is not how I'm using this at all. I think this should go into some kind of separate function. Would be nice if this could be global.
+        public void DebugDraw(SpriteBatch spriteBatch, SpriteFont font, string text, Vector2 position)
+        {
             spriteBatch.DrawString(
                 font,
                 text,
-                new Vector2(
-                    1, 1
-                    ),
+                position,
                 Color.Yellow
             );
         }

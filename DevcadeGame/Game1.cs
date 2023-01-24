@@ -243,7 +243,7 @@ namespace DevcadeGame
                     map.Update(gameTime);
 
                     medium.Update(gameTime);
-                    wraith.Update(gameTime);
+                    wraith.Update(gameTime, tkThrowables);
 
                     foreach (AEObject throwable in tkThrowables)
                     {
@@ -344,6 +344,7 @@ namespace DevcadeGame
                 if (player.currentPlane == WHPlane.ETHEREAL)
                 {
                     //                    System.Diagnostics.Debug.WriteLine("Drawing ethereal plane");
+                    // Wraith Kludge
                     RectangleSprite.FillRectangle(
                         _spriteBatch,
                         new Rectangle(
@@ -359,15 +360,15 @@ namespace DevcadeGame
 
                 map.Draw(gameTime, _spriteBatch);
 
-                if (player.currentPlane == medium.currentPlane)
-                    medium.Draw(gameTime, _spriteBatch);
-                if (player.currentPlane == wraith.currentPlane)
-                    wraith.Draw(gameTime, _spriteBatch);
-
                 foreach (AEObject throwable in tkThrowables)
                 {
                     throwable.Draw(gameTime, _spriteBatch);
                 }
+
+                if (player.currentPlane == medium.currentPlane)
+                    medium.Draw(gameTime, _spriteBatch);
+                if (player.currentPlane == wraith.currentPlane)
+                    wraith.Draw(gameTime, _spriteBatch);
 
                 foreach (AEDamageBox box in damageBoxes)
                 {
@@ -392,7 +393,24 @@ namespace DevcadeGame
                     // Draw HUDs and other important stuff
                     GraphicsDevice.Viewport = defaultViewport;
                     _spriteBatch.Begin();
-                    medium.DebugDraw(gameTime, _spriteBatch, _HUDFont);
+
+
+                    // DEBUG STATEMENTS
+                    medium.DebugDraw(_spriteBatch, _HUDFont, $"Position: {medium.Position().X}, {medium.Position().Y}", new Vector2(1, 1));
+
+                    wraith.DebugDraw(_spriteBatch, _HUDFont, $"Position: {wraith.Position().X}, {wraith.Position().Y}", new Vector2(150, 550));
+
+                    if (wraith.getTkCandidate() != null)
+                    {
+                        wraith.DebugDraw(_spriteBatch, _HUDFont, $"TKCandidate: {wraith.getTkCandidate().Position().X}, {wraith.getTkCandidate().Position().Y}", new Vector2(150, 570));
+
+                        Rectangle tkcan = wraith.getTkCandidate().GetCameraCoords();
+                        wraith.DebugDraw(_spriteBatch, _HUDFont, $"tkcan_cam: {tkcan.X}, {tkcan.Y}", new Vector2(150, 610));
+                    }
+
+                    wraith.DebugDraw(_spriteBatch, _HUDFont, $"Cam: {wraithCamera.Position.X}, {wraithCamera.Position.Y}", new Vector2(150, 590));
+                    wraith.DebugDraw(_spriteBatch, _HUDFont, $"THROW_cam: {tkThrowables[0].GetCameraCoords().X}, {tkThrowables[0].GetCameraCoords().Y}", new Vector2(150, 630));
+
                     // Draw black dividing bar
                     RectangleSprite.FillRectangle(
                         _spriteBatch,
