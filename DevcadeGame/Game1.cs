@@ -103,7 +103,7 @@ namespace DevcadeGame
                 _spriteScale,
                 _spriteScale * 2f,
                 new Vector2(1.5f, 1.5f),
-                world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(10f, 150f), 0, BodyType.Dynamic),
+                world.CreateRectangle(1.5f, 3.0f, 1, new Vector2(10f, 150f), 0, BodyType.Dynamic), // Player hitboxes are twice as tall as they are wide.
                 AETag.WRAITH
             );
 
@@ -112,7 +112,7 @@ namespace DevcadeGame
                 _spriteScale,
                 _spriteScale * 2f,
                 new Vector2(1.5f, 1.5f),
-                world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(50f, 100f), 0, BodyType.Dynamic),
+                world.CreateRectangle(1.5f, 3.0f, 1, new Vector2(50f, 100f), 0, BodyType.Dynamic),
                 AETag.MEDIUM
             );
 

@@ -19,7 +19,7 @@ namespace WraithHunt
 
         // Movement
         protected Vector2 _startPosition;
-        protected float _walkAccel = 1.0f;
+        protected float _walkAccel = 2.0f;
         protected float _maxWalkSpeed = 20.0f;
         protected bool _hasJumped = true;
         protected float _jumpPower = 30.0f;
@@ -63,8 +63,9 @@ namespace WraithHunt
             Rectangle dimensions = GetCameraCoords();
             /*dimensions.X = (int) (dimensions.X / 2f);*/
 
+            // Properly center the sprite within the hitbox
             dimensions.X -= dimensions.Width / 4;
-            dimensions.Y -= dimensions.Height / 2;
+            dimensions.Y -= dimensions.Height / 4;
 
             spriteBatch.Draw(
                 _sprite,
@@ -92,15 +93,22 @@ namespace WraithHunt
                     if (_body.LinearVelocity.X == 0)
                         _body.Position = new Vector2(_body.Position.X - floorTileCludge, _body.Position.Y);
                     _body.ApplyLinearImpulse(new Vector2(-1 * _walkAccel, 0f));
+                    if (_body.LinearVelocity.X < -1 * _maxWalkSpeed)
+                        _body.LinearVelocity = new Vector2(-1 * _maxWalkSpeed, _body.LinearVelocity.Y);
+
                     break;
                 case Direction.RIGHT:
                     if (_body.LinearVelocity.X == 0)
                         _body.Position = new Vector2(_body.Position.X + floorTileCludge, _body.Position.Y);
                     _body.ApplyLinearImpulse(new Vector2(_walkAccel, 0f));
+                    if (_body.LinearVelocity.X > _maxWalkSpeed)
+                        _body.LinearVelocity = new Vector2(_maxWalkSpeed, _body.LinearVelocity.Y);
                     break;
                 default:
                     break;
             }
+            
+            // _body.LinearVelocity = new Vector2(_maxWalkSpeed * (direction == Direction.LEFT ? -1 : 1), _body.LinearVelocity.Y);
         }
 
         public void Jump()
@@ -144,8 +152,8 @@ namespace WraithHunt
 
         protected void PlayerSeparationHandler(Fixture sender, Fixture other, Contact contact)
         {
-            if (other.Tag is AETag && (AETag)other.Tag == AETag.WORLD)
-                _hasJumped = true;
+            //if (other.Tag is AETag && (AETag)other.Tag == AETag.WORLD)
+            //    _hasJumped = true;
         }
 
         /**** MONOGAME PLUMBING ****/
