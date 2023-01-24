@@ -7,6 +7,7 @@ using tainicom.Aether.Physics2D.Dynamics;
 using Comora;
 using System.Collections.Generic;
 using System;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace DevcadeGame
 {
@@ -189,6 +190,8 @@ namespace DevcadeGame
                     world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(50f + (float)(i * 10), 100f), 0, BodyType.Dynamic)
                 );
 
+                throwable.setTag(AETag.NONE);
+
                 throwable.LoadContent(Content);
 
                 tkThrowables.Add(throwable);
@@ -262,6 +265,7 @@ namespace DevcadeGame
                     // Delete damage boxes whose timers have expired
                     damageBoxes.RemoveAll(x => x.tick < TimeSpan.Zero);
 
+                    //FIXME: What the fuck is this
                     camera.Position =
                         new Vector2(medium.Position().X * _spriteScale, medium.Position().Y * _spriteScale + GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height * 2);
                     camera.Update(gameTime);
@@ -354,7 +358,7 @@ namespace DevcadeGame
             {
                 if (player.currentPlane == WHPlane.ETHEREAL)
                 {
-                    //                    System.Diagnostics.Debug.WriteLine("Drawing ethereal plane");
+                    Color etherealBlue = new Color(0, 20, 50);
                     // Wraith Kludge
                     RectangleSprite.FillRectangle(
                         _spriteBatch,
@@ -364,7 +368,7 @@ namespace DevcadeGame
                             GraphicsDevice.Viewport.Width * (int)_spriteScale,
                             GraphicsDevice.Viewport.Height * (int)_spriteScale
                         ),
-                        new Color(0, 20, 50)
+                        etherealBlue
                     );
                     //GraphicsDevice.Clear(new Color(0, 20, 50));
                 }

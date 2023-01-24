@@ -44,10 +44,6 @@ namespace WraithHunt
             this._body.FixtureList[0].Tag = AETag.WORLD;
         }
 
-        /**** FUN STUFF ****/
-
-        // Nothing, bozo.
-
         /**** DATA ****/
 
         public Vector2 Position() => _body.Position;
@@ -58,31 +54,20 @@ namespace WraithHunt
         public void setPosition(Vector2 position) => _body.Position = position;
         public void setVelocity(Vector2 velocity) => _body.LinearVelocity = velocity;
 
+        public void setTag(AETag tag) => _body.FixtureList[0].Tag = tag;
+
         /**** MONOGAME PLUMBING ****/
 
-        /// <summary>
-        /// Loads the object's texture
-        /// </summary>
-        /// <param name="contentManager">The content manager to use</param>
         public void LoadContent(ContentManager contentManager)
         {
             _sprite = contentManager.Load<Texture2D>(_spritePath);
         }
 
-        /// <summary>
-        /// Updates the object
-        /// </summary>
-        /// <param name="gameTime">An object representing time in the game</param>
         public void Update(GameTime gameTime)
         {
 
         }
 
-        /// <summary>
-        /// Draws the object using the provided spritebatch
-        /// </summary>
-        /// <param name="gameTime">an object representing time in the game</param>
-        /// <param name="spriteBatch">The spritebatch to render with</param>
         public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             spriteBatch.Draw(
