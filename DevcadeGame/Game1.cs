@@ -323,6 +323,13 @@ namespace DevcadeGame
                     {
                         wraith.SwitchPlanes();
                     }
+
+                    if (myState.IsKeyDown(Keys.U) || Input.GetButtonHeld(2, Input.ArcadeButtons.A4))
+                    {
+                        AEDamageBox box = wraith.TKBlast(world);
+                        if (box != null)
+                            damageBoxes.Add(box);
+                    }
                     break;
                 default:
                     break;
@@ -379,7 +386,9 @@ namespace DevcadeGame
                 if (player == medium)
                 {
                     
-                }*/
+                }
+                */
+
                 if (player == wraith)
                 {
                     wraith.DrawExtas(gameTime, _spriteBatch);

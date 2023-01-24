@@ -54,8 +54,12 @@ namespace WraithHunt
         /**** DATA ****/
 
         public Vector2 Position() => _body.Position;
+        public Vector2 Velocity() => _body.LinearVelocity;
         public Vector2 getBodySize() => this.BodySize;
         public float getSpriteScale() => this._spriteScale;
+
+        public void setPosition(Vector2 position) => _body.Position = position;
+        public void setVelocity(Vector2 velocity) => _body.LinearVelocity = velocity;
 
         /**** MONOGAME PLUMBING ****/
 
