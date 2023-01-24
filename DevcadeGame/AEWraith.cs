@@ -23,9 +23,9 @@ namespace WraithHunt
         private AEObject _TKCandidate;
 
         public AEWraith(
-            string spritePath, float spriteScale, Vector2 bodySize, Body body, AETag playerType
+            string spritePath, float spriteOffset, float spriteScale, Vector2 bodySize, Body body, AETag playerType
         ) : base(
-            spritePath, spriteScale, bodySize, body, playerType
+            spritePath, spriteOffset, spriteScale, bodySize, body, playerType
         )
         {
             this._body.OnCollision -= CollisionHandler;
@@ -165,7 +165,8 @@ namespace WraithHunt
                 Vector2 attackSize = new Vector2(5.5f, 5.5f);
                 return new AEDamageBox(
                     _spritePath,
-                    _spriteScale,
+                    _spriteOffset,
+                    _spriteOffset,
                     attackSize,
                     world.CreateRectangle(
                         attackSize.X,
@@ -251,7 +252,8 @@ namespace WraithHunt
                 Vector2 attackSize = new Vector2(5.5f, 5.5f);
                 return new AEDamageBox(
                     _spritePath,
-                    _spriteScale,
+                    _spriteOffset,
+                    _spriteOffset,
                     attackSize,
                     world.CreateRectangle(
                         attackSize.X,

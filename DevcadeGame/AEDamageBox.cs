@@ -34,9 +34,9 @@ namespace WraithHunt
         public AEPlayer owner; // Who owns this device?
 
         public AEDamageBox(
-            string spritePath, float spriteScale, Vector2 bodySize, Body body,
+            string spritePath, float spriteOffset, float spriteScale, Vector2 bodySize, Body body,
             DamageFrom damage, TimeSpan duration, bool decays, Color color, Vector2 velocity
-         ) : base(spritePath, spriteScale, bodySize, body)
+         ) : base(spritePath, spriteOffset, spriteScale, bodySize, body)
         {
             this._decay = decays;
             this.duration = duration;
@@ -66,30 +66,12 @@ namespace WraithHunt
             }
         }
 
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            /*spriteBatch.Draw(
-                _sprite,
-                new Rectangle(
-                    (int)((_body.Position.X * _spriteScale) - (BodySize.X * _spriteScale) / 2.0f),
-                    (int)((_body.Position.Y * _spriteScale) - (BodySize.Y * _spriteScale) / 2.0f),
-                    (int)(BodySize.X * _spriteScale),
-                    (int)(BodySize.Y * _spriteScale)
-                ),
-                Color.White
-            );*/
-        }
-
         public void DrawBox(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            Rectangle dimensions = GetCameraCoords();
             RectangleSprite.FillRectangle(
                 spriteBatch,
-                new Rectangle(
-                    (int)((_body.Position.X * _spriteScale) - (BodySize.X * _spriteScale) / 2.0f),
-                    (int)((_body.Position.Y * _spriteScale) - (BodySize.Y * _spriteScale) / 2.0f),
-                    (int)(BodySize.X * _spriteScale),
-                    (int)(BodySize.Y * _spriteScale)
-                ),
+                dimensions,
                 color
             );
         }

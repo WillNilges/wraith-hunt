@@ -78,6 +78,7 @@ namespace DevcadeGame
                         AEObject block = new AEObject(
                            "ground_placeholder",
                            _worldScale,
+                           _worldScale,
                            new Vector2(tileWidth / _worldScale, tileHeight / _worldScale),
                            world.CreateRectangle(
                                tileWidth / _worldScale,
