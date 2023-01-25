@@ -85,16 +85,15 @@ namespace WraithHunt
             );
         }
 
+        // Converts from world units (Aether2D units) to screen units
         public Rectangle GetCameraCoords()
         {
-            Rectangle dimensions = new Rectangle(
-                    (int) Math.Ceiling((_body.Position.X * _spriteOffset) - (BodySize.X * _spriteOffset) / 2.0f),
-                    (int) Math.Ceiling((_body.Position.Y * _spriteOffset) - (BodySize.Y * _spriteOffset) / 2.0f),
-                    (int) Math.Ceiling(BodySize.X * _spriteScale),
-                    (int) Math.Ceiling(BodySize.Y * _spriteScale)
+            return new Rectangle(
+                    (int)Math.Floor((_body.Position.X * _spriteOffset) - (BodySize.X * _spriteOffset) / 2.0f),
+                    (int)Math.Floor((_body.Position.Y * _spriteOffset) - (BodySize.Y * _spriteOffset) / 2.0f),
+                    (int)Math.Ceiling(BodySize.X * _spriteScale) + 1,
+                    (int)Math.Ceiling(BodySize.Y * _spriteScale) + 1
                 );
-
-            return dimensions;
         }
 
         // Draw debug info on the screen, like position.

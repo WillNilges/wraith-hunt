@@ -104,7 +104,7 @@ namespace DevcadeGame
             world = new World();
             world.Gravity = new Vector2(0, 40f);
 
-            map = new Map("Content/ice_cave.tmx", "medium_placeholder_128x128", _spriteScale, _spriteOffset);
+            map = new Map("Content/apartment_block.tmx", "chom_map_2", _spriteScale, _spriteOffset);
 
 
             medium = new AEMedium(

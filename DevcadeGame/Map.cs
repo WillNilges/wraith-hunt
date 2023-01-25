@@ -83,14 +83,14 @@ namespace DevcadeGame
                                 (float)((float) tileHeight / _spriteScale)
                             );
 
-                        float mapScale = 0.125f;
+                        float mapScale = 1f;
 
                         Vector2 plat1BodySize = new Vector2(worldDimensions.Z, worldDimensions.W) * mapScale;
                         Vector2 plat1BodyPosition = new Vector2(worldDimensions.X, worldDimensions.Y) * mapScale;
 
                         // Load in the Aether Body to do collision
                         AEMapTile block = new AEMapTile(
-                           "medium_placeholder",
+                           tilesetPath,
                            tilesetRec,
                            _spriteOffset,
                            _spriteScale,
@@ -99,6 +99,11 @@ namespace DevcadeGame
                                plat1BodySize.X, plat1BodySize.Y, 1, plat1BodyPosition, 0, BodyType.Static //TODO: Step through this in debug mode.
                            )
                         );
+
+                        // TODO: Elevators and other stuff can be tagged like so
+                        if (layer == 0)
+                            block.setTag(AETag.NONE);
+
                         block.LoadContent(contentManager);
                         tileBodies.Add(block);
                     }
