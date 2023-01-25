@@ -26,7 +26,7 @@ namespace DevcadeGame
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private float _spriteOffset = 5f; // An offset multiplier for all sprites
+        private float _spriteOffset = 10f; // An offset multiplier for all sprites
         private float _spriteScale = 10f; // A scale multiplier for all sprites.
 
         public SpriteFont _HUDFont;
@@ -107,29 +107,18 @@ namespace DevcadeGame
 
             // MORE DEBUG SHIT
             platforms = new List<AEObject>();
-            Vector2 plat1BodySize = new Vector2(40f, 40f);
+            Vector2 plat1BodySize = new Vector2(50f, 50f);
             AEObject plat1 = new AEObject(
-               "ground_placeholder",
+               "medium_placeholder",
                _spriteOffset,
                _spriteScale,
                plat1BodySize,
                world.CreateRectangle(
-                   40f, 40f, 1, new Vector2(8f, 160f), 0, BodyType.Static
-               )
-            );
-
-            AEObject plat2 = new AEObject(
-               "ground_placeholder",
-               _spriteOffset,
-               _spriteScale,
-               plat1BodySize,
-               world.CreateRectangle(
-                   40f, 40f, 1, new Vector2(49f, 110f), 0, BodyType.Static
+                   plat1BodySize.X, plat1BodySize.Y, 1, new Vector2(-10f, 170f), 0, BodyType.Static
                )
             );
 
             platforms.Add(plat1);
-            platforms.Add(plat2);
 
             //block.LoadContent(contentManager);
 
@@ -139,7 +128,7 @@ namespace DevcadeGame
                 _spriteScale,
                 new Vector2(1.5f, 3.0f),
                 world.CreateRectangle(
-                    1.5f, 3.0f, 1, new Vector2(10f, 150f), 0, BodyType.Dynamic
+                    1.5f, 3.0f, 1, new Vector2(8f, 100f), 0, BodyType.Dynamic
                 ), // Player hitboxes are twice as tall as they are wide.
                 AETag.WRAITH
             );
@@ -150,7 +139,7 @@ namespace DevcadeGame
                 _spriteScale,
                 new Vector2(1.5f, 3.0f),
                 world.CreateRectangle(
-                    1.5f, 3.0f, 1, new Vector2(50f, 100f), 0, BodyType.Dynamic
+                    1.5f, 3.0f, 1, new Vector2(11f, 100f), 0, BodyType.Dynamic
                 ),
                 AETag.MEDIUM
             );
