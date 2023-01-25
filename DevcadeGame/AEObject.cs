@@ -99,10 +99,10 @@ namespace WraithHunt
         public Rectangle GetCameraCoords()
         {
             Rectangle dimensions = new Rectangle(
-                    (int)((_body.Position.X * _spriteOffset) - (BodySize.X * _spriteOffset) / 2.0f),
-                    (int)((_body.Position.Y * _spriteOffset) - (BodySize.Y * _spriteOffset) / 2.0f),
-                    (int)(BodySize.X * _spriteScale),
-                    (int)(BodySize.Y * _spriteScale)
+                    (int) Math.Ceiling((_body.Position.X * _spriteOffset) - (BodySize.X * _spriteOffset) / 2.0f),
+                    (int) Math.Ceiling((_body.Position.Y * _spriteOffset) - (BodySize.Y * _spriteOffset) / 2.0f),
+                    (int) Math.Ceiling(BodySize.X * _spriteScale),
+                    (int) Math.Ceiling(BodySize.Y * _spriteScale)
                 );
 
             return dimensions;

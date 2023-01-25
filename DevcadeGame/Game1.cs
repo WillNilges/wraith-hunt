@@ -121,7 +121,7 @@ namespace DevcadeGame
 
             Vector2 characterSize = new Vector2(1.5f, 3.0f);
             Vector2 mediumStartingPosition = new Vector2(100f, 50f);
-            Vector2 wraithStartingPosition = new Vector2(102f, 50f);
+            Vector2 wraithStartingPosition = new Vector2(110f, 50f);
 
             medium = new AEMedium(
                 "medium_placeholder_02/medium_placeholder_red_hood_128x128",
@@ -209,10 +209,10 @@ namespace DevcadeGame
                     _spriteScale,
                     _spriteScale,
                     new Vector2(1.5f, 1.5f),
-                    world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(100f + (float)(i * 2f), 40f), 0, BodyType.Dynamic)
+                    world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(100f + (float)(i * 2f), 45f), 0, BodyType.Dynamic)
                 );
 
-                //throwable.setTag(AETag.NONE);
+                throwable.setTag(AETag.NONE);
 
                 throwable.LoadContent(Content);
 

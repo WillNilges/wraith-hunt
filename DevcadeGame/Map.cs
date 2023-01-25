@@ -82,7 +82,7 @@ namespace DevcadeGame
                                 (float)((float) tileHeight / _spriteScale)
                             );
 
-                        float mapScale = 0.125f;
+                        float mapScale = 0.25f;
 
                         Vector2 plat1BodySize = new Vector2(worldDimensions.Z, worldDimensions.W) * mapScale;
                         Vector2 plat1BodyPosition = new Vector2(worldDimensions.X, worldDimensions.Y) * mapScale;
