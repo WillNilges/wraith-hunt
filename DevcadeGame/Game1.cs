@@ -8,6 +8,7 @@ using Comora;
 using System.Collections.Generic;
 using System;
 using static System.Net.Mime.MediaTypeNames;
+using Microsoft.Xna.Framework.Content;
 
 namespace DevcadeGame
 {
@@ -25,7 +26,8 @@ namespace DevcadeGame
     {
         private GraphicsDeviceManager _graphics;
         private SpriteBatch _spriteBatch;
-        private float _spriteScale = 100f;
+        private float _spriteOffset = 5f; // An offset multiplier for all sprites
+        private float _spriteScale = 10f; // A scale multiplier for all sprites.
 
         public SpriteFont _HUDFont;
         public SpriteFont _titleFont;
@@ -42,9 +44,12 @@ namespace DevcadeGame
 
         private AEDamageBox killPlane;
 
-        private Map map;
+        //private Map map;
 
-        private Camera camera;
+        // DEBUG
+        private List<AEObject> platforms;
+
+        private Camera mediumCamera;
         private Camera wraithCamera;
 
         public GameState state = GameState.START;
@@ -52,8 +57,8 @@ namespace DevcadeGame
         // Here be dragons
         // Stuff for viewport
         Viewport defaultViewport;
-        Viewport leftViewport;
-        Viewport rightViewport;
+        Viewport mediumViewport;
+        Viewport wraithViewport;
         Matrix projectionMatrix;
         Matrix halfprojectionMatrix;
 
@@ -89,31 +94,64 @@ namespace DevcadeGame
 
             // TODO: Add your initialization logic here
 
-            camera = new Camera(_graphics.GraphicsDevice);
+            mediumCamera = new Camera(_graphics.GraphicsDevice);
             wraithCamera = new Camera(_graphics.GraphicsDevice);
-            camera.Zoom = 0.1f;
-            wraithCamera.Zoom = 0.1f;
+            mediumCamera.Zoom = 1f;
+            wraithCamera.Zoom = 1f;
 
             world = new World();
             world.Gravity = new Vector2(0, 40f);
 
-            map = new Map("Content/apartment_block.tmx", "chom_map_2", _spriteScale);
+            //map = new Map("Content/apartment_block.tmx", "chom_map_2", _spriteScale);
+
+
+            // MORE DEBUG SHIT
+            platforms = new List<AEObject>();
+            Vector2 plat1BodySize = new Vector2(40f, 40f);
+            AEObject plat1 = new AEObject(
+               "ground_placeholder",
+               _spriteOffset,
+               _spriteScale,
+               plat1BodySize,
+               world.CreateRectangle(
+                   40f, 40f, 1, new Vector2(8f, 160f), 0, BodyType.Static
+               )
+            );
+
+            AEObject plat2 = new AEObject(
+               "ground_placeholder",
+               _spriteOffset,
+               _spriteScale,
+               plat1BodySize,
+               world.CreateRectangle(
+                   40f, 40f, 1, new Vector2(49f, 110f), 0, BodyType.Static
+               )
+            );
+
+            platforms.Add(plat1);
+            platforms.Add(plat2);
+
+            //block.LoadContent(contentManager);
 
             medium = new AEMedium(
                 "medium_placeholder_02/medium_placeholder_red_hood_128x128",
+                _spriteOffset,
                 _spriteScale,
-                _spriteScale * 2f,
-                new Vector2(1.5f, 1.5f),
-                world.CreateRectangle(1.5f, 3.0f, 1, new Vector2(10f, 150f), 0, BodyType.Dynamic), // Player hitboxes are twice as tall as they are wide.
+                new Vector2(1.5f, 3.0f),
+                world.CreateRectangle(
+                    1.5f, 3.0f, 1, new Vector2(10f, 150f), 0, BodyType.Dynamic
+                ), // Player hitboxes are twice as tall as they are wide.
                 AETag.WRAITH
             );
 
             wraith = new AEWraith(
                 "demon_placeholder_01", // FIXME: Wraith placeholder is 160x160
+                _spriteOffset,
                 _spriteScale,
-                _spriteScale * 2f,
-                new Vector2(1.5f, 1.5f),
-                world.CreateRectangle(1.5f, 3.0f, 1, new Vector2(50f, 100f), 0, BodyType.Dynamic),
+                new Vector2(1.5f, 3.0f),
+                world.CreateRectangle(
+                    1.5f, 3.0f, 1, new Vector2(50f, 100f), 0, BodyType.Dynamic
+                ),
                 AETag.MEDIUM
             );
 
@@ -161,11 +199,11 @@ namespace DevcadeGame
 
             // Split Screen
             defaultViewport = GraphicsDevice.Viewport;
-            leftViewport = defaultViewport;
-            rightViewport = defaultViewport;
-            leftViewport.Height = leftViewport.Height / 2;
-            rightViewport.Height = rightViewport.Height / 2;
-            rightViewport.Y = leftViewport.Height;
+            mediumViewport = defaultViewport;
+            wraithViewport = defaultViewport;
+            mediumViewport.Height /= 2;
+            wraithViewport.Height /= 2;
+            wraithViewport.Y = wraithViewport.Height;
 
             // Projection Matrix
             projectionMatrix = Matrix.CreatePerspectiveFieldOfView(
@@ -197,7 +235,9 @@ namespace DevcadeGame
                 tkThrowables.Add(throwable);
             }
 
-            map.LoadContent(Content, world);
+            //map.LoadContent(Content, world);
+            foreach (AEObject plat in platforms)
+                plat.LoadContent(Content);
         }
 
         /// <summary>
@@ -247,7 +287,10 @@ namespace DevcadeGame
                         state = GameState.WRAITH_WON;
                         break;
                     }
-                    map.Update(gameTime);
+                    //map.Update(gameTime);
+
+                    foreach (AEObject plat in platforms)
+                        plat.Update(gameTime);
 
                     medium.Update(gameTime);
                     wraith.Update(gameTime, tkThrowables);
@@ -266,13 +309,16 @@ namespace DevcadeGame
                     damageBoxes.RemoveAll(x => x.tick < TimeSpan.Zero);
 
                     //FIXME: What the fuck is this
-                    camera.Position =
+                    /*camera.Position =
                         new Vector2(medium.Position().X * _spriteScale, medium.Position().Y * _spriteScale + GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height * 2);
                     camera.Update(gameTime);
 
                     wraithCamera.Position =
                         new Vector2(wraith.Position().X * _spriteScale, wraith.Position().Y * _spriteScale + GraphicsAdapter.DefaultAdapter.CurrentDisplayMode.Height * 2);
-                    wraithCamera.Update(gameTime);
+                    wraithCamera.Update(gameTime);*/
+
+                    mediumCamera.Position = new Vector2(medium.GetCameraCoords().X, medium.GetCameraCoords().Y + (mediumViewport.Height / 2) / mediumCamera.Zoom);
+                    wraithCamera.Position = new Vector2(wraith.GetCameraCoords().X, wraith.GetCameraCoords().Y + (wraithViewport.Height / 2) / wraithCamera.Zoom);
 
                     /** Player 1 **/
                     if (myState.IsKeyDown(Keys.W) || Input.GetButtonDown(1, Input.ArcadeButtons.A1))
@@ -360,20 +406,23 @@ namespace DevcadeGame
                 {
                     Color etherealBlue = new Color(0, 20, 50);
                     // Wraith Kludge
+                    // FIXME: Why Width/2? Could be due to how I'm setting the camera to the position of the character.
                     RectangleSprite.FillRectangle(
                         _spriteBatch,
                         new Rectangle(
-                            (int)cam.Position.X - 10000,
-                            (int)cam.Position.Y - 10000,
-                            GraphicsDevice.Viewport.Width * (int)_spriteScale,
-                            GraphicsDevice.Viewport.Height * (int)_spriteScale
+                            (int)cam.Position.X - GraphicsDevice.Viewport.Width/2,
+                            (int)cam.Position.Y - GraphicsDevice.Viewport.Height,
+                            GraphicsDevice.Viewport.Width,
+                            GraphicsDevice.Viewport.Height
                         ),
                         etherealBlue
                     );
                     //GraphicsDevice.Clear(new Color(0, 20, 50));
                 }
 
-                map.Draw(gameTime, _spriteBatch);
+                //map.Draw(gameTime, _spriteBatch);
+                foreach (AEObject plat in platforms)
+                    plat.Draw(gameTime, _spriteBatch);
 
                 foreach (AEObject throwable in tkThrowables)
                 {
@@ -407,12 +456,12 @@ namespace DevcadeGame
             switch (state)
             {
                 case GameState.PLAYING:
-                    GraphicsDevice.Viewport = leftViewport;
-                    _spriteBatch.Begin(camera);
-                    drawThings(camera, medium);
+                    GraphicsDevice.Viewport = mediumViewport;
+                    _spriteBatch.Begin(mediumCamera);
+                    drawThings(mediumCamera, medium);
                     _spriteBatch.End();
 
-                    GraphicsDevice.Viewport = rightViewport;
+                    GraphicsDevice.Viewport = wraithViewport;
                     _spriteBatch.Begin(wraithCamera);
                     drawThings(wraithCamera, wraith);
                     _spriteBatch.End();
@@ -423,9 +472,12 @@ namespace DevcadeGame
 
                     // DEBUG STATEMENTS
                     medium.DebugDraw(_spriteBatch, _HUDFont, $"Position: {medium.Position().X}, {medium.Position().Y}", new Vector2(1, 1));
-                    medium.DebugDraw(_spriteBatch, _HUDFont, $"Cam_Position: {camera.Position.X}, {camera.Position.Y}", new Vector2(1, 20));
+                    medium.DebugDraw(_spriteBatch, _HUDFont, $"Cam_Position: {mediumCamera.Position.X}, {mediumCamera.Position.Y}", new Vector2(1, 20));
                     medium.DebugDraw(_spriteBatch, _HUDFont, $"Draw_Position: {medium.GetCameraCoords().X}, {medium.GetCameraCoords().Y}", new Vector2(1, 40));
-                    //wraith.DebugDraw(_spriteBatch, _HUDFont, $"Position: {wraith.Position().X}, {wraith.Position().Y}", new Vector2(150, 550));
+
+                    wraith.DebugDraw(_spriteBatch, _HUDFont, $"Position: {wraith.Position().X}, {wraith.Position().Y}", new Vector2(150, 550));
+                    wraith.DebugDraw(_spriteBatch, _HUDFont, $"Cam_Position: {wraithCamera.Position.X}, {wraithCamera.Position.Y}", new Vector2(150, 570));
+                    wraith.DebugDraw(_spriteBatch, _HUDFont, $"Draw_Position: {wraith.GetCameraCoords().X}, {wraith.GetCameraCoords().Y}", new Vector2(150, 590));
 
                     // Draw black dividing bar
                     RectangleSprite.FillRectangle(

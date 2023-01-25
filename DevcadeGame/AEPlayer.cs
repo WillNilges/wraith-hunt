@@ -71,6 +71,36 @@ namespace WraithHunt
             health = healthMax;
         }
 
+        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            SpriteEffects effects = SpriteEffects.None;
+            if (facing == Direction.RIGHT)
+            {
+                effects = SpriteEffects.FlipHorizontally;
+            }
+
+            Rectangle dimensions = GetCameraCoords();
+            /*dimensions.X = (int) (dimensions.X / 2f);*/
+
+            // Properly center the sprite within the hitbox
+            //dimensions.X -= dimensions.Width / 4;
+            //dimensions.Y -= dimensions.Height / 4;
+
+            dimensions.Width *= 2; // Players are twice as tall as they are wide. 
+
+            spriteBatch.Draw(
+                _sprite,
+                dimensions,
+                null,
+                Color.White,
+                0,
+                new Vector2(0, 0),
+                effects,
+                0
+            );
+
+        }
+
         public void drawHUD(SpriteBatch spriteBatch, Viewport defaultViewport, SpriteFont font, bool drawOnBottom)
         {
             int HUDHeight = defaultViewport.Height / 2 - 50;
@@ -113,34 +143,6 @@ namespace WraithHunt
                 ),
                 Color.LimeGreen
             );
-        }
-
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
-        {
-            SpriteEffects effects = SpriteEffects.None;
-            if (facing == Direction.RIGHT)
-            {
-                effects = SpriteEffects.FlipHorizontally;
-            }
-
-            Rectangle dimensions = GetCameraCoords();
-            /*dimensions.X = (int) (dimensions.X / 2f);*/
-
-            // Properly center the sprite within the hitbox
-            dimensions.X -= dimensions.Width / 4;
-            dimensions.Y -= dimensions.Height / 4;
-
-            spriteBatch.Draw(
-                _sprite,
-                dimensions,
-                null,
-                Color.White,
-                0,
-                new Vector2(0, 0),
-                effects,
-                0
-            );
-
         }
 
         /**** FUN STUFF ****/

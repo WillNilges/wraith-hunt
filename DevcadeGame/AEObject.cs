@@ -104,6 +104,12 @@ namespace WraithHunt
                     (int)(BodySize.X * _spriteScale),
                     (int)(BodySize.Y * _spriteScale)
                 );
+            /*Rectangle dimensions = new Rectangle(
+                (int)(_body.Position.X),
+                (int)(_body.Position.Y),
+                (int)(BodySize.X),
+                (int)(BodySize.Y)
+            );*/
             return dimensions;
         }
 
