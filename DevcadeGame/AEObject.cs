@@ -8,17 +8,6 @@ using tainicom.Aether.Physics2D.Dynamics.Contacts;
 
 namespace WraithHunt
 {
-    public enum AETag
-    {
-        WORLD,
-        MEDIUM,
-        WRAITH,
-        MEDIUMATTACK,
-        WRAITHATTACK,
-        KILLPLANE,
-        NONE
-    }
-
     public class AEObject
     {
         protected string _spritePath;

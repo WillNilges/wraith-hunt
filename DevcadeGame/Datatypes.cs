@@ -14,4 +14,14 @@ namespace DevcadeGame
         MATERIAL,
         ETHEREAL
     }
+    public enum AETag
+    {
+        WORLD,
+        MEDIUM,
+        WRAITH,
+        MEDIUMATTACK,
+        WRAITHATTACK,
+        KILLPLANE,
+        NONE
+    }
 }

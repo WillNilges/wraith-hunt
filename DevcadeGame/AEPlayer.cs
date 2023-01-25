@@ -207,7 +207,6 @@ namespace WraithHunt
                 if (((DamageFrom)other.Tag).player != null) // Don't yeet the killplane
                     other.Tag = 0;
             }
-
             return false;
         }
 

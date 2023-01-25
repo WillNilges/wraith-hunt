@@ -26,7 +26,7 @@ namespace DevcadeGame
         private int tilesetTilesWide;
         private int tilesetTilesHigh;
 
-        private List<AEObject> tileBodies;
+        private List<AEMapTile> tileBodies;
 
         public Map(string tmxPath, string tilesetPath, float spriteScale, float spriteOffset)
         {
@@ -49,7 +49,7 @@ namespace DevcadeGame
             tilesetTilesWide = tileset.Width / tileWidth;
             tilesetTilesHigh = tileset.Height / tileHeight;
 
-            tileBodies = new List<AEObject>();
+            tileBodies = new List<AEMapTile>();
 
             // Map tile locations in the tile map to space in the world.
             for (var layer = 0; layer < map.Layers.Count; layer++)
@@ -72,7 +72,8 @@ namespace DevcadeGame
                         float x = (i % map.Width) * map.TileWidth;
                         float y = (float)Math.Floor(i / (double)map.Width) * map.TileHeight;
 
-                        // Load in the Aether Body to do collision
+                        Rectangle tilesetRec =
+                            new Rectangle(tileWidth * column, tileHeight * row, tileWidth, tileHeight);
 
                         // Convert from screen coords to world coords
                         Vector4 worldDimensions = new Vector4(
@@ -82,13 +83,15 @@ namespace DevcadeGame
                                 (float)((float) tileHeight / _spriteScale)
                             );
 
-                        float mapScale = 0.25f;
+                        float mapScale = 0.125f;
 
                         Vector2 plat1BodySize = new Vector2(worldDimensions.Z, worldDimensions.W) * mapScale;
                         Vector2 plat1BodyPosition = new Vector2(worldDimensions.X, worldDimensions.Y) * mapScale;
 
-                        AEObject block = new AEObject(
+                        // Load in the Aether Body to do collision
+                        AEMapTile block = new AEMapTile(
                            "medium_placeholder",
+                           tilesetRec,
                            _spriteOffset,
                            _spriteScale,
                            plat1BodySize,
@@ -115,8 +118,8 @@ namespace DevcadeGame
 
             // Regardless, I think the above WILL NOT work. We'll need to use the positional data from the bodies in order to
             // correctly draw. Chicken-and-egg scenario here.
-            foreach (AEObject AEObj in tileBodies)
-                AEObj.Draw(gameTime, spriteBatch);
+            foreach (AEMapTile tile in tileBodies)
+                tile.Draw(gameTime, spriteBatch);
         }
     }
 }

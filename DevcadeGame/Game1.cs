@@ -29,6 +29,10 @@ namespace DevcadeGame
         private float _spriteOffset = 10f; // An offset multiplier for all sprites
         private float _spriteScale = 10f; // A scale multiplier for all sprites.
 
+        Vector2 characterSize = new Vector2(1.5f, 3.0f);
+        Vector2 mediumStartingPosition = new Vector2(50f, 10f);
+        Vector2 wraithStartingPosition = new Vector2(60f, 10f);
+
         public SpriteFont _HUDFont;
         public SpriteFont _titleFont;
         private Texture2D _redButton;
@@ -46,8 +50,6 @@ namespace DevcadeGame
 
         private Map map;
 
-        // DEBUG
-        private List<AEObject> platforms;
 
         private Camera mediumCamera;
         private Camera wraithCamera;
@@ -104,24 +106,6 @@ namespace DevcadeGame
 
             map = new Map("Content/ice_cave.tmx", "medium_placeholder_128x128", _spriteScale, _spriteOffset);
 
-            // MORE DEBUG SHIT
-            platforms = new List<AEObject>();
-            Vector2 plat1BodySize = new Vector2(50f, 50f);
-            AEObject plat1 = new AEObject(
-               "medium_placeholder",
-               _spriteOffset,
-               _spriteScale,
-               plat1BodySize,
-               world.CreateRectangle(
-                   plat1BodySize.X, plat1BodySize.Y, 1, new Vector2(0f, 30f), 0, BodyType.Static
-               )
-            );
-
-            platforms.Add(plat1);
-
-            Vector2 characterSize = new Vector2(1.5f, 3.0f);
-            Vector2 mediumStartingPosition = new Vector2(100f, 50f);
-            Vector2 wraithStartingPosition = new Vector2(110f, 50f);
 
             medium = new AEMedium(
                 "medium_placeholder_02/medium_placeholder_red_hood_128x128",
@@ -135,7 +119,7 @@ namespace DevcadeGame
             );
 
             wraith = new AEWraith(
-                "demon_placeholder_01", // FIXME: Wraith placeholder is 160x160
+                "demon_placeholder_01",
                 _spriteOffset,
                 _spriteScale,
                 characterSize,
@@ -209,7 +193,7 @@ namespace DevcadeGame
                     _spriteScale,
                     _spriteScale,
                     new Vector2(1.5f, 1.5f),
-                    world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(100f + (float)(i * 2f), 45f), 0, BodyType.Dynamic)
+                    world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(wraithStartingPosition.X + (float)(i * 2f), wraithStartingPosition.Y), 0, BodyType.Dynamic)
                 );
 
                 throwable.setTag(AETag.NONE);
@@ -220,8 +204,6 @@ namespace DevcadeGame
             }
 
             map.LoadContent(Content, world);
-            foreach (AEObject plat in platforms)
-                plat.LoadContent(Content);
         }
 
         /// <summary>
@@ -273,9 +255,6 @@ namespace DevcadeGame
                     }
                     
                     map.Update(gameTime);
-
-                    foreach (AEObject plat in platforms)
-                        plat.Update(gameTime);
 
                     medium.Update(gameTime);
                     wraith.Update(gameTime, tkThrowables);
@@ -397,8 +376,6 @@ namespace DevcadeGame
                 }
 
                 map.Draw(gameTime, _spriteBatch);
-                foreach (AEObject plat in platforms)
-                    plat.Draw(gameTime, _spriteBatch);
 
                 foreach (AEObject throwable in tkThrowables)
                 {
