@@ -62,6 +62,12 @@
 /processorParam:TextureFormat=Compressed
 /build:hudfont.spritefont
 
+#begin ice_cave.tmx
+/copy:ice_cave.tmx
+
+#begin Ice.tsx
+/copy:Ice.tsx
+
 #begin medium_placeholder_01_white.png
 /importer:TextureImporter
 /processor:TextureProcessor

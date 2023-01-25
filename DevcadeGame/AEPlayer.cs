@@ -83,7 +83,7 @@ namespace WraithHunt
             /*dimensions.X = (int) (dimensions.X / 2f);*/
 
             // Properly center the sprite within the hitbox
-            //dimensions.X -= dimensions.Width / 4;
+            dimensions.X -= dimensions.Width / 2;
             //dimensions.Y -= dimensions.Height / 4;
 
             dimensions.Width *= 2; // Players are twice as tall as they are wide. 
