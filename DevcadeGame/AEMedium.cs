@@ -16,7 +16,7 @@ namespace WraithHunt
         TimeSpan _beamAttackCooldown = new TimeSpan(0, 0, 0, 0, 500);
         TimeSpan _beamAttackTick;
 
-        TimeSpan _blinkCooldown = new TimeSpan(0, 0, 12);
+        TimeSpan _blinkCooldown = new TimeSpan(0, 0, 2); // DEBUG: Should be 12 seconds
         TimeSpan _blinkTick = TimeSpan.Zero;
         float _blinkRange = 10f;
 
@@ -134,11 +134,12 @@ namespace WraithHunt
         {
             if (currentPlane == WHPlane.MATERIAL && _blinkTick <= TimeSpan.Zero)
             {
-                Vector2 attackSize = new Vector2(1.5f, _blinkRange);
+                Vector2 attackSize;
+                attackSize = new Vector2(1.5f, _blinkRange);
                 Vector2 origin = new Vector2(
-                            _body.Position.X + attackSize.X / 2,
-                            _body.Position.Y - BodySize.Y
-                        );
+                    _body.Position.X,
+                    _body.Position.Y
+                );
                 currentPlane = WHPlane.ETHEREAL;
                 //_collide = false;
                 switch (dir)
@@ -146,33 +147,34 @@ namespace WraithHunt
                     case Direction.UP:
                         _body.ApplyLinearImpulse(new Vector2(0, -20));
                         _body.Position = new Vector2(_body.Position.X, _body.Position.Y - _blinkRange);
+                        attackSize = new Vector2(1.5f, _blinkRange); 
                         break;
                     case Direction.DOWN:
                         _body.Position = new Vector2(_body.Position.X, _body.Position.Y + _blinkRange);
+                        attackSize = new Vector2(1.5f, _blinkRange);
                         break;
                     case Direction.LEFT:
                         _body.Position = new Vector2(_body.Position.X - _blinkRange, _body.Position.Y);
+                        attackSize = new Vector2(_blinkRange, 1.5f);
                         break;
                     case Direction.RIGHT:
                         _body.Position = new Vector2(_body.Position.X + _blinkRange, _body.Position.Y);
+                        attackSize = new Vector2(_blinkRange, 1.5f);
                         break;
                 }
                 currentPlane = WHPlane.MATERIAL;
                 _blinkTick = _blinkCooldown;
                 // TODO: I need a particle system or something.
+                /*Vector2 origin = new Vector2(
+                    _body.Position.X + attackSize.X / 2,
+                    _body.Position.Y
+                );*/
                 return new AEDamageBox(
                     _spritePath,
                     _spriteOffset,
                     _spriteOffset,
                     attackSize,
-                    world.CreateRectangle(
-                        attackSize.X,
-                        attackSize.Y,
-                        1,
-                        origin,
-                        0,
-                        BodyType.Dynamic
-                    ),
+                    world.CreateRectangle(attackSize.X, attackSize.Y, 1, origin, 0, BodyType.Dynamic),
                     new DamageFrom(this, 0, new Vector2(10, -10)),
                     new TimeSpan(0, 0, 0, 2, 500),
                     true,

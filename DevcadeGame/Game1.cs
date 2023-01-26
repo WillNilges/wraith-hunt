@@ -95,7 +95,6 @@ namespace DevcadeGame
             #endregion
 
             // TODO: Add your initialization logic here
-
             mediumCamera = new Camera(_graphics.GraphicsDevice);
             wraithCamera = new Camera(_graphics.GraphicsDevice);
             mediumCamera.Zoom = 1f;
@@ -298,11 +297,32 @@ namespace DevcadeGame
                             damageBoxes.Add(box);
                     }
 
-                    if (myState.IsKeyDown(Keys.S) || Input.GetButtonDown(1, Input.ArcadeButtons.A3))
+                    if (myState.IsKeyDown(Keys.Q) || Input.GetButtonDown(1, Input.ArcadeButtons.A3))
                     {
-                        AEDamageBox box = medium.Blink(Direction.UP, world);
-                        if (box != null)
-                            damageBoxes.Add(box);
+                        if (myState.IsKeyDown(Keys.W))
+                        {
+                            AEDamageBox box = medium.Blink(Direction.UP, world);
+                            if (box != null)
+                                damageBoxes.Add(box);
+                        }
+                        else if (myState.IsKeyDown(Keys.S))
+                        {
+                            AEDamageBox box = medium.Blink(Direction.DOWN, world);
+                            if (box != null)
+                                damageBoxes.Add(box);
+                        }
+                        else if (myState.IsKeyDown(Keys.A))
+                        {
+                            AEDamageBox box = medium.Blink(Direction.LEFT, world);
+                            if (box != null)
+                                damageBoxes.Add(box);
+                        }
+                        else if (myState.IsKeyDown(Keys.D))
+                        {
+                            AEDamageBox box = medium.Blink(Direction.RIGHT, world);
+                            if (box != null)
+                                damageBoxes.Add(box);
+                        }
                     }
 
                     /** Player 2 **/
