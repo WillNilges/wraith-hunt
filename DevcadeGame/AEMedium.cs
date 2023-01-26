@@ -16,9 +16,11 @@ namespace WraithHunt
         TimeSpan _beamAttackCooldown = new TimeSpan(0, 0, 0, 0, 500);
         TimeSpan _beamAttackTick;
 
+        // Blink
         TimeSpan _blinkCooldown = new TimeSpan(0, 0, 2); // DEBUG: Should be 12 seconds
         TimeSpan _blinkTick = TimeSpan.Zero;
         float _blinkRange = 10f;
+        public bool BlinkButtonHeld = false;
 
         Color mediumColor = new Color(198, 107, 255);
 
@@ -35,6 +37,7 @@ namespace WraithHunt
             base.Update(gameTime);
             _beamAttackTick -= gameTime.ElapsedGameTime;
             _blinkTick -= gameTime.ElapsedGameTime;
+            BlinkButtonHeld = false;
         }
 
         public void drawHUD(SpriteBatch spriteBatch, Viewport defaultViewport, SpriteFont font, bool drawOnBottom)
@@ -51,6 +54,8 @@ namespace WraithHunt
             Color blinkTextColor = Color.White;
             if (_blinkTick > TimeSpan.Zero)
                 blinkTextColor = Color.Gray;
+            else if (BlinkButtonHeld)
+                blinkTextColor = mediumColor;
 
             string textPlaneshift = "BLINK";
             Vector2 textPlaneshiftSize = font.MeasureString(textPlaneshift);
@@ -165,10 +170,7 @@ namespace WraithHunt
                 currentPlane = WHPlane.MATERIAL;
                 _blinkTick = _blinkCooldown;
                 // TODO: I need a particle system or something.
-                /*Vector2 origin = new Vector2(
-                    _body.Position.X + attackSize.X / 2,
-                    _body.Position.Y
-                );*/
+                _hasJumped = true; // Don't let the player jump after a blink. 
                 return new AEDamageBox(
                     _spritePath,
                     _spriteOffset,

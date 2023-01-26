@@ -211,6 +211,103 @@ namespace DevcadeGame
         /// <param name="gameTime">This is the gameTime object you can use to get the time since last frame.</param>
         protected override void Update(GameTime gameTime)
         {
+            // If a button might be held continuously, check for it here so that the rest of the input loop can continue
+            // accordingly
+            void handleHeldInputs(KeyboardState myState)
+            {
+                if (myState.IsKeyDown(Keys.Q) || Input.GetButtonDown(1, Input.ArcadeButtons.A3))
+                    medium.BlinkButtonHeld = true;
+            }
+
+            void handlePlayingInput(KeyboardState myState)
+            {
+                handleHeldInputs(myState);
+
+                /** Player 1 **/
+                if (myState.IsKeyDown(Keys.W) || Input.GetButtonDown(1, Input.ArcadeButtons.A1))
+                {
+                    if (!medium.BlinkButtonHeld)
+                        medium.Jump();
+                }
+
+                if (myState.IsKeyDown(Keys.A) || Input.GetButtonHeld(1, Input.ArcadeButtons.StickLeft))
+                {
+                    medium.Walk(Direction.LEFT);
+                }
+
+                if (myState.IsKeyDown(Keys.D) || Input.GetButtonHeld(1, Input.ArcadeButtons.StickRight))
+                {
+                    medium.Walk(Direction.RIGHT);
+                }
+
+                if (myState.IsKeyDown(Keys.E) || Input.GetButtonHeld(1, Input.ArcadeButtons.A2))
+                {
+                    AEDamageBox box = medium.Attack(world);
+                    if (box != null)
+                        damageBoxes.Add(box);
+                }
+
+                if (myState.IsKeyDown(Keys.Q) || Input.GetButtonDown(1, Input.ArcadeButtons.A3))
+                {
+                    medium.BlinkButtonHeld = true;
+                    AEDamageBox box = null;
+                    if (myState.IsKeyDown(Keys.W) || Input.GetButtonDown(1, Input.ArcadeButtons.StickUp))
+                    {
+                        box = medium.Blink(Direction.UP, world);
+                    }
+                    else if (myState.IsKeyDown(Keys.S) || Input.GetButtonDown(1, Input.ArcadeButtons.StickDown))
+                    {
+                        box = medium.Blink(Direction.DOWN, world);
+                    }
+                    else if (myState.IsKeyDown(Keys.A) || Input.GetButtonDown(1, Input.ArcadeButtons.StickLeft))
+                    {
+                        box = medium.Blink(Direction.LEFT, world);
+                    }
+                    else if (myState.IsKeyDown(Keys.D) || Input.GetButtonDown(1, Input.ArcadeButtons.StickRight))
+                    {
+                        box = medium.Blink(Direction.RIGHT, world);
+
+                    }
+                    if (box != null)
+                        damageBoxes.Add(box);
+                }
+
+                /** Player 2 **/
+                if (myState.IsKeyDown(Keys.I) || Input.GetButtonDown(2, Input.ArcadeButtons.A1))
+                {
+                    wraith.Jump();
+                }
+
+                if (myState.IsKeyDown(Keys.J) || Input.GetButtonHeld(2, Input.ArcadeButtons.StickLeft))
+                {
+                    wraith.Walk(Direction.LEFT);
+                }
+
+                if (myState.IsKeyDown(Keys.L) || Input.GetButtonHeld(2, Input.ArcadeButtons.StickRight))
+                {
+                    wraith.Walk(Direction.RIGHT);
+                }
+
+                if (myState.IsKeyDown(Keys.O) || Input.GetButtonHeld(2, Input.ArcadeButtons.A2))
+                {
+                    AEDamageBox box = wraith.Attack(world);
+                    if (box != null)
+                        damageBoxes.Add(box);
+                }
+
+                if (myState.IsKeyDown(Keys.K) || Input.GetButtonDown(2, Input.ArcadeButtons.A3))
+                {
+                    wraith.SwitchPlanes();
+                }
+
+                if (myState.IsKeyDown(Keys.U) || Input.GetButtonHeld(2, Input.ArcadeButtons.A4))
+                {
+                    AEDamageBox box = wraith.TKBlast(world);
+                    if (box != null)
+                        damageBoxes.Add(box);
+                }
+            }
+
             Input.Update(); // Updates the state of the input library
 
             // Exit when both menu buttons are pressed (or escape for keyboard debuging)
@@ -240,6 +337,8 @@ namespace DevcadeGame
                     }
                     break;
                 case GameState.PLAYING:
+                    handlePlayingInput(myState);
+
                     world.Step((float)gameTime.ElapsedGameTime.TotalSeconds);
 
                     if (wraith.health <= 0)
@@ -273,92 +372,6 @@ namespace DevcadeGame
 
                     mediumCamera.Position = new Vector2(medium.GetCameraCoords().X, medium.GetCameraCoords().Y + (mediumViewport.Height / 2) / mediumCamera.Zoom);
                     wraithCamera.Position = new Vector2(wraith.GetCameraCoords().X, wraith.GetCameraCoords().Y + (wraithViewport.Height / 2) / wraithCamera.Zoom);
-
-                    /** Player 1 **/
-                    if (myState.IsKeyDown(Keys.W) || Input.GetButtonDown(1, Input.ArcadeButtons.A1))
-                    {
-                        medium.Jump();
-                    }
-
-                    if (myState.IsKeyDown(Keys.A) || Input.GetButtonHeld(1, Input.ArcadeButtons.StickLeft))
-                    {
-                        medium.Walk(Direction.LEFT);
-                    }
-
-                    if (myState.IsKeyDown(Keys.D) || Input.GetButtonHeld(1, Input.ArcadeButtons.StickRight))
-                    {
-                        medium.Walk(Direction.RIGHT);
-                    }
-
-                    if (myState.IsKeyDown(Keys.E) || Input.GetButtonHeld(1, Input.ArcadeButtons.A2))
-                    {
-                        AEDamageBox box = medium.Attack(world);
-                        if (box != null)
-                            damageBoxes.Add(box);
-                    }
-
-                    if (myState.IsKeyDown(Keys.Q) || Input.GetButtonDown(1, Input.ArcadeButtons.A3))
-                    {
-                        if (myState.IsKeyDown(Keys.W))
-                        {
-                            AEDamageBox box = medium.Blink(Direction.UP, world);
-                            if (box != null)
-                                damageBoxes.Add(box);
-                        }
-                        else if (myState.IsKeyDown(Keys.S))
-                        {
-                            AEDamageBox box = medium.Blink(Direction.DOWN, world);
-                            if (box != null)
-                                damageBoxes.Add(box);
-                        }
-                        else if (myState.IsKeyDown(Keys.A))
-                        {
-                            AEDamageBox box = medium.Blink(Direction.LEFT, world);
-                            if (box != null)
-                                damageBoxes.Add(box);
-                        }
-                        else if (myState.IsKeyDown(Keys.D))
-                        {
-                            AEDamageBox box = medium.Blink(Direction.RIGHT, world);
-                            if (box != null)
-                                damageBoxes.Add(box);
-                        }
-                    }
-
-                    /** Player 2 **/
-                    if (myState.IsKeyDown(Keys.I) || Input.GetButtonDown(2, Input.ArcadeButtons.A1))
-                    {
-                        wraith.Jump();
-                    }
-
-                    if (myState.IsKeyDown(Keys.J) || Input.GetButtonHeld(2, Input.ArcadeButtons.StickLeft))
-                    {
-                        wraith.Walk(Direction.LEFT);
-                    }
-
-                    if (myState.IsKeyDown(Keys.L) || Input.GetButtonHeld(2, Input.ArcadeButtons.StickRight))
-                    {
-                        wraith.Walk(Direction.RIGHT);
-                    }
-
-                    if (myState.IsKeyDown(Keys.O) || Input.GetButtonHeld(2, Input.ArcadeButtons.A2))
-                    {
-                        AEDamageBox box = wraith.Attack(world);
-                        if (box != null)
-                            damageBoxes.Add(box);
-                    }
-
-                    if (myState.IsKeyDown(Keys.K) || Input.GetButtonDown(2, Input.ArcadeButtons.A3))
-                    {
-                        wraith.SwitchPlanes();
-                    }
-
-                    if (myState.IsKeyDown(Keys.U) || Input.GetButtonHeld(2, Input.ArcadeButtons.A4))
-                    {
-                        AEDamageBox box = wraith.TKBlast(world);
-                        if (box != null)
-                            damageBoxes.Add(box);
-                    }
                     break;
                 default:
                     break;
