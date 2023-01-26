@@ -150,19 +150,38 @@ namespace WraithHunt
                 switch (dir)
                 {
                     case Direction.UP:
-                        _body.ApplyLinearImpulse(new Vector2(0, -20));
+                        origin = new Vector2(
+                            _body.Position.X,
+                            _body.Position.Y - BodySize.Y
+                        );
+                        _body.LinearVelocity = new Vector2(_body.LinearVelocity.X, -20); // 'Lil boost
                         _body.Position = new Vector2(_body.Position.X, _body.Position.Y - _blinkRange);
                         attackSize = new Vector2(1.5f, _blinkRange); 
                         break;
                     case Direction.DOWN:
+                        origin = new Vector2(
+                            _body.Position.X,
+                            _body.Position.Y + BodySize.Y
+                        );
+                        _body.LinearVelocity = new Vector2(_body.LinearVelocity.X, 0); // No boost down (Not really necessary?)
                         _body.Position = new Vector2(_body.Position.X, _body.Position.Y + _blinkRange);
                         attackSize = new Vector2(1.5f, _blinkRange);
                         break;
                     case Direction.LEFT:
+                        origin = new Vector2(
+                            _body.Position.X,
+                            _body.Position.Y + BodySize.Y / 2
+                        );
+                        _body.LinearVelocity = new Vector2(_body.LinearVelocity.X - 5, _body.LinearVelocity.Y / 2); // 'Lil boost, cancel some vertical momentum.
                         _body.Position = new Vector2(_body.Position.X - _blinkRange, _body.Position.Y);
                         attackSize = new Vector2(_blinkRange, 1.5f);
                         break;
                     case Direction.RIGHT:
+                        origin = new Vector2(
+                            _body.Position.X + BodySize.X*2,
+                            _body.Position.Y + BodySize.Y / 2
+                        );
+                        _body.LinearVelocity = new Vector2(_body.LinearVelocity.X + 5, _body.LinearVelocity.Y / 2); // 'Lil boost, cancel some vertical momentum.
                         _body.Position = new Vector2(_body.Position.X + _blinkRange, _body.Position.Y);
                         attackSize = new Vector2(_blinkRange, 1.5f);
                         break;

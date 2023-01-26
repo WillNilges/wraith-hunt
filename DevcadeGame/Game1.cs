@@ -372,6 +372,10 @@ namespace DevcadeGame
 
                     mediumCamera.Position = new Vector2(medium.GetCameraCoords().X, medium.GetCameraCoords().Y + (mediumViewport.Height / 2) / mediumCamera.Zoom);
                     wraithCamera.Position = new Vector2(wraith.GetCameraCoords().X, wraith.GetCameraCoords().Y + (wraithViewport.Height / 2) / wraithCamera.Zoom);
+
+                    // We are probably still holding inputs, and we need to deal with that 
+                    handleHeldInputs(myState);
+
                     break;
                 default:
                     break;
