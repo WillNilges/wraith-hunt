@@ -42,12 +42,10 @@ namespace WraithHunt
             this._body = body;
             _body.Mass = 1;
 
-
             this._body.OnCollision -= base.CollisionHandler;
             this._body.OnCollision += PlayerCollisionHandler;
             this._body.OnSeparation += PlayerSeparationHandler;
             this._body.FixedRotation = true;
-            //this._body.FixtureList[0].Tag = &this;
             this.playerType = playerType;
             this._startPosition = this._body.Position;
         }
@@ -168,8 +166,6 @@ namespace WraithHunt
                 default:
                     break;
             }
-            
-            // _body.LinearVelocity = new Vector2(_maxWalkSpeed * (direction == Direction.LEFT ? -1 : 1), _body.LinearVelocity.Y);
         }
 
         public void Jump()

@@ -30,8 +30,8 @@ namespace DevcadeGame
         private float _spriteScale = 10f; // A scale multiplier for all sprites.
 
         Vector2 characterSize = new Vector2(1.5f, 3.0f);
-        Vector2 mediumStartingPosition = new Vector2(50f, 10f);
-        Vector2 wraithStartingPosition = new Vector2(60f, 10f);
+        Vector2 mediumStartingPosition = new Vector2(40f, 60f);
+        Vector2 wraithStartingPosition = new Vector2(150f, 170f);
 
         public SpriteFont _HUDFont;
         public SpriteFont _titleFont;
@@ -193,7 +193,7 @@ namespace DevcadeGame
                     _spriteScale,
                     _spriteScale,
                     new Vector2(1.5f, 1.5f),
-                    world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(wraithStartingPosition.X + (float)(i * 2f), wraithStartingPosition.Y), 0, BodyType.Dynamic)
+                    world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(wraithStartingPosition.X + (float)(i * 2f), wraithStartingPosition.Y - 10f), 0, BodyType.Dynamic)
                 );
 
                 throwable.setTag(AETag.NONE);

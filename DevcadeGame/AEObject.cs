@@ -112,8 +112,14 @@ namespace WraithHunt
 
         public bool CollisionHandler(Fixture fixture, Fixture other, Contact contact)
         {
-            return true;
-        }
+            //AETag collidedWith;
+            //if (other.Tag is AETag)
+            //    collidedWith = (AETag)other.Tag;
 
+            if (other.Tag is AETag && (AETag)other.Tag == AETag.WORLD)
+                return true;
+
+            return false;
+        }
     }
 }

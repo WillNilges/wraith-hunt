@@ -17,10 +17,12 @@ namespace WraithHunt
         TimeSpan _planeShiftTick = TimeSpan.Zero;
 
         // Telekinesis
-        TimeSpan _TKCooldown = new TimeSpan(0,0,15);
+        TimeSpan _TKCooldown = new TimeSpan(0,0,2); // DEBUG: should be 15 seconds.
         TimeSpan _TKTick = TimeSpan.Zero;
         private int _TKRange = 20;
         private AEObject _TKCandidate;
+
+        private Vector2 _TKBlastForce = new Vector2(100f, -100f);
 
         public AEWraith(
             string spritePath, float spriteOffset, float spriteScale, Vector2 bodySize, Body body, AETag playerType
@@ -239,7 +241,7 @@ namespace WraithHunt
 
                 _TKCandidate.setPosition(new Vector2(_TKCandidate.Position().X + 0.5f * dirMod, _TKCandidate.Position().Y - 0.5f));
 
-                _TKCandidate.setVelocity(new Vector2(_TKCandidate.Velocity().X + 30f * dirMod, _TKCandidate.Velocity().Y - 30f));
+                _TKCandidate.setVelocity(new Vector2(_TKBlastForce.X * dirMod, _TKBlastForce.Y));
                 _TKTick = _TKCooldown;
 
                 Vector2 attackSize = new Vector2(5.5f, 5.5f);

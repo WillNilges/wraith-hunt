@@ -14,6 +14,9 @@ namespace WraithHunt
 		public AEMapTile(string spritePath, Rectangle spriteParameters, float spriteOffset, float spriteScale, Vector2 bodySize, Body body) : base(spritePath, spriteOffset, spriteScale, bodySize, body)
 		{
 			this.spriteParameters = spriteParameters;
+
+			this._body.OnCollision -= base.CollisionHandler;
+			this._body.OnCollision += MapTileCollisionHandler;
 		}
 
 
@@ -25,6 +28,11 @@ namespace WraithHunt
 				spriteParameters,
 				Color.White
 			);
+		}
+
+		public bool MapTileCollisionHandler(Fixture fixture, Fixture other, Contact contact)
+		{
+			return true;
 		}
 	}
 }
