@@ -4,6 +4,7 @@ using Microsoft.Xna.Framework.Input;
 using Devcade;
 using WraithHunt;
 using tainicom.Aether.Physics2D.Dynamics;
+using tainicom.Aether.Physics2D.Dynamics.Joints;
 using Comora;
 using System.Collections.Generic;
 using System;
@@ -195,6 +196,21 @@ namespace DevcadeGame
                     world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(wraithStartingPosition.X + (float)(i * 2f), wraithStartingPosition.Y - 10f), 0, BodyType.Dynamic)
                 );
 
+/*                if (i == 2)
+                {
+                    wraith.TKWeld = new RopeJoint(
+                        wraith._body,
+                        throwable._body,
+                        new Vector2(0f, 0f),
+                        new Vector2(0f, 0f),
+                        false
+                    );
+                    wraith.TKWeld.MaxLength = 4f;
+                    world.Add(wraith.TKWeld);
+                    throwable._body.Mass = 1;
+                }
+*/
+
                 throwable.setTag(AETag.NONE);
 
                 throwable.LoadContent(Content);
@@ -302,9 +318,14 @@ namespace DevcadeGame
 
                 if (myState.IsKeyDown(Keys.U) || Input.GetButtonHeld(2, Input.ArcadeButtons.A4))
                 {
-                    AEDamageBox box = wraith.TKBlast(world);
-                    if (box != null)
-                        damageBoxes.Add(box);
+                    if (wraith.TKWeld == null)
+                        wraith.TKAttach(world);
+                    else
+                    {
+                        AEDamageBox box = wraith.TKBlast(world);
+                        if (box != null)
+                            damageBoxes.Add(box);
+                    }
                 }
             }
 

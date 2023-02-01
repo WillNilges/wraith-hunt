@@ -14,7 +14,7 @@ namespace WraithHunt
         protected Texture2D _sprite;
         protected float _spriteOffset;
         protected float _spriteScale;
-        protected Body _body;
+        public Body _body;
         public Vector2 BodySize;
 
         public AEObject(string spritePath, float spriteOffset, float spriteScale, Vector2 bodySize, Body body)
@@ -35,6 +35,7 @@ namespace WraithHunt
 
         /**** DATA ****/
 
+        public Body GetBody() => _body;
         public Vector2 Position() => _body.Position;
         public Vector2 Velocity() => _body.LinearVelocity;
         public Vector2 getBodySize() => this.BodySize;
@@ -75,12 +76,12 @@ namespace WraithHunt
             );
         }
 
-        public void DrawOutline(SpriteBatch spriteBatch)
+        public void DrawOutline(SpriteBatch spriteBatch, Color color)
         {
             RectangleSprite.DrawRectangle(
                 spriteBatch,
                 GetCameraCoords(),
-                Color.Yellow,
+                color,
                 3
             );
         }

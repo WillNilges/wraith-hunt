@@ -4,7 +4,7 @@ using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using tainicom.Aether.Physics2D.Dynamics;
-using tainicom.Aether.Physics2D.Dynamics.Contacts;
+using tainicom.Aether.Physics2D.Dynamics.Joints;
 
 namespace WraithHunt
 {
@@ -21,8 +21,13 @@ namespace WraithHunt
         TimeSpan _TKTick = TimeSpan.Zero;
         private int _TKRange = 20;
         private AEObject _TKCandidate;
+        public RopeJoint TKWeld = null;
+        private float _TKLength = 4f;
+        private float _TKBoost = -0.1f;
 
         private Vector2 _TKBlastForce = new Vector2(100f, -100f);
+
+        public Color WraithColor = Color.Orange;
 
         public AEWraith(
             string spritePath, float spriteOffset, float spriteScale, Vector2 bodySize, Body body, AETag playerType
@@ -41,13 +46,19 @@ namespace WraithHunt
             _planeShiftTick -= gameTime.ElapsedGameTime;
             _TKTick -= gameTime.ElapsedGameTime;
             TKSearch(throwables);
+            if (TKWeld != null)
+            {
+                _TKCandidate._body.ApplyLinearImpulse(new Vector2(0, _TKBoost));
+            }
         }
 
         public void DrawExtas(GameTime gameTime, SpriteBatch spriteBatch)
         {
             // Draw an outline of the nearest throwable on the Wraith's screen.
-            if (_TKTick <= TimeSpan.Zero && _TKCandidate != null)
-                _TKCandidate.DrawOutline(spriteBatch);
+            if (_TKTick <= TimeSpan.Zero && _TKCandidate != null && TKWeld == null)
+                _TKCandidate.DrawOutline(spriteBatch, Color.Yellow);
+            else if (TKWeld != null)
+                _TKCandidate.DrawOutline(spriteBatch, WraithColor);
         }
 
         public void drawHUD(SpriteBatch spriteBatch, Viewport defaultViewport, SpriteFont font, bool drawOnBottom)
@@ -98,7 +109,7 @@ namespace WraithHunt
                         ((float)_planeShiftTick.TotalMilliseconds / (float)_planeShiftCooldown.TotalMilliseconds)),
                     5
                 ),
-                Color.Orange
+                WraithColor
             );
 
 
@@ -140,7 +151,7 @@ namespace WraithHunt
                         ((float)_TKTick.TotalMilliseconds / (float)_TKCooldown.TotalMilliseconds)),
                     5
                 ),
-                Color.Orange
+                WraithColor
             );
         }
 
@@ -177,7 +188,7 @@ namespace WraithHunt
                     new DamageFrom(this, 4, new Vector2(15, -15)),
                     new TimeSpan(0, 0, 0, 0, 500),
                     true,
-                    Color.Orange,
+                    WraithColor,
                     new Vector2(facing == Direction.RIGHT ? 10 : -10, 0)
                     );
 
@@ -231,10 +242,37 @@ namespace WraithHunt
             if (pythag > _TKRange)
                 _TKCandidate = null;
         }
+
+        public void TKAttach(World world)
+        {
+            if (_TKCandidate != null && _TKTick <= TimeSpan.Zero)
+            {
+                TKWeld = new RopeJoint(
+                    _body,
+                    _TKCandidate._body,
+                    new Vector2(0f, 0f),
+                    new Vector2(0f, 0f),
+                    false
+                );
+                TKWeld.MaxLength = _TKLength;
+                world.Add(TKWeld);
+                _TKCandidate._body.Mass = 0.1f;
+                _TKTick = new TimeSpan(0, 0, 0, 0, 500);
+            }
+        }
+        
+        public void TKRelease(World world)
+        {
+            world.Remove(TKWeld);
+            _TKCandidate._body.Mass = 1f;
+            TKWeld = null;
+        }
+
         public AEDamageBox TKBlast(World world)
         {
             if (_TKCandidate != null && _TKTick <= TimeSpan.Zero)
             {
+                TKRelease(world);
                 int dirMod = 1;
                 if (facing == Direction.LEFT)
                     dirMod = -1;
@@ -264,7 +302,7 @@ namespace WraithHunt
                     new DamageFrom(this, 4, new Vector2(15, -15)),
                     new TimeSpan(0, 0, 0, 0, 500),
                     true,
-                    Color.Orange,
+                    WraithColor,
                     new Vector2(facing == Direction.RIGHT ? 10 : -10, 0)
                     );
             }

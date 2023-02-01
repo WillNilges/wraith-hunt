@@ -62,12 +62,6 @@
 /processorParam:TextureFormat=Compressed
 /build:hudfont.spritefont
 
-#begin ice_cave.tmx
-/copy:ice_cave.tmx
-
-#begin Ice.tsx
-/copy:Ice.tsx
-
 #begin medium_placeholder_01_white.png
 /importer:TextureImporter
 /processor:TextureProcessor
@@ -91,30 +85,6 @@
 /processorParam:MakeSquare=False
 /processorParam:TextureFormat=Color
 /build:medium_placeholder_02/medium_placeholder_red_hood_128x128.png
-
-#begin medium_placeholder_02/red-hood-all.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:medium_placeholder_02/red-hood-all.png
-
-#begin medium_placeholder_128x128.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:medium_placeholder_128x128.png
 
 #begin medium_placeholder.png
 /importer:TextureImporter
@@ -146,18 +116,6 @@
 /processorParam:PremultiplyAlpha=True
 /processorParam:TextureFormat=Compressed
 /build:titlefont.spritefont
-
-#begin wraith_placeholder_128x128.png
-/importer:TextureImporter
-/processor:TextureProcessor
-/processorParam:ColorKeyColor=255,0,255,255
-/processorParam:ColorKeyEnabled=True
-/processorParam:GenerateMipmaps=False
-/processorParam:PremultiplyAlpha=True
-/processorParam:ResizeToPowerOfTwo=False
-/processorParam:MakeSquare=False
-/processorParam:TextureFormat=Color
-/build:wraith_placeholder_128x128.png
 
 #begin wraith_placeholder.png
 /importer:TextureImporter
