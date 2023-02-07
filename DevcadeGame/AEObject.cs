@@ -55,6 +55,11 @@ namespace WraithHunt
 
         public void Update(GameTime gameTime)
         {
+            // Remove the damage tag from a thrown object if it is travelling slow enough.
+            if (this._body.FixtureList[0].Tag is DamageFrom && Math.Sqrt(Math.Pow(_body.LinearVelocity.X, 2) + Math.Pow(_body.LinearVelocity.Y, 2)) < 10f)
+            {
+                this._body.FixtureList[0].Tag = AETag.NONE;
+            }
 
         }
 

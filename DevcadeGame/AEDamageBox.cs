@@ -7,20 +7,7 @@ using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace WraithHunt
-{
-    public struct DamageFrom
-    {
-        public AEPlayer player;
-        public int damage;
-        public Vector2 knockback;
-
-        public DamageFrom(AEPlayer player, int damage, Vector2 knockback)
-        {
-            this.player = player;
-            this.damage = damage;
-            this.knockback = knockback;
-        }
-    }
+{ 
     public class AEDamageBox : AEObject
     {
         private bool _hasHit = false;

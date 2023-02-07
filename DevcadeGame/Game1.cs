@@ -31,7 +31,7 @@ namespace DevcadeGame
         private float _spriteScale = 10f; // A scale multiplier for all sprites.
 
         Vector2 characterSize = new Vector2(1.5f, 3.0f);
-        Vector2 mediumStartingPosition = new Vector2(40f, 60f);
+        Vector2 mediumStartingPosition = new Vector2(140f, 170f); // new Vector2(40f, 60f);
         Vector2 wraithStartingPosition = new Vector2(150f, 170f);
 
         public SpriteFont _HUDFont;
@@ -89,9 +89,9 @@ namespace DevcadeGame
             _graphics.PreferredBackBufferHeight = 980;
             _graphics.ApplyChanges();
 #else
-			_graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
-			_graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
-			_graphics.ApplyChanges();
+            _graphics.PreferredBackBufferWidth = GraphicsDevice.DisplayMode.Width;
+            _graphics.PreferredBackBufferHeight = GraphicsDevice.DisplayMode.Height;
+            _graphics.ApplyChanges();
 #endif
             #endregion
 
@@ -186,37 +186,39 @@ namespace DevcadeGame
             medium.LoadContent(Content);
             wraith.LoadContent(Content);
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < 30; i++)
             {
                 AEObject throwable = new AEObject(
                     "wraith_placeholder",
                     _spriteScale,
                     _spriteScale,
                     new Vector2(1.5f, 1.5f),
-                    world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(wraithStartingPosition.X + (float)(i * 2f), wraithStartingPosition.Y - 10f), 0, BodyType.Dynamic)
+                    world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(wraithStartingPosition.X - 50f + (float)(i * 12f), wraithStartingPosition.Y - 100f), 0, BodyType.Dynamic)
                 );
 
-/*                if (i == 2)
-                {
-                    wraith.TKWeld = new RopeJoint(
-                        wraith._body,
-                        throwable._body,
-                        new Vector2(0f, 0f),
-                        new Vector2(0f, 0f),
-                        false
-                    );
-                    wraith.TKWeld.MaxLength = 4f;
-                    world.Add(wraith.TKWeld);
-                    throwable._body.Mass = 1;
-                }
-*/
-
+                throwable._body.FixedRotation = false;
                 throwable.setTag(AETag.NONE);
 
                 throwable.LoadContent(Content);
 
                 tkThrowables.Add(throwable);
             }
+
+            AEObject throwableDebug = new AEObject(
+                    "wraith_placeholder",
+                    _spriteScale,
+                    _spriteScale,
+                    new Vector2(1.5f, 1.5f),
+                    world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(wraithStartingPosition.X + 2f, wraithStartingPosition.Y - 2f), 0, BodyType.Dynamic)
+                );
+
+            throwableDebug._body.FixedRotation = false;
+            throwableDebug.setTag(AETag.NONE);
+
+            throwableDebug.LoadContent(Content);
+
+            tkThrowables.Add(throwableDebug);
+
 
             map.LoadContent(Content, world);
         }
@@ -322,9 +324,22 @@ namespace DevcadeGame
                         wraith.TKAttach(world);
                     else
                     {
-                        AEDamageBox box = wraith.TKBlast(world);
-                        if (box != null)
-                            damageBoxes.Add(box);
+                        if (myState.IsKeyDown(Keys.I) || Input.GetButtonHeld(2, Input.ArcadeButtons.StickUp))
+                        {
+                            AEDamageBox box = wraith.TKBlast(world, Direction.UP);
+                            if (box != null)
+                                damageBoxes.Add(box);
+                        } else if (myState.IsKeyDown(Keys.K) || Input.GetButtonHeld(2, Input.ArcadeButtons.StickDown))
+                        {
+                            AEDamageBox box = wraith.TKBlast(world, Direction.DOWN);
+                            if (box != null)
+                                damageBoxes.Add(box);
+                        } else
+                        {
+                            AEDamageBox box = wraith.TKBlast(world, Direction.NONE);
+                            if (box != null)
+                                damageBoxes.Add(box);
+                        }
                     }
                 }
             }

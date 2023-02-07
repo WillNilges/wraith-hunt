@@ -25,7 +25,7 @@ namespace WraithHunt
         private float _TKLength = 4f;
         private float _TKBoost = -0.1f;
 
-        private Vector2 _TKBlastForce = new Vector2(100f, -100f);
+        private Vector2 _TKBlastForce = new Vector2(100f, 20f);
 
         public Color WraithColor = Color.Orange;
 
@@ -112,11 +112,12 @@ namespace WraithHunt
                 WraithColor
             );
 
-
             // TKBlast Cooldown
             Color tkBlastTextColor = Color.White;
             if (_TKTick > TimeSpan.Zero || _TKCandidate == null)
                 tkBlastTextColor = Color.Gray;
+            else if (TKWeld != null)
+                tkBlastTextColor = WraithColor;
 
             // Planeshift cooldown bar
             string textTkBlast = "BLAST";
@@ -213,6 +214,7 @@ namespace WraithHunt
                 _planeShiftTick = _planeShiftCooldown;
             }
         }
+
         public void TKSearch(List<AEObject> furniture)
         {
             _TKCandidate = furniture[0];
@@ -268,7 +270,7 @@ namespace WraithHunt
             TKWeld = null;
         }
 
-        public AEDamageBox TKBlast(World world)
+        public AEDamageBox TKBlast(World world, Direction direction)
         {
             if (_TKCandidate != null && _TKTick <= TimeSpan.Zero)
             {
@@ -277,12 +279,26 @@ namespace WraithHunt
                 if (facing == Direction.LEFT)
                     dirMod = -1;
 
+                float lift = 0f;
+                switch (direction)
+                {
+                    case Direction.UP:
+                        lift = _TKBlastForce.Y * -1f;
+                        break;
+                    case Direction.DOWN:
+                        lift = _TKBlastForce.Y;
+                        break;
+                    default:
+                        break;
+                }
+
                 _TKCandidate.setPosition(new Vector2(_TKCandidate.Position().X + 0.5f * dirMod, _TKCandidate.Position().Y - 0.5f));
 
-                _TKCandidate.setVelocity(new Vector2(_TKBlastForce.X * dirMod, _TKBlastForce.Y));
+                _TKCandidate.setVelocity(new Vector2(_TKBlastForce.X * dirMod, lift));
                 _TKTick = _TKCooldown;
 
                 Vector2 attackSize = new Vector2(5.5f, 5.5f);
+                _TKCandidate._body.FixtureList[0].Tag = new DamageFrom(this, 5, new Vector2(15, -15));
                 return new AEDamageBox(
                     _spritePath,
                     _spriteOffset,
@@ -299,7 +315,7 @@ namespace WraithHunt
                         0,
                         BodyType.Dynamic
                     ),
-                    new DamageFrom(this, 4, new Vector2(15, -15)),
+                    new DamageFrom(this, 2, new Vector2(15, -15)),
                     new TimeSpan(0, 0, 0, 0, 500),
                     true,
                     WraithColor,

@@ -1,13 +1,28 @@
-﻿using System;
+﻿using Microsoft.Xna.Framework;
 
-namespace DevcadeGame
+namespace WraithHunt
 {
+    public struct DamageFrom
+    {
+        public AEPlayer player;
+        public int damage;
+        public Vector2 knockback;
+
+        public DamageFrom(AEPlayer player, int damage, Vector2 knockback)
+        {
+            this.player = player;
+            this.damage = damage;
+            this.knockback = knockback;
+        }
+    }
+
     public enum Direction
     {
         LEFT,
         RIGHT,
         UP,
-        DOWN
+        DOWN,
+        NONE
     }
     public enum WHPlane
     {
