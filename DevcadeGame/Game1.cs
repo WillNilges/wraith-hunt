@@ -4,12 +4,9 @@ using Microsoft.Xna.Framework.Input;
 using Devcade;
 using WraithHunt;
 using tainicom.Aether.Physics2D.Dynamics;
-using tainicom.Aether.Physics2D.Dynamics.Joints;
 using Comora;
 using System.Collections.Generic;
 using System;
-using static System.Net.Mime.MediaTypeNames;
-using Microsoft.Xna.Framework.Content;
 
 namespace DevcadeGame
 {
@@ -45,7 +42,7 @@ namespace DevcadeGame
 
         private List<AEObject> tkThrowables; // List of shit the wraith can chuck at people
 
-        private List<AEPlayer> npcs;
+        private List<AEObject> npcs;
 
         private List<AEDamageBox> damageBoxes;
 
@@ -133,7 +130,7 @@ namespace DevcadeGame
 
             tkThrowables = new List<AEObject>();
 
-            npcs = new List<AEPlayer>();
+            npcs = new List<AEObject>();
 
             damageBoxes = new List<AEDamageBox>();
 
@@ -312,57 +309,8 @@ namespace DevcadeGame
                 }
 
                 /** Player 2 **/
-                if (myState.IsKeyDown(Keys.I) || Input.GetButtonDown(2, Input.ArcadeButtons.A1))
-                {
-                    wraith.Jump();
-                }
-
-                if (myState.IsKeyDown(Keys.J) || Input.GetButtonHeld(2, Input.ArcadeButtons.StickLeft))
-                {
-                    wraith.Walk(Direction.LEFT);
-                }
-
-                if (myState.IsKeyDown(Keys.L) || Input.GetButtonHeld(2, Input.ArcadeButtons.StickRight))
-                {
-                    wraith.Walk(Direction.RIGHT);
-                }
-
-                if (myState.IsKeyDown(Keys.O) || Input.GetButtonHeld(2, Input.ArcadeButtons.A2))
-                {
-                    AEDamageBox box = wraith.Attack(world);
-                    if (box != null)
-                        damageBoxes.Add(box);
-                }
-
-                if (myState.IsKeyDown(Keys.K) || Input.GetButtonDown(2, Input.ArcadeButtons.A3))
-                {
-                    wraith.SwitchPlanes();
-                }
-
-                if (myState.IsKeyDown(Keys.U) || Input.GetButtonHeld(2, Input.ArcadeButtons.A4))
-                {
-                    if (wraith.TKWeld == null)
-                        wraith.TKAttach(world);
-                    else
-                    {
-                        if (myState.IsKeyDown(Keys.I) || Input.GetButtonHeld(2, Input.ArcadeButtons.StickUp))
-                        {
-                            AEDamageBox box = wraith.TKBlast(world, Direction.UP);
-                            if (box != null)
-                                damageBoxes.Add(box);
-                        } else if (myState.IsKeyDown(Keys.K) || Input.GetButtonHeld(2, Input.ArcadeButtons.StickDown))
-                        {
-                            AEDamageBox box = wraith.TKBlast(world, Direction.DOWN);
-                            if (box != null)
-                                damageBoxes.Add(box);
-                        } else
-                        {
-                            AEDamageBox box = wraith.TKBlast(world, Direction.NONE);
-                            if (box != null)
-                                damageBoxes.Add(box);
-                        }
-                    }
-                }
+                wraith.HandleInput(myState, world, damageBoxes);
+                
             }
 
             Input.Update(); // Updates the state of the input library
@@ -416,7 +364,7 @@ namespace DevcadeGame
                     map.Update(gameTime);
 
                     medium.Update(gameTime);
-                    wraith.Update(gameTime, tkThrowables);
+                    wraith.Update(gameTime, tkThrowables, npcs);
 
                     foreach (AEObject throwable in tkThrowables)
                     {
@@ -437,7 +385,14 @@ namespace DevcadeGame
                     damageBoxes.RemoveAll(x => x.tick < TimeSpan.Zero);
 
                     mediumCamera.Position = new Vector2(medium.GetCameraCoords().X, medium.GetCameraCoords().Y + (mediumViewport.Height / 2) / mediumCamera.Zoom);
-                    wraithCamera.Position = new Vector2(wraith.GetCameraCoords().X, wraith.GetCameraCoords().Y + (wraithViewport.Height / 2) / wraithCamera.Zoom);
+
+                    if (wraith.PSActive)
+                        wraithCamera.Position = new Vector2(
+                                wraith.PSCandidate.GetCameraCoords().X, 
+                                wraith.PSCandidate.GetCameraCoords().Y + (wraithViewport.Height / 2) / wraithCamera.Zoom
+                                );
+                    else
+                        wraithCamera.Position = new Vector2(wraith.GetCameraCoords().X, wraith.GetCameraCoords().Y + (wraithViewport.Height / 2) / wraithCamera.Zoom);
 
                     // We are probably still holding inputs, and we need to deal with that 
                     handleHeldInputs(myState);

@@ -1,10 +1,12 @@
-﻿using DevcadeGame;
-using Microsoft.Xna.Framework;
+﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
 using System.Collections.Generic;
 using tainicom.Aether.Physics2D.Dynamics;
 using tainicom.Aether.Physics2D.Dynamics.Joints;
+
+using Microsoft.Xna.Framework.Input;
+using Devcade;
 
 namespace WraithHunt
 {
@@ -24,8 +26,13 @@ namespace WraithHunt
         public RopeJoint TKWeld = null;
         private float _TKLength = 4f;
         private float _TKBoost = -0.1f;
-
         private Vector2 _TKBlastForce = new Vector2(100f, 20f);
+
+        TimeSpan _PSCooldown = new TimeSpan(0,0,2); // DEBUG: should be 15 seconds.
+        TimeSpan _PSTick = TimeSpan.Zero;
+        private int _PSRange = 20;
+        public AEPlayer PSCandidate;
+        public bool PSActive = false;
 
         public Color WraithColor = Color.Orange;
 
@@ -39,16 +46,86 @@ namespace WraithHunt
 
         public AEObject getTkCandidate() => _TKCandidate;
 
-        public void Update(GameTime gameTime, List<AEObject> throwables)
+        public void Update(GameTime gameTime, List<AEObject> throwables, List<AEObject> npcs)
         {
             base.Update(gameTime);
             _blastAttackTick -= gameTime.ElapsedGameTime;
             _planeShiftTick -= gameTime.ElapsedGameTime;
             _TKTick -= gameTime.ElapsedGameTime;
-            TKSearch(throwables);
+            _PSTick -= gameTime.ElapsedGameTime;
+            
+            // If we're not throwing something, search for shit to throw
             if (TKWeld != null)
             {
                 _TKCandidate._body.ApplyLinearImpulse(new Vector2(0, _TKBoost));
+            } else 
+            {
+                _TKCandidate = TKSearch(throwables);
+            }
+
+            // If we're not posessing someone, search for people to possess.
+            if (!PSActive)
+            {
+                PSCandidate = (AEPlayer) TKSearch(npcs);
+            }
+        }
+
+        public void HandleInput(KeyboardState myState, World world, List<AEDamageBox> damageBoxes)
+        {
+            if (myState.IsKeyDown(Keys.I) || Input.GetButtonDown(2, Input.ArcadeButtons.A1))
+            {
+                Jump();
+            }
+
+            if (myState.IsKeyDown(Keys.J) || Input.GetButtonHeld(2, Input.ArcadeButtons.StickLeft))
+            {
+                Walk(Direction.LEFT);
+            }
+
+            if (myState.IsKeyDown(Keys.L) || Input.GetButtonHeld(2, Input.ArcadeButtons.StickRight))
+            {
+                Walk(Direction.RIGHT);
+            }
+
+            if (myState.IsKeyDown(Keys.O) || Input.GetButtonHeld(2, Input.ArcadeButtons.A2))
+            {
+                AEDamageBox box = Attack(world);
+                if (box != null)
+                    damageBoxes.Add(box);
+            }
+
+            if (myState.IsKeyDown(Keys.K) || Input.GetButtonDown(2, Input.ArcadeButtons.A3))
+            {
+                SwitchPlanes();
+            }
+
+            if (myState.IsKeyDown(Keys.U) || Input.GetButtonHeld(2, Input.ArcadeButtons.A4))
+            {
+                if (TKWeld == null)
+                    TKAttach(world);
+                else
+                {
+                    if (myState.IsKeyDown(Keys.I) || Input.GetButtonHeld(2, Input.ArcadeButtons.StickUp))
+                    {
+                        AEDamageBox box = TKBlast(world, Direction.UP);
+                        if (box != null)
+                            damageBoxes.Add(box);
+                    } else if (myState.IsKeyDown(Keys.K) || Input.GetButtonHeld(2, Input.ArcadeButtons.StickDown))
+                    {
+                        AEDamageBox box = TKBlast(world, Direction.DOWN);
+                        if (box != null)
+                            damageBoxes.Add(box);
+                    } else
+                    {
+                        AEDamageBox box = TKBlast(world, Direction.NONE);
+                        if (box != null)
+                            damageBoxes.Add(box);
+                    }
+                }
+            }
+            if (myState.IsKeyDown(Keys.P) || Input.GetButtonHeld(2, Input.ArcadeButtons.B1))
+            {
+                PSPossess();
             }
         }
 
@@ -59,6 +136,9 @@ namespace WraithHunt
                 _TKCandidate.DrawOutline(spriteBatch, Color.Yellow);
             else if (TKWeld != null)
                 _TKCandidate.DrawOutline(spriteBatch, WraithColor);
+
+            if (_PSTick <= TimeSpan.Zero && PSCandidate != null && PSActive == false)
+                PSCandidate.DrawOutline(spriteBatch, Color.Gold);
         }
 
         public void drawHUD(SpriteBatch spriteBatch, Viewport defaultViewport, SpriteFont font, bool drawOnBottom)
@@ -119,7 +199,8 @@ namespace WraithHunt
             else if (TKWeld != null)
                 tkBlastTextColor = WraithColor;
 
-            // Planeshift cooldown bar
+            /*
+            // TKBlast cooldown bar
             string textTkBlast = "BLAST";
             Vector2 textTkBlastSize = font.MeasureString(textTkBlast);
             spriteBatch.DrawString(
@@ -153,6 +234,75 @@ namespace WraithHunt
                     5
                 ),
                 WraithColor
+            );*/
+
+            DrawBar(spriteBatch,
+                    font, 
+                    new Vector2(20, HUDHeight + 60), 
+                    "BLAST", 
+                    tkBlastTextColor, 
+                    (float) _TKTick.TotalMilliseconds, 
+                    (float) _TKCooldown.TotalMilliseconds, 
+                    new Vector2(defaultViewport.Width / 5.0f, 5)
+                    );
+
+            Color possessionColor = Color.White;
+            if (_PSTick > TimeSpan.Zero || PSCandidate == null)
+                possessionColor = Color.Gray;
+            else if (PSActive)
+                possessionColor = WraithColor;
+
+            DrawBar(spriteBatch,
+                    font, 
+                    new Vector2(20, HUDHeight + 90), 
+                    "POSSESS", 
+                    possessionColor, 
+                    (float) _PSTick.TotalMilliseconds, 
+                    (float) _PSCooldown.TotalMilliseconds, 
+                    new Vector2(defaultViewport.Width / 5.0f, 5)
+                    );
+        }
+
+        public void DrawBar(
+            SpriteBatch spriteBatch,
+            SpriteFont font,
+            Vector2 position,
+            String title,
+            Color titleColor,
+            float currentValue, 
+            float maxValue,
+            Vector2 dimensions
+        )
+        {
+            Vector2 textTkBlastSize = font.MeasureString(title);
+            spriteBatch.DrawString(
+                font,
+                title,
+                position,
+                titleColor 
+            );
+
+            RectangleSprite.FillRectangle(
+                spriteBatch,
+                new Rectangle(
+                    (int) position.X,
+                    (int) position.Y + 20,
+                    (int) dimensions.X,
+                    (int) dimensions.Y
+                ),
+                Color.Black
+            );
+
+            RectangleSprite.FillRectangle(
+                spriteBatch,
+                new Rectangle(
+                    (int) position.X,
+                    (int) position.Y + 20,
+                    (int)((dimensions.X / 5.0f) *
+                        ((float)currentValue / (float)maxValue)),
+                    (int) dimensions.Y
+                ),
+                WraithColor
             );
         }
 
@@ -162,6 +312,8 @@ namespace WraithHunt
             _blastAttackTick = TimeSpan.Zero;
             _planeShiftTick = TimeSpan.Zero;
             _TKTick = TimeSpan.Zero;
+            _PSTick = TimeSpan.Zero;
+            PSActive = false;
         }
 
         public AEDamageBox Attack(World world)
@@ -215,9 +367,9 @@ namespace WraithHunt
             }
         }
 
-        public void TKSearch(List<AEObject> furniture)
+        public AEObject TKSearch(List<AEObject> furniture)
         {
-            _TKCandidate = furniture[0];
+            AEObject currentCandidate = furniture[0];
             foreach (AEObject furn in furniture)
             {
                 // How far away this furn is
@@ -226,8 +378,8 @@ namespace WraithHunt
                 float furnPythag = (float)Math.Sqrt(furnDistX * furnDistX + furnDistY * furnDistY);
 
                 // How far away the closest furn is
-                float closestDistX = Math.Abs(_TKCandidate.Position().X - this._body.Position.X);
-                float closestDistY = Math.Abs(_TKCandidate.Position().Y - this._body.Position.Y);
+                float closestDistX = Math.Abs(currentCandidate.Position().X - this._body.Position.X);
+                float closestDistY = Math.Abs(currentCandidate.Position().Y - this._body.Position.Y);
                 float closestPythag = (float)Math.Sqrt(closestDistX * closestDistX + closestDistY * closestDistY);
 
                 if (
@@ -235,14 +387,15 @@ namespace WraithHunt
                     furnPythag < closestPythag
                 )
                 {
-                    _TKCandidate = furn;
+                    return furn;
                 }
             }
-            float distX = Math.Abs(_TKCandidate.Position().X - this._body.Position.X);
-            float distY = Math.Abs(_TKCandidate.Position().Y - this._body.Position.Y);
+            float distX = Math.Abs(currentCandidate.Position().X - this._body.Position.X);
+            float distY = Math.Abs(currentCandidate.Position().Y - this._body.Position.Y);
             float pythag = (float)Math.Sqrt(distX * distX + distY * distY);
             if (pythag > _TKRange)
-                _TKCandidate = null;
+                return null;
+            return currentCandidate;
         }
 
         public void TKAttach(World world)
@@ -323,6 +476,15 @@ namespace WraithHunt
                     );
             }
             return null;
+        }
+
+        public void PSPossess()
+        {
+            if (PSCandidate != null && _PSTick <= TimeSpan.Zero)
+            {
+                _PSTick = _PSCooldown;
+                PSActive = true;
+            }
         }
     }
 }
