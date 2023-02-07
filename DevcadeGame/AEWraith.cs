@@ -157,7 +157,7 @@ namespace WraithHunt
             }
         }
 
-        public void DrawExtas(GameTime gameTime, SpriteBatch spriteBatch)
+        public void DrawExtras(GameTime gameTime, SpriteBatch spriteBatch)
         {
             // Draw an outline of the nearest throwable on the Wraith's screen.
             if (_TKTick <= TimeSpan.Zero && _TKCandidate != null && TKWeld == null)

@@ -415,7 +415,14 @@ namespace DevcadeGame
 
             void drawThings(Camera cam, AEPlayer player)
             {
-                if (player.currentPlane == WHPlane.ETHEREAL)
+                // Get current plane, and override it if posessing
+                WHPlane currentPlane = player.currentPlane;
+                if (player is AEWraith && ((AEWraith) player).PSActive)
+                {
+                    currentPlane = WHPlane.MATERIAL;
+                }
+
+                if (currentPlane == WHPlane.ETHEREAL)
                 {
                     Color etherealBlue = new Color(0, 20, 50);
                     // Wraith Kludge
@@ -440,9 +447,9 @@ namespace DevcadeGame
                     throwable.Draw(gameTime, _spriteBatch);
                 }
 
-                if (player.currentPlane == medium.currentPlane)
+                if (currentPlane == medium.currentPlane)
                     medium.Draw(gameTime, _spriteBatch);
-                if (player.currentPlane == wraith.currentPlane)
+                if (currentPlane == wraith.currentPlane)
                     wraith.Draw(gameTime, _spriteBatch);
 
                 foreach (AEPlayer npc in npcs)
@@ -464,7 +471,7 @@ namespace DevcadeGame
 
                 if (player == wraith)
                 {
-                    wraith.DrawExtas(gameTime, _spriteBatch);
+                    wraith.DrawExtras(gameTime, _spriteBatch);
                 }
                 //killPlane.DrawBox(gameTime, _spriteBatch); // Don't draw the killplane; We don't need it.
             }
