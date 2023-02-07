@@ -216,7 +216,7 @@ namespace DevcadeGame
                         characterSize.X, characterSize.Y, 1, new Vector2(wraithStartingPosition.X + i * 4, wraithStartingPosition.Y), 0, BodyType.Dynamic
                     ),
                     AETag.MEDIUM
-                ); 
+                );
 
                 npc.LoadContent(Content);
                 npcs.Add(npc);
@@ -310,7 +310,7 @@ namespace DevcadeGame
 
                 /** Player 2 **/
                 wraith.HandleInput(myState, world, damageBoxes);
-                
+
             }
 
             Input.Update(); // Updates the state of the input library
@@ -360,7 +360,7 @@ namespace DevcadeGame
                         state = GameState.WRAITH_WON;
                         break;
                     }
-                    
+
                     map.Update(gameTime);
 
                     medium.Update(gameTime);
@@ -388,7 +388,7 @@ namespace DevcadeGame
 
                     if (wraith.PSActive)
                         wraithCamera.Position = new Vector2(
-                                wraith.PSCandidate.GetCameraCoords().X, 
+                                wraith.PSCandidate.GetCameraCoords().X,
                                 wraith.PSCandidate.GetCameraCoords().Y + (wraithViewport.Height / 2) / wraithCamera.Zoom
                                 );
                     else
@@ -423,10 +423,10 @@ namespace DevcadeGame
                     RectangleSprite.FillRectangle(
                         _spriteBatch,
                         new Rectangle(
-                            (int) (cam.Position.X - (GraphicsDevice.Viewport.Width/2) / cam.Zoom),
-                            (int) (cam.Position.Y - (GraphicsDevice.Viewport.Height) / cam.Zoom),
-                            (int) (GraphicsDevice.Viewport.Width/cam.Zoom),
-                            (int) (GraphicsDevice.Viewport.Height/cam.Zoom)
+                            (int)(cam.Position.X - (GraphicsDevice.Viewport.Width / 2) / cam.Zoom),
+                            (int)(cam.Position.Y - (GraphicsDevice.Viewport.Height) / cam.Zoom),
+                            (int)(GraphicsDevice.Viewport.Width / cam.Zoom),
+                            (int)(GraphicsDevice.Viewport.Height / cam.Zoom)
                         ),
                         etherealBlue
                     );

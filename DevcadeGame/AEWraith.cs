@@ -19,7 +19,7 @@ namespace WraithHunt
         TimeSpan _planeShiftTick = TimeSpan.Zero;
 
         // Telekinesis
-        TimeSpan _TKCooldown = new TimeSpan(0,0,2); // DEBUG: should be 15 seconds.
+        TimeSpan _TKCooldown = new TimeSpan(0, 0, 2); // DEBUG: should be 15 seconds.
         TimeSpan _TKTick = TimeSpan.Zero;
         private int _TKRange = 20;
         private AEObject _TKCandidate;
@@ -28,7 +28,7 @@ namespace WraithHunt
         private float _TKBoost = -0.1f;
         private Vector2 _TKBlastForce = new Vector2(100f, 20f);
 
-        TimeSpan _PSCooldown = new TimeSpan(0,0,2); // DEBUG: should be 15 seconds.
+        TimeSpan _PSCooldown = new TimeSpan(0, 0, 2); // DEBUG: should be 15 seconds.
         TimeSpan _PSTick = TimeSpan.Zero;
         private int _PSRange = 20;
         public AEPlayer PSCandidate;
@@ -53,12 +53,13 @@ namespace WraithHunt
             _planeShiftTick -= gameTime.ElapsedGameTime;
             _TKTick -= gameTime.ElapsedGameTime;
             _PSTick -= gameTime.ElapsedGameTime;
-            
+
             // If we're not throwing something, search for shit to throw
             if (TKWeld != null)
             {
                 _TKCandidate._body.ApplyLinearImpulse(new Vector2(0, _TKBoost));
-            } else 
+            }
+            else
             {
                 _TKCandidate = TKSearch(throwables);
             }
@@ -66,12 +67,37 @@ namespace WraithHunt
             // If we're not posessing someone, search for people to possess.
             if (!PSActive)
             {
-                PSCandidate = (AEPlayer) TKSearch(npcs);
+                PSCandidate = (AEPlayer)TKSearch(npcs);
             }
         }
 
         public void HandleInput(KeyboardState myState, World world, List<AEDamageBox> damageBoxes)
         {
+            if (PSActive)
+            {
+                if (myState.IsKeyDown(Keys.I) || Input.GetButtonDown(2, Input.ArcadeButtons.A1))
+                {
+                    PSCandidate.Jump();
+                }
+
+                if (myState.IsKeyDown(Keys.J) || Input.GetButtonHeld(2, Input.ArcadeButtons.StickLeft))
+                {
+                    PSCandidate.Walk(Direction.LEFT);
+                }
+
+                if (myState.IsKeyDown(Keys.L) || Input.GetButtonHeld(2, Input.ArcadeButtons.StickRight))
+                {
+                    PSCandidate.Walk(Direction.RIGHT);
+                }
+
+                if (myState.IsKeyDown(Keys.P) || Input.GetButtonHeld(2, Input.ArcadeButtons.B1))
+                {
+                    PSPossess();
+                }
+
+                return;
+            }
+
             if (myState.IsKeyDown(Keys.I) || Input.GetButtonDown(2, Input.ArcadeButtons.A1))
             {
                 Jump();
@@ -110,12 +136,14 @@ namespace WraithHunt
                         AEDamageBox box = TKBlast(world, Direction.UP);
                         if (box != null)
                             damageBoxes.Add(box);
-                    } else if (myState.IsKeyDown(Keys.K) || Input.GetButtonHeld(2, Input.ArcadeButtons.StickDown))
+                    }
+                    else if (myState.IsKeyDown(Keys.K) || Input.GetButtonHeld(2, Input.ArcadeButtons.StickDown))
                     {
                         AEDamageBox box = TKBlast(world, Direction.DOWN);
                         if (box != null)
                             damageBoxes.Add(box);
-                    } else
+                    }
+                    else
                     {
                         AEDamageBox box = TKBlast(world, Direction.NONE);
                         if (box != null)
@@ -137,6 +165,7 @@ namespace WraithHunt
             else if (TKWeld != null)
                 _TKCandidate.DrawOutline(spriteBatch, WraithColor);
 
+            // Draw an outline of the nearest possessable NPC on the Wraith's screen.
             if (_PSTick <= TimeSpan.Zero && PSCandidate != null && PSActive == false)
                 PSCandidate.DrawOutline(spriteBatch, Color.Gold);
         }
@@ -237,12 +266,12 @@ namespace WraithHunt
             );*/
 
             DrawBar(spriteBatch,
-                    font, 
-                    new Vector2(20, HUDHeight + 60), 
-                    "BLAST", 
-                    tkBlastTextColor, 
-                    (float) _TKTick.TotalMilliseconds, 
-                    (float) _TKCooldown.TotalMilliseconds, 
+                    font,
+                    new Vector2(20, HUDHeight + 60),
+                    "BLAST",
+                    tkBlastTextColor,
+                    (float)_TKTick.TotalMilliseconds,
+                    (float)_TKCooldown.TotalMilliseconds,
                     new Vector2(defaultViewport.Width / 5.0f, 5)
                     );
 
@@ -253,12 +282,12 @@ namespace WraithHunt
                 possessionColor = WraithColor;
 
             DrawBar(spriteBatch,
-                    font, 
-                    new Vector2(20, HUDHeight + 90), 
-                    "POSSESS", 
-                    possessionColor, 
-                    (float) _PSTick.TotalMilliseconds, 
-                    (float) _PSCooldown.TotalMilliseconds, 
+                    font,
+                    new Vector2(20, HUDHeight + 90),
+                    "POSSESS",
+                    possessionColor,
+                    (float)_PSTick.TotalMilliseconds,
+                    (float)_PSCooldown.TotalMilliseconds,
                     new Vector2(defaultViewport.Width / 5.0f, 5)
                     );
         }
@@ -269,7 +298,7 @@ namespace WraithHunt
             Vector2 position,
             String title,
             Color titleColor,
-            float currentValue, 
+            float currentValue,
             float maxValue,
             Vector2 dimensions
         )
@@ -279,16 +308,16 @@ namespace WraithHunt
                 font,
                 title,
                 position,
-                titleColor 
+                titleColor
             );
 
             RectangleSprite.FillRectangle(
                 spriteBatch,
                 new Rectangle(
-                    (int) position.X,
-                    (int) position.Y + 20,
-                    (int) dimensions.X,
-                    (int) dimensions.Y
+                    (int)position.X,
+                    (int)position.Y + 20,
+                    (int)dimensions.X,
+                    (int)dimensions.Y
                 ),
                 Color.Black
             );
@@ -296,11 +325,11 @@ namespace WraithHunt
             RectangleSprite.FillRectangle(
                 spriteBatch,
                 new Rectangle(
-                    (int) position.X,
-                    (int) position.Y + 20,
+                    (int)position.X,
+                    (int)position.Y + 20,
                     (int)((dimensions.X / 5.0f) *
                         ((float)currentValue / (float)maxValue)),
-                    (int) dimensions.Y
+                    (int)dimensions.Y
                 ),
                 WraithColor
             );
@@ -415,7 +444,7 @@ namespace WraithHunt
                 _TKTick = new TimeSpan(0, 0, 0, 0, 500);
             }
         }
-        
+
         public void TKRelease(World world)
         {
             world.Remove(TKWeld);
@@ -483,7 +512,7 @@ namespace WraithHunt
             if (PSCandidate != null && _PSTick <= TimeSpan.Zero)
             {
                 _PSTick = _PSCooldown;
-                PSActive = true;
+                PSActive = !PSActive;
             }
         }
     }

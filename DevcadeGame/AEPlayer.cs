@@ -75,7 +75,7 @@ namespace WraithHunt
             }
 
             Rectangle dimensions = GetCameraCoords();
-            
+
             dimensions.X -= dimensions.Width / 2; // Properly center the sprite within the hitbox
             dimensions.Width *= 2; // Players are twice as tall as they are wide. 
 

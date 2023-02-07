@@ -77,10 +77,10 @@ namespace DevcadeGame
 
                         // Convert from screen coords to world coords
                         Vector4 worldDimensions = new Vector4(
-                                (float)((x / _spriteOffset) + ((float) tileWidth / _spriteOffset) * 2.0f),
-                                (float)((y / _spriteOffset) + ((float) tileHeight / _spriteOffset) * 2.0f),
-                                (float)((float) tileWidth / _spriteScale),
-                                (float)((float) tileHeight / _spriteScale)
+                                (float)((x / _spriteOffset) + ((float)tileWidth / _spriteOffset) * 2.0f),
+                                (float)((y / _spriteOffset) + ((float)tileHeight / _spriteOffset) * 2.0f),
+                                (float)((float)tileWidth / _spriteScale),
+                                (float)((float)tileHeight / _spriteScale)
                             );
 
                         float mapScale = 1f;

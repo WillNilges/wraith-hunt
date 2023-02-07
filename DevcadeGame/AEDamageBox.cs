@@ -7,7 +7,7 @@ using Color = Microsoft.Xna.Framework.Color;
 using Rectangle = Microsoft.Xna.Framework.Rectangle;
 
 namespace WraithHunt
-{ 
+{
     public class AEDamageBox : AEObject
     {
         private bool _hasHit = false;
