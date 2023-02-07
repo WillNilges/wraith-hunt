@@ -45,6 +45,8 @@ namespace DevcadeGame
 
         private List<AEObject> tkThrowables; // List of shit the wraith can chuck at people
 
+        private List<AEPlayer> npcs;
+
         private List<AEDamageBox> damageBoxes;
 
         private AEDamageBox killPlane;
@@ -131,6 +133,8 @@ namespace DevcadeGame
 
             tkThrowables = new List<AEObject>();
 
+            npcs = new List<AEPlayer>();
+
             damageBoxes = new List<AEDamageBox>();
 
             Vector2 killPlaneSize = new Vector2(1000f, 10f);
@@ -202,6 +206,23 @@ namespace DevcadeGame
                 throwable.LoadContent(Content);
 
                 tkThrowables.Add(throwable);
+            }
+
+            for (int i = 0; i < 10; i++)
+            {
+                AEPlayer npc = new AEPlayer(
+                    "npc_placeholder_01",
+                    _spriteOffset,
+                    _spriteScale,
+                    characterSize,
+                    world.CreateRectangle(
+                        characterSize.X, characterSize.Y, 1, new Vector2(wraithStartingPosition.X + i * 4, wraithStartingPosition.Y), 0, BodyType.Dynamic
+                    ),
+                    AETag.MEDIUM
+                ); 
+
+                npc.LoadContent(Content);
+                npcs.Add(npc);
             }
 
             AEObject throwableDebug = new AEObject(
@@ -363,6 +384,10 @@ namespace DevcadeGame
                 case GameState.START:
                     medium.Reset();
                     wraith.Reset();
+                    foreach (AEPlayer npc in npcs)
+                    {
+                        npc.Reset();
+                    }
                     state = GameState.PLAYING;
                     break;
                 case GameState.MEDIUM_WON:
@@ -396,6 +421,11 @@ namespace DevcadeGame
                     foreach (AEObject throwable in tkThrowables)
                     {
                         throwable.Update(gameTime);
+                    }
+
+                    foreach (AEPlayer npc in npcs)
+                    {
+                        npc.Update(gameTime);
                     }
 
                     foreach (AEDamageBox box in damageBoxes)
@@ -459,6 +489,11 @@ namespace DevcadeGame
                     medium.Draw(gameTime, _spriteBatch);
                 if (player.currentPlane == wraith.currentPlane)
                     wraith.Draw(gameTime, _spriteBatch);
+
+                foreach (AEPlayer npc in npcs)
+                {
+                    npc.Draw(gameTime, _spriteBatch);
+                }
 
                 foreach (AEDamageBox box in damageBoxes)
                 {
