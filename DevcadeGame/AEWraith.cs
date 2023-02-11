@@ -61,13 +61,13 @@ namespace WraithHunt
             }
             else
             {
-                _TKCandidate = TKSearch(throwables, _TKCandidate, _TKRange);
+                _TKCandidate = TKSearch(throwables, _TKRange);
             }
 
             // If we're not posessing someone, search for people to possess.
             if (!PSActive)
             {
-                PSCandidate = (AEPlayer)TKSearch(npcs, PSCandidate, _PSRange);
+                PSCandidate = (AEPlayer)TKSearch(npcs, _PSRange);
             }
         }
 
@@ -166,7 +166,7 @@ namespace WraithHunt
                 _TKCandidate.DrawOutline(spriteBatch, WraithColor);
 
             // Draw an outline of the nearest possessable NPC on the Wraith's screen.
-            if (_PSTick <= TimeSpan.Zero && PSCandidate != null && PSActive == false)
+            if (_PSTick <= TimeSpan.Zero && PSCandidate != null && !PSActive)
                 PSCandidate.DrawOutline(spriteBatch, Color.Gold);
         }
 
@@ -290,6 +290,20 @@ namespace WraithHunt
                     (float)_PSCooldown.TotalMilliseconds,
                     new Vector2(defaultViewport.Width / 5.0f, 5)
                     );
+
+            // Draw the NPC's health on the Wraith's Screen
+            if (PSActive)
+            {
+                DrawBar(spriteBatch,
+                    font,
+                    new Vector2(130, HUDHeight + 90),
+                    "VICTIM LIFE",
+                    WraithColor,
+                    (float) PSCandidate.health,
+                    (float) PSCandidate.healthMax,
+                    new Vector2(defaultViewport.Width / 5.0f, 5)
+                );
+            }
         }
 
         public void DrawBar(
@@ -327,7 +341,7 @@ namespace WraithHunt
                 new Rectangle(
                     (int)position.X,
                     (int)position.Y + 20,
-                    (int)((dimensions.X / 5.0f) *
+                    (int)((dimensions.X) *
                         ((float)currentValue / (float)maxValue)),
                     (int)dimensions.Y
                 ),
@@ -396,7 +410,7 @@ namespace WraithHunt
             }
         }
 
-        public AEObject TKSearch(List<AEObject> furniture, AEObject currentCandidate, float abilityRange)
+        public AEObject TKSearch(List<AEObject> furniture, float abilityRange)
         {
             AEObject newCandidate = furniture[0];
             foreach (AEObject furn in furniture)
