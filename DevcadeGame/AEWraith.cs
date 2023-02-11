@@ -41,8 +41,7 @@ namespace WraithHunt
         ) : base(
             spritePath, spriteOffset, spriteScale, bodySize, body, playerType
         )
-        {
-        }
+        {}
 
         public AEObject getTkCandidate() => _TKCandidate;
 
@@ -68,6 +67,13 @@ namespace WraithHunt
             if (!PSActive)
             {
                 PSCandidate = (AEPlayer)TKSearch(npcs, _PSRange);
+            } else
+            {
+                if (PSCandidate.health <= 0)
+                {
+                    PSActive = false;
+                    PSCandidate = null;
+                }
             }
         }
 

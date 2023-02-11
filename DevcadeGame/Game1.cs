@@ -373,7 +373,7 @@ namespace DevcadeGame
 
                     foreach (AEPlayer npc in npcs)
                     {
-                        npc.Update(gameTime);
+                        npc.Update(gameTime, world);
                     }
 
                     foreach (AEDamageBox box in damageBoxes)
@@ -383,6 +383,7 @@ namespace DevcadeGame
 
                     // Delete damage boxes whose timers have expired
                     damageBoxes.RemoveAll(x => x.tick < TimeSpan.Zero);
+                    npcs.RemoveAll(x => ((AEPlayer) x).health <= 0);
 
                     mediumCamera.Position = new Vector2(medium.GetCameraCoords().X, medium.GetCameraCoords().Y + (mediumViewport.Height / 2) / mediumCamera.Zoom);
 

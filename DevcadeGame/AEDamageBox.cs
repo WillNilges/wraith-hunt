@@ -37,10 +37,6 @@ namespace WraithHunt
             this._body.LinearVelocity = velocity;
         }
 
-        /// <summary>
-        /// Updates the ball
-        /// </summary>
-        /// <param name="gameTime">An object representing time in the game</param>
         public void Update(GameTime gameTime, World world)
         {
             if (_decay)

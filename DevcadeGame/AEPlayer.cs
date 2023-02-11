@@ -66,7 +66,17 @@ namespace WraithHunt
             health = healthMax;
         }
 
-        public void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+
+        public void Update(GameTime gameTime, World world)
+        {
+            base.Update(gameTime);
+            if (health <= 0)
+            {
+                world.Remove(_body);
+            }
+        }
+
+        public new void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
             SpriteEffects effects = SpriteEffects.None;
             if (facing == Direction.RIGHT)
