@@ -61,13 +61,13 @@ namespace WraithHunt
             }
             else
             {
-                _TKCandidate = TKSearch(throwables);
+                _TKCandidate = TKSearch(throwables, _TKCandidate, _TKRange);
             }
 
             // If we're not posessing someone, search for people to possess.
             if (!PSActive)
             {
-                PSCandidate = (AEPlayer)TKSearch(npcs);
+                PSCandidate = (AEPlayer)TKSearch(npcs, PSCandidate, _PSRange);
             }
         }
 
@@ -396,35 +396,35 @@ namespace WraithHunt
             }
         }
 
-        public AEObject TKSearch(List<AEObject> furniture)
+        public AEObject TKSearch(List<AEObject> furniture, AEObject currentCandidate, float abilityRange)
         {
-            AEObject currentCandidate = furniture[0];
+            AEObject newCandidate = furniture[0];
             foreach (AEObject furn in furniture)
             {
                 // How far away this furn is
                 float furnDistX = Math.Abs(furn.Position().X - this._body.Position.X);
                 float furnDistY = Math.Abs(furn.Position().Y - this._body.Position.Y);
-                float furnPythag = (float)Math.Sqrt(furnDistX * furnDistX + furnDistY * furnDistY);
+                float furnPythag = (float)Math.Sqrt(Math.Pow(furnDistX, 2) + Math.Pow(furnDistY, 2));
 
                 // How far away the closest furn is
-                float closestDistX = Math.Abs(currentCandidate.Position().X - this._body.Position.X);
-                float closestDistY = Math.Abs(currentCandidate.Position().Y - this._body.Position.Y);
-                float closestPythag = (float)Math.Sqrt(closestDistX * closestDistX + closestDistY * closestDistY);
+                float closestDistX = Math.Abs(newCandidate.Position().X - this._body.Position.X);
+                float closestDistY = Math.Abs(newCandidate.Position().Y - this._body.Position.Y);
+                float closestPythag = (float)Math.Sqrt(Math.Pow(closestDistX, 2) + Math.Pow(closestDistY, 2));
 
                 if (
-                    furnPythag < _TKRange &&
+                    furnPythag < abilityRange &&
                     furnPythag < closestPythag
                 )
                 {
-                    return furn;
+                    newCandidate = furn;
                 }
             }
-            float distX = Math.Abs(currentCandidate.Position().X - this._body.Position.X);
-            float distY = Math.Abs(currentCandidate.Position().Y - this._body.Position.Y);
+            float distX = Math.Abs(newCandidate.Position().X - this._body.Position.X);
+            float distY = Math.Abs(newCandidate.Position().Y - this._body.Position.Y);
             float pythag = (float)Math.Sqrt(distX * distX + distY * distY);
             if (pythag > _TKRange)
                 return null;
-            return currentCandidate;
+            return newCandidate;
         }
 
         public void TKAttach(World world)

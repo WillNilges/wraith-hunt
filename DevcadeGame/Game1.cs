@@ -194,7 +194,7 @@ namespace DevcadeGame
                     _spriteScale,
                     _spriteScale,
                     new Vector2(1.5f, 1.5f),
-                    world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(wraithStartingPosition.X - 50f + (float)(i * 12f), wraithStartingPosition.Y - 100f), 0, BodyType.Dynamic)
+                    world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(wraithStartingPosition.X - 50f + (float)(i * 12f), wraithStartingPosition.Y - 5f), 0, BodyType.Dynamic)
                 );
 
                 throwable._body.FixedRotation = false;
