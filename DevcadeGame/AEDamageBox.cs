@@ -45,7 +45,6 @@ namespace WraithHunt
             if (tick < TimeSpan.Zero)
             {
                 world.Remove(_body);
-
             }
         }
 

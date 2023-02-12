@@ -147,10 +147,17 @@ namespace WraithHunt
         }
 
         /**** FUN STUFF ****/
+
         public void Walk(Direction direction)
         {
+            Walk(direction, 1.0f);
+        }
+
+        public void Walk(Direction direction, float walkMultiplier)
+        {
+            float walkMax = _maxWalkSpeed * walkMultiplier;
             facing = direction;
-            if (Math.Abs(_body.LinearVelocity.X) > _maxWalkSpeed)
+            if (Math.Abs(_body.LinearVelocity.X) > walkMax)
                 return;
             switch (direction)
             {
@@ -159,16 +166,16 @@ namespace WraithHunt
                     if (_body.LinearVelocity.X == 0)
                         _body.Position = new Vector2(_body.Position.X - floorTileCludge, _body.Position.Y);
                     _body.ApplyLinearImpulse(new Vector2(-1 * _walkAccel, 0f));
-                    if (_body.LinearVelocity.X < -1 * _maxWalkSpeed)
-                        _body.LinearVelocity = new Vector2(-1 * _maxWalkSpeed, _body.LinearVelocity.Y);
+                    if (_body.LinearVelocity.X < -1 * walkMax)
+                        _body.LinearVelocity = new Vector2(-1 * walkMax, _body.LinearVelocity.Y);
 
                     break;
                 case Direction.RIGHT:
                     if (_body.LinearVelocity.X == 0)
                         _body.Position = new Vector2(_body.Position.X + floorTileCludge, _body.Position.Y);
                     _body.ApplyLinearImpulse(new Vector2(_walkAccel, 0f));
-                    if (_body.LinearVelocity.X > _maxWalkSpeed)
-                        _body.LinearVelocity = new Vector2(_maxWalkSpeed, _body.LinearVelocity.Y);
+                    if (_body.LinearVelocity.X > walkMax)
+                        _body.LinearVelocity = new Vector2(walkMax, _body.LinearVelocity.Y);
                     break;
                 default:
                     break;

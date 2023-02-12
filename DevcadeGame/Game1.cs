@@ -194,7 +194,7 @@ namespace DevcadeGame
                     _spriteScale,
                     _spriteScale,
                     new Vector2(1.5f, 1.5f),
-                    world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(wraithStartingPosition.X - 50f + (float)(i * 12f), wraithStartingPosition.Y - 5f), 0, BodyType.Dynamic)
+                    world.CreateRectangle(1.5f, 1.5f, 1, new Vector2(wraithStartingPosition.X - 50f + (float)(i * 12f), wraithStartingPosition.Y - 50f), 0, BodyType.Dynamic)
                 );
 
                 throwable._body.FixedRotation = false;
@@ -207,13 +207,13 @@ namespace DevcadeGame
 
             for (int i = 0; i < 10; i++)
             {
-                AEPlayer npc = new AEPlayer(
+                Npc npc = new Npc(
                     "npc_placeholder_01",
                     _spriteOffset,
                     _spriteScale,
                     characterSize,
                     world.CreateRectangle(
-                        characterSize.X, characterSize.Y, 1, new Vector2(wraithStartingPosition.X + i * 4, wraithStartingPosition.Y), 0, BodyType.Dynamic
+                        characterSize.X, characterSize.Y, 1, new Vector2(wraithStartingPosition.X + i * 10f - 50f, wraithStartingPosition.Y-100f), 0, BodyType.Dynamic
                     ),
                     AETag.MEDIUM
                 );
@@ -331,8 +331,8 @@ namespace DevcadeGame
             {
                 case GameState.START:
                     medium.Reset();
-                    wraith.Reset();
-                    foreach (AEPlayer npc in npcs)
+                    wraith.Reset(world);
+                    foreach (Npc npc in npcs)
                     {
                         npc.Reset();
                     }
@@ -371,7 +371,7 @@ namespace DevcadeGame
                         throwable.Update(gameTime);
                     }
 
-                    foreach (AEPlayer npc in npcs)
+                    foreach (Npc npc in npcs)
                     {
                         npc.Update(gameTime, world);
                     }
@@ -383,7 +383,7 @@ namespace DevcadeGame
 
                     // Delete damage boxes whose timers have expired
                     damageBoxes.RemoveAll(x => x.tick < TimeSpan.Zero);
-                    npcs.RemoveAll(x => ((AEPlayer) x).health <= 0);
+                    npcs.RemoveAll(x => ((Npc) x).health <= 0);
 
                     mediumCamera.Position = new Vector2(medium.GetCameraCoords().X, medium.GetCameraCoords().Y + (mediumViewport.Height / 2) / mediumCamera.Zoom);
 
@@ -453,7 +453,7 @@ namespace DevcadeGame
                 if (currentPlane == wraith.currentPlane)
                     wraith.Draw(gameTime, _spriteBatch);
 
-                foreach (AEPlayer npc in npcs)
+                foreach (Npc npc in npcs)
                 {
                     npc.Draw(gameTime, _spriteBatch);
                 }

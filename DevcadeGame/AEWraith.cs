@@ -31,7 +31,7 @@ namespace WraithHunt
         TimeSpan _PSCooldown = new TimeSpan(0, 0, 2); // DEBUG: should be 15 seconds.
         TimeSpan _PSTick = TimeSpan.Zero;
         private int _PSRange = 20;
-        public AEPlayer PSCandidate;
+        public Npc PSCandidate;
         public bool PSActive = false;
 
         public Color WraithColor = Color.Orange;
@@ -66,14 +66,11 @@ namespace WraithHunt
             // If we're not posessing someone, search for people to possess.
             if (!PSActive)
             {
-                PSCandidate = (AEPlayer)TKSearch(npcs, _PSRange);
-            } else
+                PSCandidate = (Npc)TKSearch(npcs, _PSRange);
+            } else if (PSCandidate.health <= 0)
             {
-                if (PSCandidate.health <= 0)
-                {
                     PSActive = false;
                     PSCandidate = null;
-                }
             }
         }
 
@@ -355,7 +352,7 @@ namespace WraithHunt
             );
         }
 
-        public void Reset()
+        public void Reset(World world)
         {
             base.Reset();
             _blastAttackTick = TimeSpan.Zero;
@@ -363,6 +360,7 @@ namespace WraithHunt
             _TKTick = TimeSpan.Zero;
             _PSTick = TimeSpan.Zero;
             PSActive = false;
+            TKRelease(world);
         }
 
         public AEDamageBox Attack(World world)
@@ -441,7 +439,7 @@ namespace WraithHunt
             }
             float distX = Math.Abs(newCandidate.Position().X - this._body.Position.X);
             float distY = Math.Abs(newCandidate.Position().Y - this._body.Position.Y);
-            float pythag = (float)Math.Sqrt(distX * distX + distY * distY);
+            float pythag = (float)Math.Sqrt(Math.Pow(distX, 2) + Math.Pow(distY, 2));
             if (pythag > _TKRange)
                 return null;
             return newCandidate;
@@ -467,9 +465,12 @@ namespace WraithHunt
 
         public void TKRelease(World world)
         {
-            world.Remove(TKWeld);
-            _TKCandidate._body.Mass = 1f;
-            TKWeld = null;
+            if (TKWeld != null)
+            {
+                world.Remove(TKWeld);
+                _TKCandidate._body.Mass = 1f;
+                TKWeld = null;
+            }
         }
 
         public AEDamageBox TKBlast(World world, Direction direction)
@@ -533,6 +534,7 @@ namespace WraithHunt
             {
                 _PSTick = _PSCooldown;
                 PSActive = !PSActive;
+                PSCandidate.TogglePossessed();
             }
         }
     }
