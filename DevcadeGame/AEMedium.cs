@@ -30,6 +30,12 @@ namespace WraithHunt
         {
         }
 
+        public void handleHeldInputs(KeyboardState myState)
+        {
+            if (myState.IsKeyDown(Keys.Q) || Input.GetButtonDown(1, Input.ArcadeButtons.A3))
+                BlinkButtonHeld = true;
+        }
+
         public void HandleInput(KeyboardState myState, World world, List<AEDamageBox> damageBoxes)
         {
                 if (myState.IsKeyDown(Keys.W) || Input.GetButtonDown(1, Input.ArcadeButtons.A1))

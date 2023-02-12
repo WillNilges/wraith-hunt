@@ -249,15 +249,10 @@ namespace DevcadeGame
         {
             // If a button might be held continuously, check for it here so that the rest of the input loop can continue
             // accordingly
-            void handleHeldInputs(KeyboardState myState)
-            {
-                if (myState.IsKeyDown(Keys.Q) || Input.GetButtonDown(1, Input.ArcadeButtons.A3))
-                    medium.BlinkButtonHeld = true;
-            }
 
             void handlePlayingInput(KeyboardState myState)
             {
-                handleHeldInputs(myState);
+                medium.handleHeldInputs(myState);
 
                 /** Player 1 **/
                 medium.HandleInput(myState, world, damageBoxes);
@@ -349,7 +344,7 @@ namespace DevcadeGame
                         wraithCamera.Position = new Vector2(wraith.GetCameraCoords().X, wraith.GetCameraCoords().Y + (wraithViewport.Height / 2) / wraithCamera.Zoom);
 
                     // We are probably still holding inputs, and we need to deal with that 
-                    handleHeldInputs(myState);
+                    medium.handleHeldInputs(myState);
 
                     break;
                 default:
