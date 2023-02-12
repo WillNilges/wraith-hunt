@@ -78,6 +78,8 @@ namespace WraithHunt
 
         public new void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            if (this is AEWraith && ((AEWraith) this).PSActive)
+                return;
             SpriteEffects effects = SpriteEffects.None;
             if (facing == Direction.RIGHT)
             {
@@ -207,15 +209,18 @@ namespace WraithHunt
             }
 
             // Handle getting hit by an attack
-            if (other.Tag is DamageFrom && ((DamageFrom)other.Tag).player != this)
+            if (!(this is AEWraith && ((AEWraith)this).PSActive))
             {
-                health -= ((DamageFrom)other.Tag).damage;
-                Vector2 kb = ((DamageFrom)other.Tag).knockback;
-                _body.ApplyLinearImpulse(
-                    new Vector2(other.Body.LinearVelocity.X > 0 ? kb.X : -1 * kb.X, kb.Y) //FIXME: Is this where the unidirectional knockback bug is happening?
-                );
-                if (((DamageFrom)other.Tag).player != null) // Don't yeet the killplane
-                    other.Tag = 0;
+                if (other.Tag is DamageFrom && ((DamageFrom)other.Tag).player != this)
+                {
+                    health -= ((DamageFrom)other.Tag).damage;
+                    Vector2 kb = ((DamageFrom)other.Tag).knockback;
+                    _body.ApplyLinearImpulse(
+                        new Vector2(other.Body.LinearVelocity.X > 0 ? kb.X : -1 * kb.X, kb.Y) //FIXME: Is this where the unidirectional knockback bug is happening?
+                    );
+                    if (((DamageFrom)other.Tag).player != null) // Don't yeet the killplane
+                        other.Tag = 0;
+                }
             }
             return false;
         }

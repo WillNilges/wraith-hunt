@@ -75,9 +75,10 @@ namespace WraithHunt
             }
         }
 
+        // TODO: Create interface?
         public void HandleInput(KeyboardState myState, World world, List<AEDamageBox> damageBoxes)
         {
-            if (PSActive)
+            if (PSActive && PSCandidate != null)
             {
                 if (myState.IsKeyDown(Keys.I) || Input.GetButtonDown(2, Input.ArcadeButtons.A1))
                 {
@@ -98,7 +99,6 @@ namespace WraithHunt
                 {
                     PSPossess();
                 }
-
                 return;
             }
 
@@ -232,52 +232,15 @@ namespace WraithHunt
             else if (TKWeld != null)
                 tkBlastTextColor = WraithColor;
 
-            /*
-            // TKBlast cooldown bar
-            string textTkBlast = "BLAST";
-            Vector2 textTkBlastSize = font.MeasureString(textTkBlast);
-            spriteBatch.DrawString(
-                font,
-                textTkBlast,
-                new Vector2(
-                    20,
-                    HUDHeight + 70
-                ),
-                tkBlastTextColor
-            );
-
-            RectangleSprite.FillRectangle(
-                spriteBatch,
-                new Rectangle(
-                    20,
-                    HUDHeight + 90,
-                    defaultViewport.Width / 5,
-                    5
-                ),
-                Color.Black
-            );
-
-            RectangleSprite.FillRectangle(
-                spriteBatch,
-                new Rectangle(
-                    20,
-                    HUDHeight + 90,
-                    (int)(((float)defaultViewport.Width / 5.0f) *
-                        ((float)_TKTick.TotalMilliseconds / (float)_TKCooldown.TotalMilliseconds)),
-                    5
-                ),
-                WraithColor
-            );*/
-
             DrawBar(spriteBatch,
-                    font,
-                    new Vector2(20, HUDHeight + 60),
-                    "BLAST",
-                    tkBlastTextColor,
-                    (float)_TKTick.TotalMilliseconds,
-                    (float)_TKCooldown.TotalMilliseconds,
-                    new Vector2(defaultViewport.Width / 5.0f, 5)
-                    );
+                font,
+                new Vector2(20, HUDHeight + 60),
+                "BLAST",
+                tkBlastTextColor,
+                (float)_TKTick.TotalMilliseconds,
+                (float)_TKCooldown.TotalMilliseconds,
+                new Vector2(defaultViewport.Width / 5.0f, 5)
+            );
 
             Color possessionColor = Color.White;
             if (_PSTick > TimeSpan.Zero || PSCandidate == null)
@@ -286,14 +249,14 @@ namespace WraithHunt
                 possessionColor = WraithColor;
 
             DrawBar(spriteBatch,
-                    font,
-                    new Vector2(20, HUDHeight + 90),
-                    "POSSESS",
-                    possessionColor,
-                    (float)_PSTick.TotalMilliseconds,
-                    (float)_PSCooldown.TotalMilliseconds,
-                    new Vector2(defaultViewport.Width / 5.0f, 5)
-                    );
+                font,
+                new Vector2(20, HUDHeight + 90),
+                "POSSESS",
+                possessionColor,
+                (float)_PSTick.TotalMilliseconds,
+                (float)_PSCooldown.TotalMilliseconds,
+                new Vector2(defaultViewport.Width / 5.0f, 5)
+            );
 
             // Draw the NPC's health on the Wraith's Screen
             if (PSActive)
@@ -536,6 +499,19 @@ namespace WraithHunt
                 _PSTick = _PSCooldown;
                 PSActive = !PSActive;
                 PSCandidate.TogglePossessed();
+
+                if (PSActive)
+                {
+                    // Hide and disable the wraith when posessing
+                    this._body.Enabled = false;
+                } else
+                {
+                    // Re-enable the wraith and move him to the position
+                    // of his victim. Also, kill him.
+                    this._body.Position = this.PSCandidate._body.Position;
+                    this._body.Enabled = true;
+                    this.PSCandidate.health = 0;
+                }
             }
         }
     }
