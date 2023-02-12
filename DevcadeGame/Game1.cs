@@ -260,54 +260,7 @@ namespace DevcadeGame
                 handleHeldInputs(myState);
 
                 /** Player 1 **/
-                if (myState.IsKeyDown(Keys.W) || Input.GetButtonDown(1, Input.ArcadeButtons.A1))
-                {
-                    if (!medium.BlinkButtonHeld)
-                        medium.Jump();
-                }
-
-                if (myState.IsKeyDown(Keys.A) || Input.GetButtonHeld(1, Input.ArcadeButtons.StickLeft))
-                {
-                    medium.Walk(Direction.LEFT);
-                }
-
-                if (myState.IsKeyDown(Keys.D) || Input.GetButtonHeld(1, Input.ArcadeButtons.StickRight))
-                {
-                    medium.Walk(Direction.RIGHT);
-                }
-
-                if (myState.IsKeyDown(Keys.E) || Input.GetButtonHeld(1, Input.ArcadeButtons.A2))
-                {
-                    AEDamageBox box = medium.Attack(world);
-                    if (box != null)
-                        damageBoxes.Add(box);
-                }
-
-                if (myState.IsKeyDown(Keys.Q) || Input.GetButtonDown(1, Input.ArcadeButtons.A3))
-                {
-                    medium.BlinkButtonHeld = true;
-                    AEDamageBox box = null;
-                    if (myState.IsKeyDown(Keys.W) || Input.GetButtonDown(1, Input.ArcadeButtons.StickUp))
-                    {
-                        box = medium.Blink(Direction.UP, world);
-                    }
-                    else if (myState.IsKeyDown(Keys.S) || Input.GetButtonDown(1, Input.ArcadeButtons.StickDown))
-                    {
-                        box = medium.Blink(Direction.DOWN, world);
-                    }
-                    else if (myState.IsKeyDown(Keys.A) || Input.GetButtonDown(1, Input.ArcadeButtons.StickLeft))
-                    {
-                        box = medium.Blink(Direction.LEFT, world);
-                    }
-                    else if (myState.IsKeyDown(Keys.D) || Input.GetButtonDown(1, Input.ArcadeButtons.StickRight))
-                    {
-                        box = medium.Blink(Direction.RIGHT, world);
-
-                    }
-                    if (box != null)
-                        damageBoxes.Add(box);
-                }
-
+                medium.HandleInput(myState, world, damageBoxes);
                 /** Player 2 **/
                 wraith.HandleInput(myState, world, damageBoxes);
 

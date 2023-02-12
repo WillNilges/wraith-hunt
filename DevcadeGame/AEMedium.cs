@@ -1,13 +1,11 @@
 ﻿using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using System;
-using System.Security.Cryptography;
 using tainicom.Aether.Physics2D.Dynamics;
-using static System.Net.Mime.MediaTypeNames;
-using Transform;
 using Color = Microsoft.Xna.Framework.Color;
-using tainicom.Aether.Physics2D.Dynamics.Contacts;
-using DevcadeGame;
+using System.Collections.Generic;
+using Microsoft.Xna.Framework.Input;
+using Devcade;
 
 namespace WraithHunt
 {
@@ -30,6 +28,56 @@ namespace WraithHunt
             spritePath, spriteOffset, spriteScale, bodySize, body, playerType
         )
         {
+        }
+
+        public void HandleInput(KeyboardState myState, World world, List<AEDamageBox> damageBoxes)
+        {
+                if (myState.IsKeyDown(Keys.W) || Input.GetButtonDown(1, Input.ArcadeButtons.A1))
+                {
+                    if (!BlinkButtonHeld)
+                        Jump();
+                }
+
+                if (myState.IsKeyDown(Keys.A) || Input.GetButtonHeld(1, Input.ArcadeButtons.StickLeft))
+                {
+                    Walk(Direction.LEFT);
+                }
+
+                if (myState.IsKeyDown(Keys.D) || Input.GetButtonHeld(1, Input.ArcadeButtons.StickRight))
+                {
+                    Walk(Direction.RIGHT);
+                }
+
+                if (myState.IsKeyDown(Keys.E) || Input.GetButtonHeld(1, Input.ArcadeButtons.A2))
+                {
+                    AEDamageBox box = Attack(world);
+                    if (box != null)
+                        damageBoxes.Add(box);
+                }
+
+                if (myState.IsKeyDown(Keys.Q) || Input.GetButtonDown(1, Input.ArcadeButtons.A3))
+                {
+                    BlinkButtonHeld = true;
+                    AEDamageBox box = null;
+                    if (myState.IsKeyDown(Keys.W) || Input.GetButtonDown(1, Input.ArcadeButtons.StickUp))
+                    {
+                        box = Blink(Direction.UP, world);
+                    }
+                    else if (myState.IsKeyDown(Keys.S) || Input.GetButtonDown(1, Input.ArcadeButtons.StickDown))
+                    {
+                        box = Blink(Direction.DOWN, world);
+                    }
+                    else if (myState.IsKeyDown(Keys.A) || Input.GetButtonDown(1, Input.ArcadeButtons.StickLeft))
+                    {
+                        box = Blink(Direction.LEFT, world);
+                    }
+                    else if (myState.IsKeyDown(Keys.D) || Input.GetButtonDown(1, Input.ArcadeButtons.StickRight))
+                    {
+                        box = Blink(Direction.RIGHT, world);
+                    }
+                    if (box != null)
+                        damageBoxes.Add(box);
+                }
         }
 
         public void Update(GameTime gameTime)
