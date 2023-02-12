@@ -21,6 +21,9 @@ namespace WraithHunt
         private Direction _millDirection = Direction.LEFT;
         private float _millSpeed = 0.3f;
 
+        TimeSpan _blastAttackCooldown = new TimeSpan(0, 0, 5);
+        TimeSpan _blastAttackTick = TimeSpan.Zero;
+
         Random random;
 
         public Npc(
@@ -66,7 +69,43 @@ namespace WraithHunt
                 {
                     Jump();
                 }
+            } else {
+                _blastAttackTick -= gameTime.ElapsedGameTime;
             }
+        }
+
+        public AEDamageBox Attack(World world)
+        {
+            if (_blastAttackTick < TimeSpan.Zero)
+            {
+                _blastAttackTick = _blastAttackCooldown;
+                Vector2 attackSize = new Vector2(1f, 1f);
+                return new AEDamageBox(
+                    _spritePath,
+                    _spriteOffset,
+                    _spriteOffset,
+                    attackSize,
+                    world.CreateRectangle(
+                        attackSize.X,
+                        attackSize.Y,
+                        1,
+                        new Vector2(
+                            _body.Position.X + (facing == Direction.RIGHT ? attackSize.X / 2 + .5f : -1 * (attackSize.Y / 2 + .5f)),
+                            _body.Position.Y - attackSize.Y / 4
+                        ),
+                        0,
+                        BodyType.Dynamic
+                    ),
+                    new DamageFrom(this, 1, new Vector2(5, -5)),
+                    new TimeSpan(0, 0, 0, 0, 500),
+                    true,
+                    Color.Red,
+                    new Vector2(facing == Direction.RIGHT ? 10 : -10, 0)
+                    );
+
+                //true, 1, new TimeSpan(0, 0, 0, 0, 500), Color.Red, playerType, new Vector2(_body.LinearVelocity.X > 0 ? 30 : -30, 0));
+            }
+            return null;
         }
 
         public void TogglePossessed()

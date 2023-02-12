@@ -70,7 +70,7 @@ namespace WraithHunt
             }
             else if (PSCandidate.health <= 0)
             {
-                PSActive = false;
+                PSPossess(); 
                 PSCandidate = null;
             }
         }
@@ -99,6 +99,14 @@ namespace WraithHunt
                 {
                     PSPossess();
                 }
+
+                if (myState.IsKeyDown(Keys.O) || Input.GetButtonHeld(2, Input.ArcadeButtons.A2))
+                {
+                    AEDamageBox box = PSCandidate.Attack(world);
+                    if (box != null)
+                        damageBoxes.Add(box);
+                }
+
                 return;
             }
 
