@@ -78,8 +78,11 @@ namespace WraithHunt
 
         public new void Draw(GameTime gameTime, SpriteBatch spriteBatch)
         {
+            // Don't draw the Wraith at all if the Wraith is
+            // possessing someone
             if (this is AEWraith && ((AEWraith) this).PSActive)
                 return;
+
             SpriteEffects effects = SpriteEffects.None;
             if (facing == Direction.RIGHT)
             {

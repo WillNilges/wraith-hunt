@@ -166,6 +166,9 @@ namespace WraithHunt
             if (myState.IsKeyDown(Keys.P) || Input.GetButtonHeld(2, Input.ArcadeButtons.B1))
             {
                 PSPossess();
+
+                // Drop Telekinesis
+                this.TKRelease(world);
             }
         }
 

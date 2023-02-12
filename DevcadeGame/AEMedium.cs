@@ -20,6 +20,12 @@ namespace WraithHunt
         float _blinkRange = 10f;
         public bool BlinkButtonHeld = false;
 
+        // Trap
+        TimeSpan _trapCooldown = new TimeSpan(0, 0, 2); // DEBUG: Should be 30 seconds
+        TimeSpan _trapTick = TimeSpan.Zero;
+        float _trapRange = 30f;
+        AEObject _trap = null;
+
         Color mediumColor = new Color(198, 107, 255);
 
         public AEMedium(
@@ -84,14 +90,26 @@ namespace WraithHunt
                 if (box != null)
                     damageBoxes.Add(box);
             }
+
+            if (myState.IsKeyDown(Keys.R) || Input.GetButtonDown(1, Input.ArcadeButtons.A4))
+            {
+                Trap(world);
+            }
         }
 
-        public void Update(GameTime gameTime)
+        public new void Update(GameTime gameTime)
         {
             base.Update(gameTime);
             _beamAttackTick -= gameTime.ElapsedGameTime;
             _blinkTick -= gameTime.ElapsedGameTime;
             BlinkButtonHeld = false;
+        }
+
+        public new void Draw(GameTime gameTime, SpriteBatch spriteBatch)
+        {
+            base.Draw(gameTime, spriteBatch);
+            if (_trap != null)
+                _trap.DirectDraw(spriteBatch);// Draw(gameTime, spriteBatch);
         }
 
         public void drawHUD(SpriteBatch spriteBatch, Viewport defaultViewport, SpriteFont font, bool drawOnBottom)
@@ -260,6 +278,31 @@ namespace WraithHunt
                 //return new AEDamageBox(space.X + 30, space.Y, Direction.LEFT, 30, _blinkRange, Color.BlueViolet, _beamDuration, 0, _beamDecays, this);
             }
             return null;
+        }
+
+        public void Trap(World world)
+        {
+            if (_trapTick <= TimeSpan.Zero)
+            {
+                _trap = new AEObject(
+                    "wraith_placeholder",
+                    _spriteScale,
+                    _spriteScale,
+                    new Vector2(_trapRange, _trapRange),
+                    world.CreateRectangle(
+                        _trapRange, 
+                        _trapRange, 
+                        1, 
+                        new Vector2(
+                            this._body.Position.X,
+                            this._body.Position.Y
+                        ),
+                        0,
+                        BodyType.Static
+                    )
+                ); 
+                _trap.setTag(AETag.NONE);
+            }
         }
     }
 }
