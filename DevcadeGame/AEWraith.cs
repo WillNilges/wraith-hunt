@@ -41,7 +41,7 @@ namespace WraithHunt
         ) : base(
             spritePath, spriteOffset, spriteScale, bodySize, body, playerType
         )
-        {}
+        { }
 
         public AEObject getTkCandidate() => _TKCandidate;
 
@@ -67,10 +67,11 @@ namespace WraithHunt
             if (!PSActive)
             {
                 PSCandidate = (Npc)TKSearch(npcs, _PSRange);
-            } else if (PSCandidate.health <= 0)
+            }
+            else if (PSCandidate.health <= 0)
             {
-                    PSActive = false;
-                    PSCandidate = null;
+                PSActive = false;
+                PSCandidate = null;
             }
         }
 
@@ -302,8 +303,8 @@ namespace WraithHunt
                     new Vector2(130, HUDHeight + 90),
                     "VICTIM LIFE",
                     WraithColor,
-                    (float) PSCandidate.health,
-                    (float) PSCandidate.healthMax,
+                    (float)PSCandidate.health,
+                    (float)PSCandidate.healthMax,
                     new Vector2(defaultViewport.Width / 5.0f, 5)
                 );
             }

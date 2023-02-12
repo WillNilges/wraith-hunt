@@ -213,7 +213,7 @@ namespace DevcadeGame
                     _spriteScale,
                     characterSize,
                     world.CreateRectangle(
-                        characterSize.X, characterSize.Y, 1, new Vector2(wraithStartingPosition.X + i * 10f - 50f, wraithStartingPosition.Y-100f), 0, BodyType.Dynamic
+                        characterSize.X, characterSize.Y, 1, new Vector2(wraithStartingPosition.X + i * 10f - 50f, wraithStartingPosition.Y - 100f), 0, BodyType.Dynamic
                     ),
                     AETag.MEDIUM
                 );
@@ -331,7 +331,7 @@ namespace DevcadeGame
 
                     // Delete damage boxes whose timers have expired
                     damageBoxes.RemoveAll(x => x.tick < TimeSpan.Zero);
-                    npcs.RemoveAll(x => ((Npc) x).health <= 0);
+                    npcs.RemoveAll(x => ((Npc)x).health <= 0);
 
                     mediumCamera.Position = new Vector2(medium.GetCameraCoords().X, medium.GetCameraCoords().Y + (mediumViewport.Height / 2) / mediumCamera.Zoom);
 
@@ -366,7 +366,7 @@ namespace DevcadeGame
             {
                 // Get current plane, and override it if posessing
                 WHPlane currentPlane = player.currentPlane;
-                if (player is AEWraith && ((AEWraith) player).PSActive)
+                if (player is AEWraith && ((AEWraith)player).PSActive)
                 {
                     currentPlane = WHPlane.MATERIAL;
                 }

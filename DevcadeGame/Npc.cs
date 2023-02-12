@@ -5,7 +5,7 @@ using Vector2 = Microsoft.Xna.Framework.Vector2;
 
 namespace WraithHunt
 {
-    public enum MillStage 
+    public enum MillStage
     {
         WAITINGLEFT,
         MOVINGLEFT,
@@ -23,26 +23,26 @@ namespace WraithHunt
 
         Random random;
 
-        public Npc (
+        public Npc(
             string spritePath, float spriteOffset, float spriteScale, Vector2 bodySize, Body body, AETag playerType
         ) : base(
             spritePath, spriteOffset, spriteScale, bodySize, body, playerType
         )
         {
-           setTag(AETag.NONE); // Oops no collision. 
-           random = new Random();
+            setTag(AETag.NONE); // Oops no collision. 
+            random = new Random();
         }
 
         public new void Update(GameTime gameTime, World world)
         {
-            base.Update(gameTime,world);
+            base.Update(gameTime, world);
             if (!_possessed)
             {
                 _millTick -= gameTime.ElapsedGameTime;
                 if (_millTick < TimeSpan.Zero)
                 {
-                    _millTick = new TimeSpan(0, 0, 0, 0, (int) ((float)_millDuration.TotalMilliseconds * ((float)random.Next() / (float)Int32.MaxValue)));
-                    _millStage = (MillStage) (((int) _millStage + 1) % System.Enum.GetNames(typeof(MillStage)).Length);
+                    _millTick = new TimeSpan(0, 0, 0, 0, (int)((float)_millDuration.TotalMilliseconds * ((float)random.Next() / (float)Int32.MaxValue)));
+                    _millStage = (MillStage)(((int)_millStage + 1) % System.Enum.GetNames(typeof(MillStage)).Length);
                 }
                 switch (_millStage)
                 {
