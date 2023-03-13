@@ -91,10 +91,13 @@ namespace WraithHunt
                     damageBoxes.Add(box);
             }
 
+            /*
+            // TODO: Implement trap
             if (myState.IsKeyDown(Keys.R) || Input.GetButtonDown(1, Input.ArcadeButtons.A4))
             {
                 Trap(world);
             }
+            */
         }
 
         public new void Update(GameTime gameTime)
