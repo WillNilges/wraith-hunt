@@ -50,11 +50,12 @@ namespace DevcadeGame
 
         private Map map;
 
-
         private Camera mediumCamera;
         private Camera wraithCamera;
 
         public GameState state = GameState.START;
+
+        private bool drawHelp;
 
         // Here be dragons
         // Stuff for viewport
@@ -259,6 +260,10 @@ namespace DevcadeGame
                 /** Player 2 **/
                 wraith.HandleInput(myState, world, damageBoxes);
 
+                if (myState.IsKeyDown(Keys.H) || Input.GetButtonDown(1, Input.ArcadeButtons.Menu))
+                    drawHelp = true;
+                else
+                    drawHelp = false;
             }
 
             Input.Update(); // Updates the state of the input library
@@ -362,6 +367,44 @@ namespace DevcadeGame
         {
             GraphicsDevice.Clear(Color.DarkSlateGray);
 
+            void help()
+            {
+                List<String> mHelps = new List<String>{
+                    "=== Controls ===",
+                    "--- Medium ---",
+                    "Move: WASD/Joystick",
+                    "Jump: W",
+                    "Beam Attack: E",
+                    "Blink: Q + WASD/Joystick",
+                    "Trap: R"
+                };
+
+                List<String> wHelps = new List<String>{
+                    "=== Controls ===",
+                    "--- Wraith ---",
+                    "Move: WASD/Joystick",
+                    "Jump: W",
+                    "Blast Attack: O",
+                    "Planeshift: K",
+                    "Telekinesis: U + U + WD/Joystick",
+                    "Posess: P"
+                };
+
+                int i = 0;
+                foreach (String line in mHelps)
+                {
+                    medium.DebugDraw(_spriteBatch, _HUDFont, line, new Vector2(20, 20 + i));
+                    i += 20;
+                }
+
+                i = 0;
+                foreach (String line in wHelps)
+                {
+                    wraith.DebugDraw(_spriteBatch, _HUDFont, line, new Vector2(20, (980-20-wHelps.Count * 20) + i));
+                    i += 20;
+                }
+            }
+
             void drawThings(Camera cam, AEPlayer player)
             {
                 // Get current plane, and override it if posessing
@@ -443,6 +486,7 @@ namespace DevcadeGame
                     _spriteBatch.Begin();
 
                     // DEBUG STATEMENTS
+                    /*
                     medium.DebugDraw(_spriteBatch, _HUDFont, $"Position: {medium.Position().X}, {medium.Position().Y}", new Vector2(1, 1));
                     medium.DebugDraw(_spriteBatch, _HUDFont, $"Cam_Position: {mediumCamera.Position.X}, {mediumCamera.Position.Y}", new Vector2(1, 20));
                     medium.DebugDraw(_spriteBatch, _HUDFont, $"Draw_Position: {medium.GetCameraCoords().X}, {medium.GetCameraCoords().Y}", new Vector2(1, 40));
@@ -450,6 +494,12 @@ namespace DevcadeGame
                     wraith.DebugDraw(_spriteBatch, _HUDFont, $"Position: {wraith.Position().X}, {wraith.Position().Y}", new Vector2(150, 550));
                     wraith.DebugDraw(_spriteBatch, _HUDFont, $"Cam_Position: {wraithCamera.Position.X}, {wraithCamera.Position.Y}", new Vector2(150, 570));
                     wraith.DebugDraw(_spriteBatch, _HUDFont, $"Draw_Position: {wraith.GetCameraCoords().X}, {wraith.GetCameraCoords().Y}", new Vector2(150, 590));
+                    */
+
+
+                    medium.DebugDraw(_spriteBatch, _HUDFont, "Press <H>/Menu for Help", new Vector2(240, 960));
+                    if (drawHelp == true)
+                        help();
 
                     // Draw black dividing bar
                     RectangleSprite.FillRectangle(
