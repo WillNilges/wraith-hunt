@@ -15,11 +15,11 @@ namespace WraithHunt
         TimeSpan _blastAttackCooldown = new TimeSpan(0, 0, 0, 0, 500);
         TimeSpan _blastAttackTick = TimeSpan.Zero;
 
-        TimeSpan _planeShiftCooldown = new TimeSpan(0, 0, 10);
+        TimeSpan _planeShiftCooldown = new TimeSpan(0, 0, 7);
         TimeSpan _planeShiftTick = TimeSpan.Zero;
 
         // Telekinesis
-        TimeSpan _TKCooldown = new TimeSpan(0, 0, 2); // DEBUG: should be 15 seconds.
+        TimeSpan _TKCooldown = new TimeSpan(0, 0, 8); // DEBUG: should be 15 seconds.
         TimeSpan _TKTick = TimeSpan.Zero;
         private int _TKRange = 20;
         private AEObject _TKCandidate;
@@ -28,7 +28,7 @@ namespace WraithHunt
         private float _TKBoost = -0.1f;
         private Vector2 _TKBlastForce = new Vector2(100f, 20f);
 
-        TimeSpan _PSCooldown = new TimeSpan(0, 0, 2); // DEBUG: should be 15 seconds.
+        TimeSpan _PSCooldown = new TimeSpan(0, 0, 15); // DEBUG: should be 15 seconds.
         TimeSpan _PSTick = TimeSpan.Zero;
         private int _PSRange = 20;
         public Npc PSCandidate;

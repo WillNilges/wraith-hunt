@@ -15,13 +15,13 @@ namespace WraithHunt
         TimeSpan _beamAttackTick;
 
         // Blink
-        TimeSpan _blinkCooldown = new TimeSpan(0, 0, 2); // DEBUG: Should be 12 seconds
+        TimeSpan _blinkCooldown = new TimeSpan(0, 0, 7); // DEBUG: Should be 12 seconds
         TimeSpan _blinkTick = TimeSpan.Zero;
         float _blinkRange = 10f;
         public bool BlinkButtonHeld = false;
 
         // Trap
-        TimeSpan _trapCooldown = new TimeSpan(0, 0, 2); // DEBUG: Should be 30 seconds
+        TimeSpan _trapCooldown = new TimeSpan(0, 0, 30); // DEBUG: Should be 30 seconds
         TimeSpan _trapTick = TimeSpan.Zero;
         float _trapRange = 30f;
         AEObject _trap = null;
