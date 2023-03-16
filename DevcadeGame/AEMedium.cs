@@ -38,7 +38,7 @@ namespace WraithHunt
 
         public void handleHeldInputs(KeyboardState myState)
         {
-            if (myState.IsKeyDown(Keys.Q) || Input.GetButtonDown(1, Input.ArcadeButtons.A3))
+            if (myState.IsKeyDown(Keys.Q) || Input.GetButtonHeld(1, Input.ArcadeButtons.A3))
                 BlinkButtonHeld = true;
         }
 
@@ -46,7 +46,7 @@ namespace WraithHunt
         {
             if (myState.IsKeyDown(Keys.W) || Input.GetButtonDown(1, Input.ArcadeButtons.A1))
             {
-                if (!BlinkButtonHeld)
+                if (!Input.GetButtonHeld(1, Input.ArcadeButtons.A3))
                     Jump();
             }
 
@@ -67,7 +67,7 @@ namespace WraithHunt
                     damageBoxes.Add(box);
             }
 
-            if (myState.IsKeyDown(Keys.Q) || Input.GetButtonDown(1, Input.ArcadeButtons.A3))
+            if (myState.IsKeyDown(Keys.Q) || Input.GetButtonHeld(1, Input.ArcadeButtons.A3))
             {
                 BlinkButtonHeld = true;
                 AEDamageBox box = null;

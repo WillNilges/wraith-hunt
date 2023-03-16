@@ -29,6 +29,7 @@ namespace WraithHunt
         private Vector2 _TKBlastForce = new Vector2(100f, 20f);
 
         TimeSpan _PSCooldown = new TimeSpan(0, 0, 15); // DEBUG: should be 15 seconds.
+        TimeSpan _PSEnterCooldown = new TimeSpan(0, 0, 2); // DEBUG: should be 15 seconds.
         TimeSpan _PSTick = TimeSpan.Zero;
         private int _PSRange = 20;
         public Npc PSCandidate;
@@ -274,14 +275,14 @@ namespace WraithHunt
             {
                 DrawBar(spriteBatch,
                     font,
-                    new Vector2(130, HUDHeight + 90),
+                    new Vector2(20, HUDHeight + 120),
                     "VICTIM LIFE",
                     WraithColor,
                     (float)PSCandidate.health,
                     (float)PSCandidate.healthMax,
                     new Vector2(defaultViewport.Width / 5.0f, 5)
                 );
-            }
+            } 
         }
 
         public void DrawBar(
@@ -507,16 +508,21 @@ namespace WraithHunt
         {
             if (PSCandidate != null && _PSTick <= TimeSpan.Zero)
             {
-                _PSTick = _PSCooldown;
                 PSActive = !PSActive;
                 PSCandidate.TogglePossessed();
 
                 if (PSActive)
                 {
+                    // Only a couple of seconds before you can exit posession
+                    _PSTick = _PSEnterCooldown;
+
                     // Hide and disable the wraith when posessing
                     this._body.Enabled = false;
                 } else
                 {
+                    // Only start cooldown when you come out of posession
+                    _PSTick = _PSCooldown;
+
                     // Re-enable the wraith and move him to the position
                     // of his victim. Also, kill him.
                     this._body.Position = this.PSCandidate._body.Position;

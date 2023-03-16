@@ -260,7 +260,7 @@ namespace DevcadeGame
                 /** Player 2 **/
                 wraith.HandleInput(myState, world, damageBoxes);
 
-                if (myState.IsKeyDown(Keys.H) || Input.GetButtonDown(1, Input.ArcadeButtons.Menu))
+                if (myState.IsKeyDown(Keys.H) || Input.GetButtonHeld(1, Input.ArcadeButtons.Menu) || Input.GetButtonHeld(2, Input.ArcadeButtons.Menu))
                     drawHelp = true;
                 else
                     drawHelp = false;
@@ -293,7 +293,7 @@ namespace DevcadeGame
                     break;
                 case GameState.MEDIUM_WON:
                 case GameState.WRAITH_WON:
-                    if (myState.IsKeyDown(Keys.Enter) || Input.GetButtonDown(1, Input.ArcadeButtons.A1))
+                    if (myState.IsKeyDown(Keys.Enter) || Input.GetButtonDown(1, Input.ArcadeButtons.A1) || Input.GetButtonDown(2, Input.ArcadeButtons.A1))
                     {
                         state = GameState.START;
                     }
@@ -400,7 +400,7 @@ namespace DevcadeGame
                 i = 0;
                 foreach (String line in wHelps)
                 {
-                    wraith.DebugDraw(_spriteBatch, _HUDFont, line, new Vector2(20, (980-20-wHelps.Count * 20) + i));
+                    wraith.DebugDraw(_spriteBatch, _HUDFont, line, new Vector2(20, ((mediumViewport.Height * 2)-20-wHelps.Count * 20) + i));
                     i += 20;
                 }
             }
