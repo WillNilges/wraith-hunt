@@ -1,5 +1,5 @@
 {
-  description = "Custom game engine in C";
+  description = "1v1 Arena psycho-cyberpunk 'em up";
 
   inputs = {
     flake-utils.url = "github:numtide/flake-utils";

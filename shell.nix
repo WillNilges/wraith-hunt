@@ -2,7 +2,7 @@
 
 pkgs.mkShell
 {
-  name = "openGL";
+  name = "WraithHunt";
 
   buildInputs = [
     pkgs.clang-tools
