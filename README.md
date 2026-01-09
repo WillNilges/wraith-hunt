@@ -31,3 +31,44 @@ She can kill the demon by fighting him on the ethereal plane, or ripping him out
 
 The demon can win by by killing the Medium, or by posessing and killing enough people. She is vulnerable to attacks on the material plane (throwing shit at her, melee attacks, and traps) and on the ethereal plane.
 ```
+
+# Development
+
+Tiling software: (Tiled) https://www.mapeditor.org/
+Sound software: https://www.bfxr.net/
+
+Monogame Editor
+
+See also: https://github.com/ComputerScienceHouse/devcade-onboard/blob/main/HACKING/Dockerfile
+
+# Running dev versions of the game
+
+### Software Requirements
+- dotnet
+
+To run the game:
+
+`dotnet publish -c Release -r linux-x64 --self-contained`
+
+nuget?
+
+`dotnet add package devcade-library`
+
+
+`DOTNET_SYSTEM_GLOBALIZATION_INVARIANT=1 ./DevcadeGame`
+
+`dotnet run`
+
+# libfreetype compilation issues
+
+This is cursed.
+
+The nix flake should have a copy of libfreetype in it. Find one in your system with
+`find /nix/store/ -name "libfreetype.so"`
+
+And then do
+
+`ln -s /nix/store/l1g7r8sgrc3djn0x51mpy8fz5wp3204d-freetype-2.13.3/lib/libfreetype.so /home/wilnil/.nuget/packages/dotnet-mgcb/3.8.1.303/tools/net6.0/any/runtimes/linux-x64/native/freetype6.so`
+
+
+
